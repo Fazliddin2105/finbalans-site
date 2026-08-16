@@ -1,0 +1,3982 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinBalans — Boshqaruv paneli</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2310233B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23D9BC6B' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================
+       1. Tokenlar va asos
+       ===================================================== */
+    :root {
+      --ink: #16232F;
+      --text: #33414E;
+      --muted: #606C78;
+      --navy: #10233B;
+      --navy-2: #0B1A2C;
+      --navy-hover: #1B3A5C;
+      --on-navy: #E9EDF3;
+      --on-navy-muted: #8FA1B5;
+      --gold: #B8902D;
+      --gold-dark: #8F6E1F;
+      --gold-soft: #D9BC6B;
+      --gold-tint: #F7F1E3;
+      --green: #1E8E5A;
+      --green-tint: #E9F6EF;
+      --red: #C0392B;
+      --red-tint: #FBEEED;
+      --bg: #FFFFFF;
+      --bg-gray: #F4F6F8;
+      --border: #E3E7EB;
+      --r-card: 8px;
+      --r-ctl: 6px;
+      --shadow: 0 1px 2px rgba(16, 35, 59, 0.05), 0 8px 24px rgba(16, 35, 59, 0.06);
+      --font: 'Golos Text', 'Segoe UI', Tahoma, sans-serif;
+      --serif: 'Lora', Georgia, serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scrollbar-width: thin; scrollbar-color: #C4CCD4 transparent; }
+    body {
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg-gray);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--navy); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: var(--font); cursor: pointer; color: inherit; }
+    svg { display: block; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: #C4CCD4; border-radius: 8px; border: 2px solid var(--bg-gray); }
+    ::-webkit-scrollbar-track { background: transparent; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    .brand { font-family: var(--serif); font-size: 21px; font-weight: 600; color: #fff; letter-spacing: 0.01em; }
+    .brand i { font-style: normal; color: var(--gold-soft); }
+
+    /* =====================================================
+       2. Tugmalar va boshqaruv elementlari
+       ===================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 18px;
+      border-radius: var(--r-ctl);
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.3;
+      border: 1px solid transparent;
+      background: none;
+      transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .btn svg { width: 15px; height: 15px; }
+    .btn-primary {
+      background: linear-gradient(105deg, var(--gold-soft), var(--gold));
+      color: var(--navy-2);
+      border: none;
+      transition: filter 0.15s;
+    }
+    .btn-primary:hover { filter: brightness(1.07); }
+    .btn-ghost { background: var(--bg); color: var(--text); border-color: var(--border); }
+    .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-danger { background: var(--bg); color: var(--red); border-color: var(--border); }
+    .btn-danger:hover { border-color: var(--red); background: var(--red-tint); }
+    .btn-sm { padding: 7px 12px; font-size: 13px; }
+    .btn:disabled { opacity: 0.45; cursor: default; pointer-events: none; }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      background: var(--bg);
+      color: var(--muted);
+      transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+    }
+    .icon-btn svg { width: 15px; height: 15px; }
+    .icon-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .icon-btn.danger:hover { border-color: var(--red); color: var(--red); background: var(--red-tint); }
+
+    input[type="text"], input[type="password"], input[type="search"] {
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--ink);
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      background: var(--bg);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+    input[type="text"]:focus, input[type="password"]:focus, input[type="search"]:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 144, 45, 0.14);
+    }
+    input::placeholder { color: #9AA5AF; }
+    textarea {
+      font-family: var(--font);
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--ink);
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      background: var(--bg);
+      width: 100%;
+      resize: vertical;
+      min-height: 64px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 144, 45, 0.14);
+    }
+    input[type="checkbox"] { accent-color: var(--gold-dark); width: 15px; height: 15px; cursor: pointer; }
+    input:disabled { background: var(--bg-gray); color: var(--muted); cursor: not-allowed; }
+
+    /* =====================================================
+       3. Kirish ekrani
+       ===================================================== */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      /* yagona ruxsat etilgan gradient — vinyetka */
+      background: radial-gradient(ellipse at 50% 32%, #1A3252 0%, var(--navy) 52%, var(--navy-2) 100%);
+    }
+    .login-card {
+      width: 100%;
+      max-width: 388px;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 42px 38px 34px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+    }
+    .login-card .brand { color: var(--ink); font-size: 27px; }
+    .login-sub {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 8px 0 30px;
+    }
+    .login-field { margin-bottom: 14px; }
+    .login-field input { text-align: left; }
+    .pass-wrap { position: relative; margin-bottom: 14px; }
+    .pass-wrap input { padding-right: 46px; }
+    .pass-toggle {
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      color: var(--muted);
+      border-radius: var(--r-ctl);
+    }
+    .pass-toggle:hover { color: var(--ink); }
+    .pass-toggle svg { width: 18px; height: 18px; }
+    .login-error {
+      display: none;
+      font-size: 13px;
+      color: var(--red);
+      margin: -4px 0 12px;
+      text-align: left;
+    }
+    .login-error.show { display: block; }
+    .login-notice {
+      display: none;
+      font-size: 13px;
+      color: var(--gold-dark);
+      margin: -4px 0 12px;
+      text-align: left;
+    }
+    .login-notice.show { display: block; }
+    .no-server-text {
+      font-size: 13.5px;
+      color: var(--text);
+      text-align: left;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .no-server-text b, .no-server-text code { color: var(--ink); }
+    .login-card .btn-primary { width: 100%; padding: 12px 18px; font-size: 14.5px; }
+    .login-note {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-5px); }
+      40%, 60% { transform: translateX(5px); }
+    }
+    .login-card.shake { animation: shake 0.45s ease; }
+
+    /* =====================================================
+       4. Panel karkasi — yon panel
+       ===================================================== */
+    .app { display: none; min-height: 100vh; }
+    .app.active { display: grid; grid-template-columns: 250px 1fr; }
+
+    .sidebar {
+      background: var(--navy);
+      color: var(--on-navy-muted);
+      display: flex;
+      flex-direction: column;
+      padding: 26px 16px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar .brand { padding: 0 12px 28px; }
+
+    .side-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .nav-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(143, 161, 181, 0.72);
+      padding: 18px 12px 7px;
+    }
+    .nav-label:first-child { padding-top: 0; }
+    .side-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 9px 12px;
+      border-radius: var(--r-ctl);
+      background: none;
+      border: none;
+      color: var(--on-navy-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+      text-align: left;
+      width: 100%;
+      transition: background-color 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+    a.side-link:hover { text-decoration: none; }
+    .side-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .side-link:hover { color: var(--on-navy); background: rgba(255, 255, 255, 0.05); }
+    .side-link.active { color: #fff; background: rgba(255, 255, 255, 0.08); }
+    .side-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      bottom: 7px;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--gold);
+    }
+    .side-link.active svg { color: var(--gold-soft); }
+    .side-txt { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; text-align: left; }
+    .side-txt small { font-size: 10.5px; font-weight: 400; color: rgba(143, 161, 181, 0.85); }
+    .side-link:hover .side-txt small { color: rgba(233, 237, 243, 0.6); }
+    .side-link.active .side-txt small { color: rgba(233, 237, 243, 0.65); }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: var(--navy-2);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 3px 7px;
+      border-radius: 100px;
+    }
+    @keyframes badgeFlash {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 188, 107, 0.55); }
+      35% { transform: scale(1.3); box-shadow: 0 0 0 7px rgba(217, 188, 107, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 188, 107, 0); }
+    }
+    .nav-badge.flash { animation: badgeFlash 0.9s ease 3; }
+
+    .admin-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .admin-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(217, 188, 107, 0.16);
+      border: 1px solid rgba(217, 188, 107, 0.4);
+      color: var(--gold-soft);
+      font-family: var(--serif);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .admin-meta { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+    .admin-name { font-size: 13px; font-weight: 600; color: var(--on-navy); }
+    .admin-host { font-size: 11.5px; color: var(--on-navy-muted); }
+
+    /* Rejim ko'rsatkichi (server / demo) */
+    .mode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      margin: 14px 12px 0;
+      padding: 5px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--on-navy-muted);
+      cursor: default;
+      white-space: nowrap;
+    }
+    .mode-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-soft); flex-shrink: 0; }
+    .mode-pill.server { color: var(--on-navy); }
+    .mode-pill.server .mode-dot { background: #37B37E; }
+
+    /* =====================================================
+       5. Asosiy maydon va yuqori panel
+       ===================================================== */
+    .main { padding: 28px 36px 64px; max-width: 1160px; width: 100%; }
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+    .topbar h1 { font-family: var(--serif); font-size: 25px; font-weight: 600; color: var(--ink); line-height: 1.25; }
+    .topbar-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .topbar-right { display: flex; align-items: center; gap: 14px; padding-top: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .topbar-date { font-size: 13px; color: var(--muted); white-space: nowrap; }
+    .chip-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--gold-tint);
+      border: 1px solid var(--gold-soft);
+      color: var(--gold-dark);
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      transition: background-color 0.15s;
+    }
+    .chip-new:hover { background: #F2E8CE; }
+    .chip-new .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+    .view { display: none; }
+    .view.active { display: block; animation: viewIn 0.25s ease; }
+    @keyframes viewIn { from { opacity: 0; transform: translateY(6px); } }
+
+    /* Xush kelibsiz yo'riqnomasi (birinchi kirishda) */
+    .welcome {
+      position: relative;
+      background: var(--gold-tint);
+      border: 1px solid var(--gold-soft);
+      border-radius: var(--r-card);
+      padding: 16px 52px 16px 20px;
+      margin-bottom: 20px;
+    }
+    .welcome h3 { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .welcome ol { margin: 0; padding-left: 20px; font-size: 13px; color: var(--text); display: flex; flex-direction: column; gap: 4px; }
+    .welcome b { color: var(--ink); }
+    .welcome-x { position: absolute; top: 12px; right: 12px; border-color: transparent; background: transparent; }
+
+    /* Jamoa suratlari slotlari */
+    .pslot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; max-width: 760px; }
+    .pslot {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      padding: 12px;
+      min-width: 0;
+    }
+    .pslot-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: block;
+    }
+    .pslot.changed .pslot-img { border: 2px solid var(--gold); }
+    .pslot-meta { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .pslot-name { font-weight: 600; font-size: 13.5px; color: var(--ink); }
+    .pslot-state { font-size: 11.5px; color: var(--muted); }
+    .pslot-state.gold { color: var(--gold-dark); font-weight: 600; }
+    .pslot-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    @media (max-width: 600px) {
+      .pslot-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =====================================================
+       6. KPI kartalari
+       ===================================================== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .kpi {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow);
+      padding: 18px 20px 14px;
+      min-width: 0;
+    }
+    .kpi.hl { border-top: 3px solid var(--gold); padding-top: 16px; }
+    .kpi-lbl { font-size: 12.5px; font-weight: 500; color: var(--muted); display: block; }
+    .kpi-row { display: flex; align-items: baseline; gap: 8px; margin-top: 2px; }
+    .kpi-num { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+    .delta {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .delta.up { background: var(--green-tint); color: var(--green); }
+    .delta.down { background: var(--red-tint); color: var(--red); }
+    .delta.flat { background: var(--bg-gray); color: var(--muted); }
+    .spark { width: 100%; height: 30px; margin-top: 8px; overflow: visible; }
+
+    /* =====================================================
+       7. Panellar
+       ===================================================== */
+    .panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .panel-head h2 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); }
+    .panel-note { font-size: 12.5px; color: var(--muted); }
+
+    /* =====================================================
+       8. Grafiklar — ustunlar va halqa
+       ===================================================== */
+    .chart-flex { display: flex; gap: 36px; align-items: stretch; }
+    .bars-wrap { flex: 1; min-width: 0; }
+    .bars { display: flex; align-items: flex-end; gap: 6px; height: 150px; }
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100%;
+      min-width: 0;
+      cursor: default;
+    }
+    .bar {
+      width: 100%;
+      max-width: 34px;
+      background: var(--navy);
+      border-radius: 3px 3px 0 0;
+      min-height: 3px;
+      transition: height 0.4s ease, opacity 0.15s;
+    }
+    .bar.today { background: var(--gold); }
+    .bar.zero { background: var(--border); }
+    .bar-col:hover .bar { opacity: 0.8; }
+    .bars-lbls { display: flex; gap: 6px; margin-top: 6px; border-top: 1px solid var(--border); padding-top: 6px; }
+    .bar-lbl { flex: 1; font-size: 10.5px; color: var(--muted); text-align: center; white-space: nowrap; min-width: 0; }
+
+    .stat-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg);
+      white-space: nowrap;
+    }
+    .stat-chip b { color: var(--ink); font-weight: 600; font-size: 12.5px; }
+    .bars-months .bar { max-width: 52px; }
+
+    .donut-box {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding-left: 32px;
+      border-left: 1px solid var(--border);
+    }
+    .donut-num { font-family: var(--serif); font-size: 26px; font-weight: 600; fill: var(--ink); }
+    .donut-cap { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--muted); font-family: var(--font); }
+    .donut-legend { display: flex; flex-direction: column; gap: 5px; align-self: stretch; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text); }
+    .legend-row .sw { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .legend-row b { margin-left: auto; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+    /* =====================================================
+       9. Jadvallar
+       ===================================================== */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th {
+      text-align: left;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr { transition: background-color 0.1s; }
+    tbody tr:hover td { background: var(--bg-gray); }
+    tr.clickable { cursor: pointer; }
+    td.nowrap, th.nowrap { white-space: nowrap; }
+    th.th-check, td.td-check { width: 34px; padding-right: 4px; }
+    td.td-check input { display: block; }
+    .lead-name { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .note-ico { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--gold-dark); }
+    .note-ico svg { width: 13px; height: 13px; }
+    .d-note-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .lead-msg { color: var(--muted); font-size: 13px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lead-date { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+    .status {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .status-new { background: var(--gold-tint); color: var(--gold-dark); }
+    .status-prog { background: #EAF0F7; color: #1B3A5C; }
+    .status-done { background: var(--green-tint); color: var(--green); }
+    .status-rej { background: var(--red-tint); color: var(--red); }
+
+    /* Bosqich tanlagich (drawer) */
+    .stage-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .stage-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: var(--r-ctl);
+      padding: 8px 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: left;
+      transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+    }
+    .stage-btn:hover { border-color: var(--navy); color: var(--ink); }
+    .stage-btn.on { border-color: var(--gold); background: var(--gold-tint); color: var(--gold-dark); }
+
+    /* Skeleton (yuklanayotgan holat) */
+    @keyframes shimmer { 100% { background-position: -200% 0; } }
+    .skel {
+      display: block;
+      height: 12px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #EDF0F3 25%, #F6F8FA 37%, #EDF0F3 63%);
+      background-size: 200% 100%;
+      animation: shimmer 1.3s linear infinite;
+    }
+    .skel-num { height: 26px; width: 56px; margin: 4px 0 8px; }
+    .skel-line { height: 11px; }
+
+    /* Voronka (konversiya) */
+    .funnel { display: flex; flex-direction: column; gap: 10px; }
+    .fn-row { display: flex; align-items: center; gap: 12px; }
+    .fn-lbl { width: 120px; font-size: 12.5px; color: var(--muted); flex-shrink: 0; }
+    .fn-track { flex: 1; display: block; height: 26px; background: var(--bg-gray); border-radius: 4px; overflow: hidden; min-width: 0; }
+    .fn-fill { display: block; height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .fn-1 { background: var(--navy); }
+    .fn-2 { background: #2C5C8F; }
+    .fn-3 { background: var(--green); }
+    .fn-val { width: 92px; text-align: right; font-size: 12.5px; color: var(--ink); font-weight: 600; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .fn-val span { color: var(--muted); font-weight: 400; }
+
+    /* Bugungi vazifalar */
+    .task-list { display: flex; flex-direction: column; }
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .task-row:last-child { border-bottom: none; }
+    .task-meta { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+    .task-name { font-weight: 600; font-size: 13.5px; color: var(--ink); }
+    .task-sub { font-size: 12px; color: var(--muted); }
+    .task-actions { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+
+    /* Sana oralig'i */
+    .range-wrap { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+    .range-wrap input[type="date"] {
+      font-family: var(--font);
+      font-size: 12.5px;
+      color: var(--ink);
+      padding: 7px 9px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      background: var(--bg);
+      width: auto;
+    }
+    .range-wrap input[type="date"]:focus { outline: none; border-color: var(--gold); }
+
+    /* =====================================================
+       10b. Buyruqlar paneli (Ctrl+K) va modal
+       ===================================================== */
+    .modal-back {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 26, 44, 0.5);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12vh 20px 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+      z-index: 100;
+    }
+    .modal-back.show { opacity: 1; pointer-events: auto; }
+    .palette {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg);
+      border-radius: 10px;
+      box-shadow: 0 24px 64px rgba(11, 26, 44, 0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 68vh;
+    }
+    .palette-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .palette-head svg { width: 17px; height: 17px; color: var(--muted); flex-shrink: 0; }
+    .palette-head input { border: none; padding: 0; font-size: 15px; background: none; }
+    .palette-head input:focus { outline: none; box-shadow: none; }
+    .palette-list { overflow-y: auto; padding: 6px; }
+    .pal-group { font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 8px 10px 4px; }
+    .pal-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: none;
+      background: none;
+      border-radius: var(--r-ctl);
+      padding: 9px 10px;
+      text-align: left;
+      font-size: 13.5px;
+      color: var(--text);
+    }
+    .pal-item .pal-ico { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+    .pal-item b { font-weight: 600; color: var(--ink); }
+    .pal-item small { color: var(--muted); font-size: 12px; margin-left: auto; padding-left: 10px; white-space: nowrap; }
+    .pal-item.sel { background: var(--gold-tint); }
+    .pal-item.sel b, .pal-item.sel { color: var(--gold-dark); }
+    .pal-empty { padding: 22px; text-align: center; color: var(--muted); font-size: 13.5px; }
+    .palette-foot { border-top: 1px solid var(--border); padding: 8px 14px; font-size: 11.5px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+    kbd {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--ink);
+    }
+    .sheet {
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg);
+      border-radius: 10px;
+      box-shadow: 0 24px 64px rgba(11, 26, 44, 0.4);
+      overflow: hidden;
+    }
+    .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .sheet-head h2 { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--ink); }
+    .sheet-body { padding: 8px 20px 18px; }
+    .sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    .sheet-row:last-child { border-bottom: none; }
+    .sheet-row span { color: var(--text); }
+
+    .topbar-icon { flex-shrink: 0; }
+    .topbar-icon kbd { margin-left: 6px; }
+
+    .row-actions { display: flex; gap: 6px; justify-content: flex-end; white-space: nowrap; }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 36px 20px;
+      font-size: 14px;
+    }
+    .empty-hero { text-align: center; padding: 64px 24px; }
+    .empty-hero svg { width: 44px; height: 44px; color: #B9C2CA; margin: 0 auto 16px; }
+    .empty-hero h3 { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .empty-hero p { font-size: 13.5px; color: var(--muted); max-width: 380px; margin: 0 auto 20px; }
+
+    /* =====================================================
+       10. Arizalar — asboblar paneli, tanlash, sahifalash
+       ===================================================== */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .tabs {
+      display: inline-flex;
+      gap: 2px;
+      background: #E9EDF0;
+      border-radius: var(--r-ctl);
+      padding: 3px;
+    }
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      background: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .tab b { font-weight: 600; font-size: 12px; color: inherit; opacity: 0.75; font-variant-numeric: tabular-nums; }
+    .tab:hover { color: var(--ink); }
+    .tab.active { background: var(--bg); color: var(--ink); box-shadow: 0 1px 2px rgba(16, 35, 59, 0.1); }
+    .tab.active b { color: var(--gold-dark); opacity: 1; }
+
+    .search-wrap { position: relative; }
+    .search-wrap svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .search-wrap input { padding-left: 34px; width: 230px; }
+    .toolbar-actions { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+
+    .bulkbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      background: var(--navy);
+      color: var(--on-navy);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow);
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      animation: viewIn 0.2s ease;
+    }
+    .bulkbar b { color: #fff; }
+    .bulk-actions { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+    .btn-onnavy {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .btn-onnavy:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.35); color: #fff; }
+    .btn-onnavy-danger { background: var(--red); color: #fff; border-color: var(--red); }
+    .btn-onnavy-danger:hover { background: #A93226; border-color: #A93226; color: #fff; }
+
+    .pager {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 16px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+    .page-nums { display: flex; gap: 4px; flex-wrap: wrap; }
+    .page-num {
+      min-width: 30px;
+      height: 30px;
+      padding: 0 8px;
+      border: 1px solid transparent;
+      border-radius: var(--r-ctl);
+      background: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .page-num:hover { border-color: var(--border); color: var(--ink); }
+    .page-num.active { background: var(--navy); color: #fff; font-weight: 600; }
+
+    /* =====================================================
+       11. Yon oyna (drawer)
+       ===================================================== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 26, 44, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 60;
+    }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 420px;
+      max-width: 100%;
+      background: var(--bg);
+      box-shadow: -12px 0 40px rgba(16, 35, 59, 0.18);
+      transform: translateX(105%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0.35, 1);
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .drawer-head h2 { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--ink); }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 22px 24px; }
+    .d-field { margin-bottom: 18px; }
+    .d-field .lbl {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .d-field .val { font-size: 14.5px; color: var(--ink); }
+    .d-field .val.big { font-family: var(--serif); font-size: 18px; font-weight: 600; }
+    .d-msg {
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .drawer-foot {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 18px 24px 22px;
+      border-top: 1px solid var(--border);
+    }
+    .drawer-foot .btn { width: 100%; padding: 11px 18px; }
+
+    /* =====================================================
+       12. Formalar (Kontent / Sozlamalar)
+       ===================================================== */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; max-width: 760px; }
+    .fg { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .fg label { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+    .fg small { font-size: 12px; color: var(--muted); }
+    .form-foot { display: flex; align-items: center; gap: 12px; margin-top: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+    .form-foot a { font-size: 13.5px; font-weight: 500; }
+
+    .hint {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--gold-tint);
+      border: 1px solid var(--gold-soft);
+      border-radius: var(--r-card);
+      padding: 14px 18px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--gold-dark);
+      margin-bottom: 20px;
+    }
+    .hint svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; }
+    .note { font-size: 12.5px; color: var(--muted); max-width: 560px; margin-top: 14px; }
+    .note code, .no-server-text code {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 12px;
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    .cmd {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--bg-gray);
+      border: 1px solid var(--border);
+      border-radius: var(--r-ctl);
+      padding: 10px 14px;
+      margin-top: 10px;
+      max-width: 720px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Server yo'qligi haqidagi banner */
+    .banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--gold-tint);
+      border: 1px solid var(--gold-soft);
+      color: var(--gold-dark);
+      font-size: 12.5px;
+      font-weight: 500;
+      border-radius: var(--r-ctl);
+      padding: 7px 8px 7px 14px;
+      margin-bottom: 14px;
+    }
+    .banner-x {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: none;
+      color: var(--gold-dark);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .banner-x:hover { background: rgba(184, 144, 45, 0.15); }
+    .banner-x svg { width: 14px; height: 14px; }
+
+    /* =====================================================
+       12b. Sayt matnlari (CMS)
+       ===================================================== */
+    .texts-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .texts-meta { display: flex; flex-direction: column; line-height: 1.4; }
+    .texts-count { font-size: 12.5px; color: var(--muted); }
+    .texts-dirty { font-size: 12px; font-weight: 600; color: var(--gold-dark); }
+    .texts-bar .btn-primary { margin-left: auto; }
+
+    .tgroup {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+    .tgroup summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--serif);
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--ink);
+      user-select: none;
+    }
+    .tgroup summary::-webkit-details-marker { display: none; }
+    .tgroup-badge {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--gold-tint);
+      color: var(--gold-dark);
+      border: 1px solid var(--gold-soft);
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+    .tgroup-reset { margin-left: auto; font-family: var(--font); }
+    .tgroup-chev { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; transition: transform 0.2s; }
+    .tgroup[open] > summary .tgroup-chev { transform: rotate(180deg); }
+    .tgroup-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+      padding: 16px 18px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .tfg { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .tfg-wide { grid-column: 1 / -1; }
+    .tfg label { font-size: 12.5px; font-weight: 600; color: var(--ink); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .tkey { font-size: 10.5px; font-weight: 400; color: var(--muted); font-family: Consolas, 'Courier New', monospace; }
+    .tfield.over { border-left: 3px solid var(--gold); }
+
+    /* =====================================================
+       13. Bildirishnoma (toast)
+       ===================================================== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--navy-2);
+      color: var(--on-navy);
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 100px;
+      box-shadow: 0 8px 30px rgba(11, 26, 44, 0.35);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 90;
+      max-width: calc(100vw - 48px);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* =====================================================
+       14. Moslashuvchanlik
+       ===================================================== */
+    @media (max-width: 1000px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-flex { flex-direction: column; gap: 24px; }
+      .donut-box { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; flex-direction: row; gap: 26px; }
+      .donut-legend { align-self: center; min-width: 170px; }
+    }
+    @media (max-width: 900px) {
+      .app.active { grid-template-columns: 1fr; }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 14px;
+        overflow: visible;
+      }
+      .sidebar .brand { padding: 0 10px 0 0; font-size: 18px; }
+      .side-nav { flex-direction: row; align-items: center; gap: 2px; }
+      .nav-label { display: none; }
+      .side-link { padding: 9px; width: auto; }
+      .side-link .side-txt { display: none; }
+      .side-link svg { width: 19px; height: 19px; }
+      .side-link.active::before { display: none; }
+      .nav-badge { position: absolute; top: 1px; right: 1px; margin: 0; padding: 2px 5px; font-size: 9.5px; }
+      .admin-card { display: none; }
+      .mode-pill { margin: 0 0 0 4px; padding: 5px 10px; align-self: center; }
+      .main { padding: 20px 16px 56px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .topbar-right { padding-top: 0; }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .kpi { padding: 14px 16px 12px; }
+      .kpi-num { font-size: 25px; }
+      .panel { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .search-wrap { flex: 1; }
+      .search-wrap input { width: 100%; }
+      .toolbar-actions { margin-left: 0; }
+      .drawer { width: 100%; }
+      .bar-lbl { font-size: 9px; }
+      table { min-width: 640px; }
+      .login-card { padding: 34px 24px 28px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    /* =====================================================
+       15. Chop etish (faqat arizalar jadvali)
+       ===================================================== */
+    .print-head { display: none; }
+    @media print {
+      @page { margin: 14mm; }
+      body { background: #fff; font-size: 11pt; }
+      .sidebar, .topbar, .toolbar, .bulkbar, .pager, .toast,
+      .drawer, .overlay, .modal-back, .banner, .welcome, .hint,
+      .row-actions, .th-check, .td-check, .empty-hero { display: none !important; }
+      .app.active { display: block; }
+      .main { padding: 0; max-width: none; }
+      .view { display: none !important; }
+      .view.active { display: block !important; animation: none; }
+      .panel { border: none; box-shadow: none; padding: 0; margin: 0; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; page-break-inside: auto; }
+      tr { page-break-inside: avoid; }
+      thead { display: table-header-group; }
+      td, th { padding: 6px 8px; }
+      tbody tr:hover td { background: none; }
+      .lead-msg { max-width: none; white-space: normal; }
+      .status { border: 1px solid #999; color: #000 !important; background: none !important; }
+      .print-head { display: block; margin-bottom: 12px; }
+      .print-head h1 { font-family: var(--serif); font-size: 18pt; color: #000; }
+      .print-head p { font-size: 10pt; color: #444; }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= Kirish ekrani ================= -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card" id="loginCard">
+      <p class="brand">FinBalans<i>.</i></p>
+      <p class="login-sub">Boshqaruv paneli</p>
+      <form id="loginForm" novalidate>
+        <div class="login-field">
+          <input type="text" id="loginUser" placeholder="Login" autocomplete="username" aria-label="Login" required>
+        </div>
+        <div class="pass-wrap">
+          <input type="password" id="loginPass" placeholder="Parol" autocomplete="current-password" required>
+          <button type="button" class="pass-toggle" id="passToggle" title="Parolni ko'rsatish" aria-label="Parolni ko'rsatish">
+            <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <p class="login-notice" id="loginNotice"></p>
+        <p class="login-error" id="loginError">Login yoki parol noto'g'ri. Qayta urinib ko'ring.</p>
+        <button type="submit" class="btn btn-primary">Kirish</button>
+      </form>
+      <p class="login-note">Faqat kompaniya xodimlari uchun. Login va parol faqat serverda tekshiriladi.</p>
+    </div>
+
+    <!-- Server topilmaganda ko'rsatiladigan ma'lumot ekrani -->
+    <div class="login-card" id="noServerCard" hidden>
+      <p class="brand">FinBalans<i>.</i></p>
+      <p class="login-sub">Boshqaruv paneli</p>
+      <p class="no-server-text">
+        Xavfsizlik talabiga ko'ra login va parol brauzerda emas, faqat serverda
+        tekshiriladi. Shuning uchun panel serverga ulanmasdan ishlamaydi.
+      </p>
+      <p class="no-server-text">
+        Serverni ishga tushirish uchun loyiha papkasidagi <b>start-site.bat</b>
+        faylini oching, so'ng panelga <code>http://localhost:3000/admin.html</code>
+        manzili orqali kiring.
+      </p>
+      <p class="login-note">Server ishga tushgach, bu sahifani yangilang</p>
+    </div>
+  </div>
+
+  <!-- ================= Panel ================= -->
+  <div class="app" id="app">
+
+    <!-- Yon panel -->
+    <aside class="sidebar">
+      <span class="brand">FinBalans<i>.</i></span>
+      <nav class="side-nav">
+        <p class="nav-label">Asosiy</p>
+        <button class="side-link active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          <span class="side-txt"><span>Boshqaruv</span><small>statistika</small></span>
+        </button>
+        <button class="side-link" data-view="leads">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          <span class="side-txt"><span>Arizalar</span><small>mijoz so'rovlari</small></span>
+          <span class="nav-badge" id="navBadge" hidden>0</span>
+        </button>
+        <button class="side-link" data-view="content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          <span class="side-txt"><span>Aloqa va narxlar</span><small>kontakt, tarif, suratlar</small></span>
+        </button>
+        <button class="side-link" data-view="texts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span class="side-txt"><span>Sayt matnlari</span><small>uch tilda tahrirlash</small></span>
+        </button>
+        <p class="nav-label">Boshqa</p>
+        <button class="side-link" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="side-txt"><span>Tizim</span><small>login, parol va zaxira</small></span>
+        </button>
+        <a class="side-link" href="index.html" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          <span class="side-txt"><span>Saytni ochish</span></span>
+        </a>
+        <button class="side-link" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span class="side-txt"><span>Chiqish</span></span>
+        </button>
+      </nav>
+      <div class="mode-pill server" id="modePill" title="Ma'lumotlar serverda saqlanadi (server.js). Kirish sessiya tokeni orqali himoyalangan.">
+        <span class="mode-dot"></span>
+        <span id="modeText">Server rejimi</span>
+      </div>
+      <div class="admin-card">
+        <div class="admin-avatar">FB</div>
+        <div class="admin-meta">
+          <span class="admin-name" id="adminName">Administrator</span>
+          <span class="admin-host">finbalans.uz</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Asosiy maydon -->
+    <main class="main">
+      <div class="banner" id="offlineBanner" hidden>
+        <span>Server bilan aloqa yo'q — oxirgi amal bajarilmagan bo'lishi mumkin. Ulanishni tekshirib, sahifani yangilang.</span>
+        <button class="banner-x" id="bannerClose" title="Yopish" aria-label="Yopish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <header class="topbar">
+        <div>
+          <h1 id="viewTitle">Boshqaruv</h1>
+          <p class="topbar-sub" id="viewSub">Panel · Umumiy holat va so'nggi faollik</p>
+        </div>
+        <div class="topbar-right">
+          <button class="chip-new" id="chipNew" hidden><span class="dot"></span><span id="chipNewText">0 ta yangi ariza</span></button>
+          <button class="icon-btn topbar-icon" id="openPalette" title="Qidiruv va buyruqlar (Ctrl+K)" aria-label="Qidiruv va buyruqlar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <span class="topbar-date" id="todayDate"></span>
+        </div>
+      </header>
+
+      <!-- ========== 1. Boshqaruv ========== -->
+      <section class="view active" id="view-dashboard">
+
+        <!-- Qisqa yo'riqnoma (birinchi kirishda, yopish mumkin) -->
+        <div class="welcome" id="welcomeStrip" hidden>
+          <button class="icon-btn welcome-x" id="welcomeClose" title="Yopish" aria-label="Yopish">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <h3>Xush kelibsiz — qisqa yo'riqnoma</h3>
+          <ol>
+            <li>Mijozlar so'rovlari — <b>«Arizalar»</b> bo'limida</li>
+            <li>Sayt matnlarini <b>«Sayt matnlari»</b>da uch tilda o'zgartiring</li>
+            <li>Suratlar, telefon va tariflar — <b>«Aloqa va narxlar»</b>da</li>
+          </ol>
+        </div>
+
+        <!-- Bo'sh holat -->
+        <div class="panel empty-hero" id="dashEmpty" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          <h3>Hozircha arizalar yo'q</h3>
+          <p id="dashEmptyText">Saytdagi forma to'ldirilganda arizalar shu yerda ko'rinadi. Panelni sinab ko'rish uchun namuna ma'lumot qo'shishingiz mumkin.</p>
+          <button class="btn btn-primary" id="dashSeed" disabled title="Server rejimida namuna qo'shish o'chirilgan — ma'lumotlar serverda saqlanadi">Namuna ma'lumot qo'shish</button>
+        </div>
+
+        <div id="dashContent">
+          <!-- KPI kartalari -->
+          <div class="kpi-grid">
+            <div class="kpi hl">
+              <span class="kpi-lbl">Yangi arizalar</span>
+              <div class="kpi-row"><span class="kpi-num" id="kpiNew">0</span></div>
+              <svg class="spark" id="spark1" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </div>
+            <div class="kpi">
+              <span class="kpi-lbl">Bugun kelgan</span>
+              <div class="kpi-row"><span class="kpi-num" id="kpiToday">0</span></div>
+              <svg class="spark" id="spark2" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </div>
+            <div class="kpi">
+              <span class="kpi-lbl">Oxirgi 7 kun</span>
+              <div class="kpi-row"><span class="kpi-num" id="kpiWeek">0</span><span id="kpiWeekDelta"></span></div>
+              <svg class="spark" id="spark3" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </div>
+            <div class="kpi">
+              <span class="kpi-lbl">Jami arizalar</span>
+              <div class="kpi-row"><span class="kpi-num" id="kpiTotal">0</span></div>
+              <svg class="spark" id="spark4" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </div>
+          </div>
+
+          <!-- Grafik: 14 kun + holat halqasi -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Oxirgi 14 kun</h2>
+              <span class="panel-note">kunlik arizalar soni</span>
+            </div>
+            <div class="chart-flex">
+              <div class="bars-wrap">
+                <div class="bars" id="barChart"></div>
+                <div class="bars-lbls" id="barLabels"></div>
+              </div>
+              <div class="donut-box">
+                <svg id="donut" viewBox="0 0 120 120" width="128" height="128" role="img" aria-label="Arizalar holati"></svg>
+                <div class="donut-legend" id="donutLegend"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Konversiya voronkasi + bugungi vazifalar -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Konversiya</h2>
+              <span class="panel-note">arizalarning bosqichlar bo'yicha ulushi</span>
+            </div>
+            <div class="funnel" id="funnel"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Bugungi vazifalar</h2>
+              <span class="panel-note">2 soatdan beri javobsiz yangi arizalar</span>
+            </div>
+            <div class="task-list" id="taskList"></div>
+          </div>
+
+          <!-- Oylik dinamika + statistik chiplar -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Oylik dinamika</h2>
+              <div class="stat-chips">
+                <span class="stat-chip">Eng band kun <b id="chipBusyDay">—</b></span>
+                <span class="stat-chip">O'rtacha kunlik (7 kun) <b id="chipDailyAvg">—</b></span>
+              </div>
+            </div>
+            <div class="bars-wrap">
+              <div class="bars bars-months" id="monthChart"></div>
+              <div class="bars-lbls" id="monthLabels"></div>
+            </div>
+          </div>
+
+          <!-- Oxirgi arizalar -->
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Oxirgi arizalar</h2>
+              <button class="btn btn-ghost btn-sm" data-view-link="leads">Barchasini ko'rish</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th class="nowrap">Sana</th><th>Ism</th><th class="nowrap">Telefon</th><th>Holat</th></tr></thead>
+                <tbody id="recentBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 2. Arizalar ========== -->
+      <section class="view" id="view-leads">
+        <div class="toolbar">
+          <div class="tabs" id="leadTabs">
+            <button class="tab active" data-filter="all">Barchasi <b id="cntAll">0</b></button>
+            <button class="tab" data-filter="new">Yangi <b id="cntNew">0</b></button>
+            <button class="tab" data-filter="inprogress">Bog'lanildi <b id="cntProg">0</b></button>
+            <button class="tab" data-filter="done">Yakunlandi <b id="cntDone">0</b></button>
+            <button class="tab" data-filter="rejected">Rad etilgan <b id="cntRej">0</b></button>
+          </div>
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="leadSearch" placeholder="Ism yoki telefon..." aria-label="Arizalarni qidirish">
+          </div>
+          <div class="range-wrap">
+            <input type="date" id="dateFrom" aria-label="Boshlanish sanasi">
+            <span>—</span>
+            <input type="date" id="dateTo" aria-label="Tugash sanasi">
+            <button class="btn btn-ghost btn-sm" id="rangeClear" hidden>Tozalash</button>
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn btn-ghost btn-sm" id="printLeads">Chop etish</button>
+            <button class="btn btn-ghost btn-sm" id="exportCsv">CSV yuklab olish</button>
+            <button class="btn btn-ghost btn-sm" id="seedBtn" disabled title="Server rejimida namuna qo'shish o'chirilgan — ma'lumotlar serverda saqlanadi">Namuna qo'shish</button>
+            <button class="btn btn-danger btn-sm" id="clearAll">Tozalash</button>
+          </div>
+        </div>
+
+        <!-- Chop etishda ko'rinadigan sarlavha -->
+        <div class="print-head">
+          <h1>FinBalans — arizalar</h1>
+          <p id="printMeta"></p>
+        </div>
+
+        <!-- Guruh amallar paneli -->
+        <div class="bulkbar" id="bulkBar" hidden>
+          <span><b id="bulkCount">0</b> ta tanlandi</span>
+          <div class="bulk-actions">
+            <button class="btn btn-onnavy btn-sm" id="bulkDone">Bog'lanildi deb belgilash</button>
+            <button class="btn btn-onnavy btn-onnavy-danger btn-sm" id="bulkDel">O'chirish</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="th-check"><input type="checkbox" id="selAll" aria-label="Barchasini tanlash"></th>
+                  <th class="nowrap">Sana</th>
+                  <th>Ism</th>
+                  <th class="nowrap">Telefon</th>
+                  <th>Izoh</th>
+                  <th>Holat</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="leadsBody"></tbody>
+            </table>
+            <p class="empty" id="leadsEmpty" hidden>Arizalar topilmadi.</p>
+          </div>
+          <div class="pager" id="pager" hidden></div>
+        </div>
+      </section>
+
+      <!-- ========== 3. Kontent ========== -->
+      <section class="view" id="view-content">
+        <div class="hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Bu yerdagi o'zgarishlar saytga darhol qo'llanadi (shu brauzerda). Sayt serverga joylangach, bu qiymatlar barcha tashrifchilarga ko'rinishi uchun fayllardagi asl matnni yangilash kerak bo'ladi.</span>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Aloqa ma'lumotlari</h2></div>
+          <div class="form-grid">
+            <div class="fg">
+              <label for="cPhone">Telefon</label>
+              <input type="text" id="cPhone" placeholder="+998 71 200 45 67">
+              <small>Saytdagi barcha telefon havolalari yangilanadi</small>
+            </div>
+            <div class="fg">
+              <label for="cTelegram">Telegram</label>
+              <input type="text" id="cTelegram" placeholder="finbalans">
+              <small>@ belgisisiz yozing</small>
+            </div>
+            <div class="fg">
+              <label for="cEmail">E-mail</label>
+              <input type="text" id="cEmail" placeholder="info@finbalans.uz">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Ijtimoiy tarmoqlar</h2></div>
+          <div class="form-grid">
+            <div class="fg">
+              <label for="cInstagram">Instagram</label>
+              <input type="text" id="cInstagram" placeholder="https://instagram.com/finbalans">
+              <small>To'liq havolani kiriting</small>
+            </div>
+            <div class="fg">
+              <label for="cFacebook">Facebook</label>
+              <input type="text" id="cFacebook" placeholder="https://facebook.com/finbalans">
+            </div>
+            <div class="fg">
+              <label for="cYoutube">YouTube</label>
+              <input type="text" id="cYoutube" placeholder="https://youtube.com/@finbalans">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Tarif narxlari</h2></div>
+          <div class="form-grid">
+            <div class="fg">
+              <label for="cT1">YaTT (so'm/oy)</label>
+              <input type="text" id="cT1" placeholder="600 000">
+            </div>
+            <div class="fg">
+              <label for="cT2">MChJ · aylanma soliq (so'm/oy)</label>
+              <input type="text" id="cT2" placeholder="1 200 000">
+            </div>
+            <div class="fg">
+              <label for="cT3">MChJ · QQS (so'm/oy)</label>
+              <input type="text" id="cT3" placeholder="2 400 000">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Jamoa suratlari</h2>
+            <span class="panel-note">JPG yoki PNG, 3 MB gacha</span>
+          </div>
+          <div class="pslot-grid" id="photoSlots"></div>
+          <input type="file" id="photoFile" accept="image/*" hidden>
+        </div>
+
+        <div class="form-foot">
+          <button class="btn btn-primary" id="saveContent">Saqlash</button>
+          <button class="btn btn-ghost" id="resetContent">Asl holiga qaytarish</button>
+          <a href="index.html" target="_blank" rel="noopener">Saytda ko'rish ↗</a>
+        </div>
+      </section>
+
+      <!-- ========== 3b. Sayt matnlari (CMS) ========== -->
+      <section class="view" id="view-texts">
+        <div class="hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Sayt sahifasidagi matnlarni uch tilda tahrirlang. Saqlangan o'zgarishlar sayt sahifasi yangilanganda qo'llanadi. Bo'sh qoldirilgan yoki asl holiga qaytarilgan maydonlar saytdagi standart matnni ishlatadi. Tarif narxlari «Aloqa va narxlar» bo'limida boshqariladi.</span>
+        </div>
+
+        <div class="texts-bar">
+          <div class="tabs" id="langTabs">
+            <button class="tab active" data-lang="uz">O'zbekcha</button>
+            <button class="tab" data-lang="ru">Русский</button>
+            <button class="tab" data-lang="en">English</button>
+          </div>
+          <div class="texts-meta">
+            <span class="texts-count" id="i18nCount"></span>
+            <span class="texts-dirty" id="textsDirtyNote" hidden>Saqlanmagan o'zgarishlar bor</span>
+          </div>
+          <button class="btn btn-primary" id="saveTexts">Saqlash</button>
+        </div>
+
+        <div id="textGroups"></div>
+      </section>
+
+      <!-- ========== 4. Sozlamalar ========== -->
+      <section class="view" id="view-settings">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Login va parolni almashtirish</h2>
+            <span class="panel-note">Tasdiqlash uchun joriy parol talab qilinadi</span>
+          </div>
+          <form id="credForm" novalidate autocomplete="off">
+            <div class="form-grid">
+              <div class="fg">
+                <label for="credCurrent">Joriy parol</label>
+                <input type="password" id="credCurrent" autocomplete="current-password" placeholder="Joriy parolingiz" required>
+                <small>Majburiy — faqat server tekshiradi</small>
+              </div>
+              <div class="fg">
+                <label for="credLogin">Yangi login</label>
+                <input type="text" id="credLogin" autocomplete="off" spellcheck="false" placeholder="admin">
+                <small>Bo'sh qoldirsangiz joriy login saqlanadi</small>
+              </div>
+              <div class="fg">
+                <label for="credPass">Yangi parol</label>
+                <input type="password" id="credPass" autocomplete="new-password" placeholder="Kamida 6 belgi">
+                <small>Bo'sh qoldirsangiz joriy parol saqlanadi</small>
+              </div>
+              <div class="fg">
+                <label for="credPass2">Yangi parolni takrorlang</label>
+                <input type="password" id="credPass2" autocomplete="new-password" placeholder="Yangi parolni qayta yozing">
+              </div>
+            </div>
+            <p class="login-error" id="credError" style="margin:14px 0 0"></p>
+            <div class="form-foot" style="margin-top:16px;margin-bottom:0">
+              <button type="submit" class="btn btn-primary" id="credSave">Saqlash</button>
+            </div>
+          </form>
+          <p class="note">
+            Login va parol serverda — <code>data/admin.json</code> faylida saqlanadi;
+            paroldan faqat tuzlangan SHA-256 xeshi yoziladi, ochiq matn hech qayerda
+            saqlanmaydi. Saqlangandan so'ng joriy sessiya ochiq qoladi, boshqa
+            qurilmalardagi sessiyalar esa yakunlanadi.
+          </p>
+          <p class="note">
+            Parolni unutsangiz: serverdagi <code>data/admin.json</code> faylini
+            o'chirib, serverni qayta ishga tushiring — standart login tiklanadi.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Ma'lumotlar zaxirasi</h2></div>
+          <div class="form-foot" style="margin-bottom:0">
+            <button class="btn btn-ghost" id="exportJson">JSON eksport</button>
+            <button class="btn btn-ghost" id="importBtn" disabled title="Server rejimida import mavjud emas — ma'lumotlar serverda saqlanadi">JSON import</button>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+            <button class="btn btn-danger" id="wipeAll">Barcha ma'lumotlarni tozalash</button>
+          </div>
+          <p class="note">Eksport arizalar va kontent o'zgarishlarini bitta faylga saqlaydi. Import shu fayldan ma'lumotlarni qayta tiklaydi.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ================= Yon oyna (ariza tafsilotlari) ================= -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Ariza tafsilotlari">
+    <div class="drawer-head">
+      <h2>Ariza tafsilotlari</h2>
+      <button class="icon-btn" id="drawerClose" title="Yopish" aria-label="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot" id="drawerFoot"></div>
+  </aside>
+
+  <!-- ================= Buyruqlar paneli (Ctrl+K) ================= -->
+  <div class="modal-back" id="paletteBack">
+    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Qidiruv va buyruqlar">
+      <div class="palette-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="paletteInput" placeholder="Ariza, bo'lim yoki amal qidiring..." autocomplete="off" aria-label="Qidiruv">
+      </div>
+      <div class="palette-list" id="paletteList"></div>
+      <div class="palette-foot">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> tanlash</span>
+        <span><kbd>Enter</kbd> ochish</span>
+        <span><kbd>Esc</kbd> yopish</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Tezkor tugmalar ro'yxati ================= -->
+  <div class="modal-back" id="sheetBack">
+    <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Tezkor tugmalar">
+      <div class="sheet-head">
+        <h2>Tezkor tugmalar</h2>
+        <button class="icon-btn" id="sheetClose" title="Yopish" aria-label="Yopish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <div class="sheet-row"><span>Qidiruv va buyruqlar</span><span><kbd>Ctrl</kbd> + <kbd>K</kbd></span></div>
+        <div class="sheet-row"><span>Boshqaruv bo'limi</span><span><kbd>g</kbd> <kbd>d</kbd></span></div>
+        <div class="sheet-row"><span>Arizalar bo'limi</span><span><kbd>g</kbd> <kbd>a</kbd></span></div>
+        <div class="sheet-row"><span>Sayt matnlari</span><span><kbd>g</kbd> <kbd>m</kbd></span></div>
+        <div class="sheet-row"><span>Shu ro'yxatni ochish</span><span><kbd>?</kbd></span></div>
+        <div class="sheet-row"><span>Oynani yopish</span><span><kbd>Esc</kbd></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    /* =====================================================
+       FinBalans boshqaruv paneli
+       XAVFSIZLIK: login va parol brauzerda SAQLANMAYDI va
+       TEKSHIRILMAYDI. Autentifikatsiya to'liq server tomonida:
+         POST /api/login  -> sessiya tokeni (sessionStorage 'fb-admin-token')
+         X-Admin-Token    -> barcha admin API so'rovlarida
+         POST /api/logout -> sessiyani bekor qilish
+         GET  /api/me          -> joriy admin logini
+         POST /api/credentials -> login/parolni almashtirish (joriy parol bilan)
+       Login va parol serverda (data/admin.json) tuzlangan xesh sifatida saqlanadi.
+       localStorage faqat yordamchi kesh uchun ishlatiladi:
+         'finbalans-lead-stage' — arizalar bosqichi (yon-jadval)
+         'fb-admin-welcome'     — yo'riqnoma ko'rsatilgani
+       ===================================================== */
+
+    const DAY = 86400000;
+    const PER_PAGE = 10;
+    const $ = id => document.getElementById(id);
+
+    /* Ilova holati */
+    const state = {
+      view: 'dashboard',
+      filter: 'all',     // all | new | inprogress | done | rejected
+      query: '',
+      page: 1,
+      selected: new Set(),
+      drawerId: null,
+      from: null,        // sana oralig'i (ms) — jadval, CSV va grafiklar uchun
+      to: null
+    };
+    let pageIds = []; // joriy sahifadagi arizalar id'lari
+    let loading = false; // server ma'lumoti yuklanmoqda (skeleton)
+    let printing = false; // chop etish uchun barcha qatorlar chiqariladi
+
+    /* =====================================================
+       Panel faqat server (server.js API) bilan ishlaydi.
+       Kirishda olingan sessiya tokeni barcha so'rovlarda
+       X-Admin-Token sarlavhasida yuboriladi.
+       ===================================================== */
+    let mode = 'demo';        // kirishdan keyin doim 'server' bo'ladi
+    let token = '';           // sessiya tokeni (X-Admin-Token)
+    let currentLogin = '';    // kirgan foydalanuvchi logini (yon paneldagi nom)
+    let serverLeads = [];     // arizalar keshi
+    let contentCache = null;  // kontent keshi
+    let bannerDismissed = false;
+
+    function isHttp() {
+      return location.protocol === 'http:' || location.protocol === 'https:';
+    }
+
+    /* API so'rovi — muvaffaqiyatsiz statusda err.status bilan xato tashlaydi */
+    async function api(path, opts) {
+      opts = opts || {};
+      const headers = Object.assign({ 'X-Admin-Token': token }, opts.headers || {});
+      if (opts.body) headers['Content-Type'] = 'application/json';
+      const res = await fetch(path, Object.assign({}, opts, { headers: headers }));
+      if (!res.ok) {
+        const err = new Error('HTTP ' + res.status);
+        err.status = res.status;
+        throw err;
+      }
+      const ct = res.headers.get('content-type') || '';
+      return ct.indexOf('json') !== -1 ? res.json() : null;
+    }
+
+    async function refreshLeads() {
+      const data = await api('/api/leads');
+      serverLeads = Array.isArray(data) ? data : [];
+    }
+
+    /* Server bilan aloqa vaqtincha uzilganda — ogohlantiramiz, sessiya saqlanadi */
+    function connLost() {
+      if (!bannerDismissed) $('offlineBanner').hidden = false;
+      toast("Server bilan aloqa yo'q — amal bajarilmadi");
+    }
+
+    /* ---------- Jonli rejim: yangi arizalarni kuzatish (faqat server) ---------- */
+    const POLL_MS = 25000;
+    let pollTimer = null;
+
+    function startPolling() {
+      stopPolling();
+      if (mode !== 'server') return;
+      pollTimer = setInterval(pollLeads, POLL_MS);
+    }
+    function stopPolling() {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+    async function pollLeads() {
+      if (mode !== 'server' || document.hidden) return; /* yashirin varaqda pauza */
+      let data;
+      try { data = await api('/api/leads'); }
+      catch (e) {
+        if (e && e.status === 401) { sessionExpired(); return; } /* sessiya tugadi */
+        return; /* vaqtinchalik uzilish — keyingi urinishda yana */
+      }
+      if (!Array.isArray(data)) return;
+      const prevIds = new Set(serverLeads.map(l => l.id));
+      const fresh = data.filter(l => !prevIds.has(l.id));
+      const changed = JSON.stringify(data) !== JSON.stringify(serverLeads);
+      serverLeads = data;
+      if (fresh.length) {
+        toast(fresh.length === 1
+          ? 'Yangi ariza: ' + (fresh[0].name || '—')
+          : fresh.length + ' ta yangi ariza keldi');
+        flashBadge();
+      }
+      if (changed) renderAll();
+    }
+    function flashBadge() {
+      const b = $('navBadge');
+      b.classList.remove('flash');
+      void b.offsetWidth;
+      b.classList.add('flash');
+    }
+    $('navBadge').addEventListener('animationend', () => $('navBadge').classList.remove('flash'));
+
+    function handleApiErr(err) {
+      if (err && err.status === 401) { sessionExpired(); return; } /* sessiya tugadi */
+      if (err && err.status) toast('Server xatosi (' + err.status + ')');
+      else connLost();
+      renderAll();
+    }
+
+    /* Saqlangan tokenni server bilan sinash: 'ok' | 'unauthorized' | 'unreachable' */
+    async function validateToken() {
+      try {
+        loading = true;
+        const res = await fetch('/api/leads', { headers: { 'X-Admin-Token': token } });
+        if (res.status === 401) return 'unauthorized';
+        if (res.ok) {
+          const data = await res.json();
+          serverLeads = Array.isArray(data) ? data : [];
+          return 'ok';
+        }
+        return 'unreachable';
+      } catch (e) { return 'unreachable'; }
+      finally { loading = false; }
+    }
+
+    /* ---------- Yordamchilar ---------- */
+    function getLeads() {
+      if (mode === 'server') return serverLeads;
+      try { return JSON.parse(localStorage.getItem('finbalans-leads') || '[]'); }
+      catch (e) { return []; }
+    }
+    function setLeads(leads) {
+      try { localStorage.setItem('finbalans-leads', JSON.stringify(leads)); } catch (e) {}
+    }
+    function getContent() {
+      if (mode === 'server') return contentCache || {};
+      try { return JSON.parse(localStorage.getItem('finbalans-content')) || {}; }
+      catch (e) { return {}; }
+    }
+    function sortedLeads() {
+      return getLeads().slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function telHref(p) {
+      return 'tel:' + String(p || '').replace(/[^\d+]/g, '');
+    }
+    function fmtDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+        ' ' + d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+    }
+    function fmtDateLong(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('uz-UZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) +
+        ', ' + d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+    }
+    /* =====================================================
+       Bosqichlar (pipeline)
+       Server faqat 'new' | 'done' ni biladi — shuning uchun
+       nozik bosqich ('inprogress' bilan bir xil 'done' ostida)
+       localStorage yon-jadvalida saqlanadi:
+         'finbalans-lead-stage' = {id: 'done'|'rejected'}
+       Moslik: status 'done' + belgisiz = Bog'lanildi (eski ma'no).
+       ===================================================== */
+    const STAGES = {
+      'new':        { label: 'Yangi',       cls: 'status-new' },
+      'inprogress': { label: "Bog'lanildi", cls: 'status-prog' },
+      'done':       { label: 'Yakunlandi',  cls: 'status-done' },
+      'rejected':   { label: 'Rad etilgan', cls: 'status-rej' }
+    };
+    const STAGE_ORDER = ['new', 'inprogress', 'done', 'rejected'];
+
+    let stageMapCache = null;
+    function getStageMap() {
+      if (stageMapCache) return stageMapCache;
+      try { stageMapCache = JSON.parse(localStorage.getItem('finbalans-lead-stage') || '{}') || {}; }
+      catch (e) { stageMapCache = {}; }
+      return stageMapCache;
+    }
+    function setStageMap(m) {
+      stageMapCache = m;
+      try { localStorage.setItem('finbalans-lead-stage', JSON.stringify(m)); } catch (e) {}
+    }
+    /* Arizaning amaldagi bosqichi */
+    function stageOf(l) {
+      if (!l) return 'new';
+      if (l.status === 'new') return 'new';
+      const s = getStageMap()[l.id];
+      return (s === 'done' || s === 'rejected') ? s : 'inprogress';
+    }
+    /* Bosqichni o'rnatish: server holati + yon-jadval birga yangilanadi */
+    async function setStage(id, stage) {
+      if (!STAGES[stage]) return;
+      const l = getLeads().find(x => x.id === id);
+      if (!l) return;
+      const wantStatus = stage === 'new' ? 'new' : 'done';
+      if (l.status !== wantStatus) {
+        if (mode === 'server') {
+          try {
+            await api('/api/leads/' + id, { method: 'PATCH', body: JSON.stringify({ status: wantStatus }) });
+            await refreshLeads();
+          } catch (err) { handleApiErr(err); return; }
+        } else {
+          const leads = getLeads();
+          const li = leads.find(x => x.id === id);
+          if (li) li.status = wantStatus;
+          setLeads(leads);
+        }
+      }
+      const map = getStageMap();
+      if (stage === 'done' || stage === 'rejected') map[id] = stage;
+      else delete map[id];
+      setStageMap(map);
+      renderAll();
+      if (state.drawerId === id) renderDrawer();
+      toast('Bosqich: ' + STAGES[stage].label);
+    }
+
+    function statusPill(l) {
+      const s = STAGES[stageOf(l)];
+      return '<span class="status ' + s.cls + '">' + s.label + '</span>';
+    }
+    function toast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    /* ---------- Kirish ---------- */
+    const loginScreen = $('loginScreen');
+    const app = $('app');
+
+    function showApp() {
+      loginScreen.style.display = 'none';
+      app.classList.add('active');
+      /* Yon paneldagi nom — kirgan login (textContent orqali xavfsiz chiqadi) */
+      $('adminName').textContent = currentLogin || 'Administrator';
+      renderAll();
+      loadContentForm();
+      startPolling();
+      /* Birinchi kirishda qisqa yo'riqnoma */
+      let seen = false;
+      try { seen = localStorage.getItem('fb-admin-welcome') === '1'; } catch (e) {}
+      $('welcomeStrip').hidden = seen;
+    }
+
+    function hideLoginMsgs() {
+      $('loginError').classList.remove('show');
+      $('loginNotice').classList.remove('show');
+    }
+
+    /* Xato xabari + karta silkinishi */
+    function showLoginError(msg) {
+      const el = $('loginError');
+      el.textContent = msg || "Login yoki parol noto'g'ri. Qayta urinib ko'ring.";
+      el.classList.add('show');
+      $('loginNotice').classList.remove('show');
+      const card = $('loginCard');
+      card.classList.remove('shake');
+      void card.offsetWidth; /* animatsiyani qayta ishga tushirish */
+      card.classList.add('shake');
+    }
+
+    function loginFail(msg, focusLogin) {
+      showLoginError(msg);
+      $('loginPass').value = '';
+      if (focusLogin) $('loginUser').focus();
+      else $('loginPass').focus();
+    }
+
+    /* Server topilmadi — panel serversiz ishlamaydi */
+    function showNoServer() {
+      $('loginCard').hidden = true;
+      $('noServerCard').hidden = false;
+    }
+
+    /* API 401 qaytardi — sessiya muddati tugagan, qayta kirish kerak */
+    function sessionExpired() {
+      token = '';
+      currentLogin = '';
+      try {
+        sessionStorage.removeItem('fb-admin-token');
+        sessionStorage.removeItem('fb-admin-name');
+      } catch (e) {}
+      stopPolling();
+      closeDrawer();
+      app.classList.remove('active');
+      loginScreen.style.display = '';
+      $('loginCard').hidden = false;
+      $('noServerCard').hidden = true;
+      $('loginError').classList.remove('show');
+      $('loginNotice').textContent = 'Sessiya muddati tugadi — qayta kiring';
+      $('loginNotice').classList.add('show');
+      $('loginPass').value = '';
+      $('loginUser').focus();
+    }
+
+    $('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const login = $('loginUser').value.trim();
+      const pass = $('loginPass').value;
+      if (!login || !pass) { loginFail(null, !login); return; } /* ikkala maydon ham majburiy */
+
+      /* Login/parol FAQAT serverda tekshiriladi — brauzerda hech qanday
+         solishtirish yo'q. Muvaffaqiyatda server sessiya tokenini qaytaradi. */
+      let res;
+      try {
+        res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login: login, password: pass })
+        });
+      } catch (err) {
+        showLoginError("Server bilan aloqa yo'q. Panel faqat server orqali ishlaydi (start-site.bat).");
+        return;
+      }
+      if (res.status === 401) { loginFail(); return; }
+      if (res.status === 429) {
+        loginFail("Juda ko'p urinish — 15 daqiqadan keyin qayta urinib ko'ring");
+        return;
+      }
+      if (!res.ok) { showLoginError('Server xatosi (' + res.status + ')'); return; }
+
+      let data = null;
+      try { data = await res.json(); } catch (err) {}
+      if (!data || !data.token) { showLoginError('Server javobi tushunarsiz'); return; }
+
+      mode = 'server';
+      token = data.token;
+      currentLogin = login;
+      try {
+        sessionStorage.setItem('fb-admin-token', token);
+        sessionStorage.setItem('fb-admin-name', login);
+      } catch (err) {}
+      hideLoginMsgs();
+      $('loginPass').value = '';
+      try { await refreshLeads(); } catch (err) {}
+      showApp();
+    });
+
+    /* Parolni ko'rsatish / yashirish */
+    $('passToggle').addEventListener('click', () => {
+      const inp = $('loginPass');
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      $('eyeOpen').style.display = show ? 'none' : 'block';
+      $('eyeOff').style.display = show ? 'block' : 'none';
+      $('passToggle').title = show ? 'Parolni yashirish' : "Parolni ko'rsatish";
+      inp.focus();
+    });
+
+    $('logoutBtn').addEventListener('click', async () => {
+      /* Sessiyani serverda ham bekor qilamiz (best-effort) */
+      try {
+        await fetch('/api/logout', { method: 'POST', headers: { 'X-Admin-Token': token } });
+      } catch (err) {}
+      try {
+        sessionStorage.removeItem('fb-admin-token');
+        sessionStorage.removeItem('fb-admin-name');
+      } catch (err) {}
+      location.reload();
+    });
+
+    /* ---------- Ko'rinishlar ---------- */
+    const VIEWS = {
+      dashboard: { title: 'Boshqaruv', sub: "Panel · Umumiy holat va so'nggi faollik" },
+      leads:     { title: 'Arizalar',  sub: 'Panel · Saytdan kelgan murojaatlar' },
+      content:   { title: 'Sozlash: aloqa va narxlar', sub: 'Panel · Kontakt, tariflar va jamoa suratlari' },
+      texts:     { title: 'Sayt matnlari', sub: 'Panel · Sayt sahifasidagi matnlar (uz / ru / en)' },
+      settings:  { title: 'Tizim', sub: 'Panel · Login, parol va zaxira nusxalari' }
+    };
+
+    function switchView(name) {
+      state.view = name;
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      document.querySelectorAll('.side-link[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+      $('viewTitle').textContent = VIEWS[name].title;
+      $('viewSub').textContent = VIEWS[name].sub;
+      if (name === 'dashboard') renderDashboard();
+      if (name === 'leads') renderLeads();
+      if (name === 'texts') initTextsView();
+      if (name === 'settings') { setCredError(''); loadAdminLogin(); }
+    }
+
+    document.querySelectorAll('.side-link[data-view]').forEach(b =>
+      b.addEventListener('click', () => switchView(b.dataset.view)));
+    document.querySelectorAll('[data-view-link]').forEach(b =>
+      b.addEventListener('click', () => switchView(b.dataset.viewLink)));
+
+    /* Vazifalar ro'yxatidan arizani ochish */
+    $('taskList').addEventListener('click', e => {
+      const b = e.target.closest('[data-task-open]');
+      if (!b) return;
+      switchView('leads');
+      openDrawer(+b.dataset.taskOpen);
+    });
+
+    /* Yuqoridagi "yangi ariza" chipi — bosilganda Yangi filtriga o'tadi */
+    $('chipNew').addEventListener('click', () => {
+      state.filter = 'new';
+      state.page = 1;
+      switchView('leads');
+    });
+
+    /* ---------- Umumiy hisoblagichlar (yon panel + chip) ---------- */
+    function renderCounters() {
+      const n = getLeads().filter(l => l.status === 'new').length;
+      $('navBadge').hidden = n === 0;
+      $('navBadge').textContent = n;
+      $('chipNew').hidden = n === 0;
+      $('chipNewText').textContent = n + ' ta yangi ariza';
+    }
+
+    /* ---------- Boshqaruv: kunlik seriyalar ---------- */
+    function dailySeries(leads, days, pred) {
+      const now = new Date();
+      const out = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const ds = new Date(now.getTime() - i * DAY).toDateString();
+        out.push(leads.filter(l => (!pred || pred(l)) && new Date(l.date).toDateString() === ds).length);
+      }
+      return out;
+    }
+
+    /* Mini-grafik (sparkline) — oltin chiziq */
+    function sparkline(el, series) {
+      const max = Math.max(1, ...series);
+      const n = series.length;
+      const coords = series.map((v, i) => [
+        (i / (n - 1)) * 100,
+        +(27 - (v / max) * 23).toFixed(2)
+      ]);
+      const pts = coords.map(c => c[0].toFixed(2) + ',' + c[1]).join(' ');
+      el.innerHTML =
+        '<polygon points="0,29 ' + pts + ' 100,29" fill="rgba(184,144,45,0.10)" stroke="none"/>' +
+        '<polyline points="' + pts + '" fill="none" stroke="var(--gold)" stroke-width="1.6" ' +
+        'vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+
+    /* O'sish / pasayish chipi */
+    function deltaChip(cur, prev) {
+      if (!cur && !prev) return '<span class="delta flat">—</span>';
+      if (!prev) return '<span class="delta up">▲ 100%</span>';
+      const pct = Math.round((cur - prev) / prev * 100);
+      if (pct > 0) return '<span class="delta up">▲ ' + pct + '%</span>';
+      if (pct < 0) return '<span class="delta down">▼ ' + Math.abs(pct) + '%</span>';
+      return '<span class="delta flat">0%</span>';
+    }
+
+    /* Halqa diagramma: Yangi (oltin) / Bog'lanildi (yashil) */
+    function renderDonut(newCount, doneCount) {
+      const total = newCount + doneCount;
+      const R = 44, W = 13, C = 2 * Math.PI * R, GAP = 3;
+      const ring = 'cx="60" cy="60" r="' + R + '" fill="none" stroke-width="' + W + '" transform="rotate(-90 60 60)"';
+      let segs;
+      if (!total) {
+        segs = '<circle ' + ring + ' stroke="var(--border)"/>';
+      } else if (!doneCount) {
+        segs = '<circle ' + ring + ' stroke="var(--gold)"/>';
+      } else if (!newCount) {
+        segs = '<circle ' + ring + ' stroke="var(--green)"/>';
+      } else {
+        const newLen = newCount / total * C;
+        const doneLen = C - newLen;
+        segs =
+          '<circle ' + ring + ' stroke="var(--green)" stroke-dasharray="' + Math.max(1, doneLen - GAP) + ' ' + C + '" stroke-dashoffset="' + (-(newLen + GAP / 2)).toFixed(2) + '"/>' +
+          '<circle ' + ring + ' stroke="var(--gold)" stroke-dasharray="' + Math.max(1, newLen - GAP) + ' ' + C + '" stroke-dashoffset="' + (-GAP / 2).toFixed(2) + '"/>';
+      }
+      $('donut').innerHTML = segs +
+        '<text x="60" y="60" text-anchor="middle" dominant-baseline="auto" class="donut-num" dy="4">' + total + '</text>' +
+        '<text x="60" y="76" text-anchor="middle" class="donut-cap">jami</text>';
+      $('donutLegend').innerHTML =
+        '<div class="legend-row"><span class="sw" style="background:var(--gold)"></span>Yangi<b>' + newCount + '</b></div>' +
+        '<div class="legend-row"><span class="sw" style="background:var(--green)"></span>Bog\'lanildi<b>' + doneCount + '</b></div>';
+    }
+
+    /* Konversiya voronkasi: Jami → Bog'lanildi → Yakunlandi */
+    function renderFunnel(leads) {
+      const total = leads.length;
+      const contacted = leads.filter(l => stageOf(l) !== 'new').length;
+      const finished = leads.filter(l => stageOf(l) === 'done').length;
+      const rows = [
+        { lbl: 'Jami arizalar', val: total, cls: 'fn-1' },
+        { lbl: "Bog'lanildi", val: contacted, cls: 'fn-2' },
+        { lbl: 'Yakunlandi', val: finished, cls: 'fn-3' }
+      ];
+      $('funnel').innerHTML = rows.map(r => {
+        const pct = total ? Math.round(r.val / total * 100) : 0;
+        return '<div class="fn-row">' +
+          '<span class="fn-lbl">' + esc(r.lbl) + '</span>' +
+          '<span class="fn-track"><span class="fn-fill ' + r.cls + '" style="width:' + pct + '%"></span></span>' +
+          '<span class="fn-val">' + r.val + ' <span>· ' + pct + '%</span></span>' +
+          '</div>';
+      }).join('');
+    }
+
+    /* Bugungi vazifalar: 2 soatdan oshgan, izohsiz yangi arizalar */
+    function renderTasks(leads) {
+      const now = Date.now();
+      const due = leads.filter(l =>
+        stageOf(l) === 'new' && !String(l.note || '').trim() &&
+        (now - new Date(l.date).getTime()) > 2 * 3600000);
+      if (!due.length) {
+        $('taskList').innerHTML = '<p class="empty" style="padding:18px">Kutilayotgan vazifa yo\'q — barcha yangi arizalar ko\'rib chiqilgan.</p>';
+        return;
+      }
+      $('taskList').innerHTML = due.slice(0, 5).map(l => {
+        const hours = Math.floor((now - new Date(l.date).getTime()) / 3600000);
+        const wait = hours >= 24 ? Math.floor(hours / 24) + ' kundan beri' : hours + ' soatdan beri';
+        return '<div class="task-row">' +
+          '<span class="status status-new">Yangi</span>' +
+          '<span class="task-meta">' +
+          '<span class="task-name">' + esc(l.name) + '</span>' +
+          '<span class="task-sub">' + esc(wait) + ' javobsiz · ' + esc(l.phone) + '</span>' +
+          '</span>' +
+          '<span class="task-actions">' +
+          '<a class="btn btn-ghost btn-sm" href="' + telHref(l.phone) + '">Qo\'ng\'iroq</a>' +
+          '<button class="btn btn-ghost btn-sm" data-task-open="' + l.id + '">Ochish</button>' +
+          '</span></div>';
+      }).join('');
+    }
+
+    function renderDashboard() {
+      /* Yuklanayotgan holat: KPI raqamlari o'rniga skeleton */
+      if (loading) {
+        $('dashEmpty').hidden = true;
+        $('dashContent').style.display = '';
+        ['kpiNew', 'kpiToday', 'kpiWeek', 'kpiTotal'].forEach(id => {
+          $(id).innerHTML = '<span class="skel skel-num"></span>';
+        });
+        $('funnel').innerHTML = '<span class="skel skel-line" style="width:100%;height:26px"></span>';
+        $('taskList').innerHTML = '<span class="skel skel-line" style="width:100%;height:20px"></span>';
+        return;
+      }
+
+      const leads = rangedLeads();
+      const now = new Date();
+      const todayStr = now.toDateString();
+
+      const empty = leads.length === 0;
+      $('dashEmpty').hidden = !empty;
+      $('dashContent').style.display = empty ? 'none' : '';
+      if (empty) {
+        $('dashEmptyText').textContent = mode === 'server'
+          ? "Saytdagi forma to'ldirilganda arizalar shu yerda ko'rinadi."
+          : "Saytdagi forma to'ldirilganda arizalar shu yerda ko'rinadi. Panelni sinab ko'rish uchun namuna ma'lumot qo'shishingiz mumkin.";
+        return;
+      }
+
+      const newCount = leads.filter(l => l.status === 'new').length;
+      const doneCount = leads.length - newCount;
+      const week = leads.filter(l => now - new Date(l.date) < 7 * DAY).length;
+      const prevWeek = leads.filter(l => {
+        const age = now - new Date(l.date);
+        return age >= 7 * DAY && age < 14 * DAY;
+      }).length;
+
+      $('kpiNew').textContent = newCount;
+      $('kpiToday').textContent = leads.filter(l => new Date(l.date).toDateString() === todayStr).length;
+      $('kpiWeek').textContent = week;
+      $('kpiWeekDelta').innerHTML = deltaChip(week, prevWeek);
+      $('kpiTotal').textContent = leads.length;
+
+      /* Mini-grafiklar: 14 kunlik real seriyalar */
+      const daily = dailySeries(leads, 14, null);
+      const dailyNew = dailySeries(leads, 14, l => l.status === 'new');
+      const older = leads.filter(l => now - new Date(l.date) >= 14 * DAY).length;
+      let run = older;
+      const cumulative = daily.map(v => (run += v));
+      sparkline($('spark1'), dailyNew);
+      sparkline($('spark2'), daily);
+      sparkline($('spark3'), daily);
+      sparkline($('spark4'), cumulative);
+
+      /* 14 kunlik ustunlar grafigi */
+      const max = Math.max(1, ...daily);
+      const cols = [], lbls = [];
+      for (let i = 0; i < 14; i++) {
+        const d = new Date(now.getTime() - (13 - i) * DAY);
+        const count = daily[i];
+        const isToday = i === 13;
+        const dateStr = d.toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        let wd = d.toLocaleDateString('uz-UZ', { weekday: 'short' });
+        wd = wd.charAt(0).toUpperCase() + wd.slice(1);
+        const lbl = wd + ' ' + d.toLocaleDateString('uz-UZ', { day: '2-digit', month: '2-digit' });
+        cols.push(
+          '<div class="bar-col" title="' + dateStr + ': ' + count + ' ta ariza">' +
+          '<div class="bar' + (isToday ? ' today' : '') + (count ? '' : ' zero') + '" style="height:' + Math.max(2, count / max * 100) + '%"></div>' +
+          '</div>');
+        lbls.push('<span class="bar-lbl">' + (i % 2 === 1 ? lbl : '') + '</span>');
+      }
+      $('barChart').innerHTML = cols.join('');
+      $('barLabels').innerHTML = lbls.join('');
+
+      renderDonut(newCount, doneCount);
+      renderFunnel(leads);
+      renderTasks(leads);
+
+      /* Oylik dinamika: oxirgi 6 oy (real sanalardan) */
+      const months = [];
+      for (let i = 5; i >= 0; i--) {
+        const md = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const cnt = leads.filter(l => {
+          const d = new Date(l.date);
+          return d.getFullYear() === md.getFullYear() && d.getMonth() === md.getMonth();
+        }).length;
+        months.push({ md: md, cnt: cnt });
+      }
+      const mMax = Math.max(1, ...months.map(m => m.cnt));
+      $('monthChart').innerHTML = months.map((m, i) => {
+        const full = m.md.toLocaleDateString('uz-UZ', { month: 'long', year: 'numeric' });
+        return '<div class="bar-col" title="' + esc(full) + ': ' + m.cnt + ' ta ariza">' +
+          '<div class="bar' + (i === 5 ? ' today' : '') + (m.cnt ? '' : ' zero') +
+          '" style="height:' + Math.max(2, m.cnt / mMax * 100) + '%"></div></div>';
+      }).join('');
+      $('monthLabels').innerHTML = months.map(m => {
+        let ml = m.md.toLocaleDateString('uz-UZ', { month: 'short' });
+        ml = ml.charAt(0).toUpperCase() + ml.slice(1);
+        return '<span class="bar-lbl">' + esc(ml) + '</span>';
+      }).join('');
+
+      /* Statistik chiplar: eng band hafta kuni va 7 kunlik o'rtacha */
+      const WD_NAMES = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
+      const wd = [0, 0, 0, 0, 0, 0, 0];
+      leads.forEach(l => { wd[new Date(l.date).getDay()]++; });
+      const maxWd = Math.max.apply(null, wd);
+      $('chipBusyDay').textContent = maxWd ? WD_NAMES[wd.indexOf(maxWd)] : '—';
+      $('chipDailyAvg').textContent = (week / 7).toFixed(1).replace('.', ',') + ' ta';
+
+      /* Oxirgi 6 ta ariza */
+      $('recentBody').innerHTML = leads.slice(0, 6).map(l =>
+        '<tr>' +
+        '<td class="nowrap lead-date">' + fmtDate(l.date) + '</td>' +
+        '<td class="lead-name">' + esc(l.name) + '</td>' +
+        '<td class="nowrap"><a href="' + telHref(l.phone) + '">' + esc(l.phone) + '</a></td>' +
+        '<td>' + statusPill(l) + '</td>' +
+        '</tr>').join('');
+    }
+
+    /* ---------- Arizalar ro'yxati ---------- */
+    /* Sana oralig'i — jadval, CSV va boshqaruv grafiklariga birdek qo'llanadi */
+    function inRange(l) {
+      const t = new Date(l.date).getTime();
+      if (state.from && t < state.from) return false;
+      if (state.to && t > state.to) return false;
+      return true;
+    }
+    function rangedLeads() {
+      return sortedLeads().filter(inRange);
+    }
+    function filteredLeads() {
+      let leads = rangedLeads();
+      if (state.filter !== 'all') leads = leads.filter(l => stageOf(l) === state.filter);
+      const q = state.query.trim().toLowerCase();
+      if (q) {
+        leads = leads.filter(l =>
+          String(l.name || '').toLowerCase().includes(q) ||
+          String(l.phone || '').toLowerCase().includes(q) ||
+          String(l.note || '').toLowerCase().includes(q));
+      }
+      return leads;
+    }
+
+    function renderLeads() {
+      const all = getLeads();
+      const allIds = new Set(all.map(l => l.id));
+      state.selected = new Set([...state.selected].filter(id => allIds.has(id)));
+
+      /* Yuklanayotgan holat (server ma'lumoti kelguncha) */
+      if (loading) { renderLeadsSkeleton(); return; }
+
+      /* Filtr hisoblagichlari — sana oralig'i hisobga olinadi */
+      const scope = rangedLeads();
+      const byStage = { 'new': 0, 'inprogress': 0, 'done': 0, 'rejected': 0 };
+      scope.forEach(l => { byStage[stageOf(l)]++; });
+      $('cntAll').textContent = scope.length;
+      $('cntNew').textContent = byStage['new'];
+      $('cntProg').textContent = byStage['inprogress'];
+      $('cntDone').textContent = byStage['done'];
+      $('cntRej').textContent = byStage['rejected'];
+      document.querySelectorAll('#leadTabs .tab').forEach(t =>
+        t.classList.toggle('active', t.dataset.filter === state.filter));
+      $('rangeClear').hidden = !state.from && !state.to;
+
+      /* Filtrlash + sahifalash */
+      const filtered = filteredLeads();
+      const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+      if (state.page > pageCount) state.page = pageCount;
+      /* Chop etishda barcha (filtrlangan) qatorlar chiqadi */
+      const items = printing ? filtered : filtered.slice((state.page - 1) * PER_PAGE, state.page * PER_PAGE);
+      pageIds = items.map(l => l.id);
+
+      $('leadsEmpty').hidden = filtered.length > 0;
+      $('leadsEmpty').textContent = state.query || state.filter !== 'all' || state.from || state.to
+        ? "So'rov bo'yicha ariza topilmadi — filtr yoki sana oralig'ini o'zgartiring."
+        : "Hozircha arizalar yo'q. Saytdagi forma to'ldirilganda shu yerda ko'rinadi.";
+
+      $('leadsBody').innerHTML = items.map(l => {
+        const msg = String(l.message || '');
+        const short = msg.length > 60 ? esc(msg.slice(0, 60)) + '…' : esc(msg);
+        const toggleLbl = l.status === 'new' ? "Bog'lanildi deb belgilash" : 'Yangi deb belgilash';
+        const noteIco = l.note
+          ? '<span class="note-ico" title="' + esc(l.note) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>'
+          : '';
+        return '<tr class="clickable" data-id="' + l.id + '">' +
+          '<td class="td-check"><input type="checkbox" class="row-check" data-id="' + l.id + '" aria-label="Tanlash"' + (state.selected.has(l.id) ? ' checked' : '') + '></td>' +
+          '<td class="nowrap lead-date">' + fmtDate(l.date) + '</td>' +
+          '<td class="lead-name">' + esc(l.name) + noteIco + '</td>' +
+          '<td class="nowrap"><a href="' + telHref(l.phone) + '">' + esc(l.phone) + '</a></td>' +
+          '<td><span class="lead-msg" title="' + esc(msg) + '">' + (short || '—') + '</span></td>' +
+          '<td>' + statusPill(l) + '</td>' +
+          '<td><div class="row-actions">' +
+          '<button class="icon-btn" data-act="toggle" data-id="' + l.id + '" title="' + toggleLbl + '" aria-label="' + toggleLbl + '">' +
+          (l.status === 'new'
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>') +
+          '</button>' +
+          '<button class="icon-btn danger" data-act="del" data-id="' + l.id + '" title="O\'chirish" aria-label="Arizani o\'chirish">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+          '</button>' +
+          '</div></td></tr>';
+      }).join('');
+
+      renderPager(pageCount);
+      updateSelAll();
+      updateBulk();
+    }
+
+    /* Yuklanish paytidagi skeleton qatorlar */
+    function renderLeadsSkeleton() {
+      $('leadsEmpty').hidden = true;
+      $('pager').hidden = true;
+      $('bulkBar').hidden = true;
+      const cell = w => '<td><span class="skel skel-line" style="width:' + w + '"></span></td>';
+      let rows = '';
+      for (let i = 0; i < 6; i++) {
+        rows += '<tr><td class="td-check"><span class="skel skel-line" style="width:15px"></span></td>' +
+          cell('110px') + cell('130px') + cell('120px') + cell('180px') + cell('80px') + cell('50px') + '</tr>';
+      }
+      $('leadsBody').innerHTML = rows;
+    }
+
+    function renderPager(pageCount) {
+      const p = $('pager');
+      if (pageCount <= 1) { p.hidden = true; p.innerHTML = ''; return; }
+      p.hidden = false;
+      let nums = '';
+      for (let i = 1; i <= pageCount; i++) {
+        nums += '<button class="page-num' + (i === state.page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+      }
+      p.innerHTML =
+        '<button class="btn btn-ghost btn-sm" data-page="prev"' + (state.page === 1 ? ' disabled' : '') + '>Oldingi</button>' +
+        '<div class="page-nums">' + nums + '</div>' +
+        '<button class="btn btn-ghost btn-sm" data-page="next"' + (state.page === pageCount ? ' disabled' : '') + '>Keyingi</button>';
+    }
+
+    $('pager').addEventListener('click', e => {
+      const b = e.target.closest('[data-page]');
+      if (!b || b.disabled) return;
+      const pageCount = Math.max(1, Math.ceil(filteredLeads().length / PER_PAGE));
+      if (b.dataset.page === 'prev') state.page = Math.max(1, state.page - 1);
+      else if (b.dataset.page === 'next') state.page = Math.min(pageCount, state.page + 1);
+      else state.page = +b.dataset.page;
+      renderLeads();
+    });
+
+    /* Tanlash: hammasini / bittalab */
+    function updateSelAll() {
+      const box = $('selAll');
+      const sel = pageIds.filter(id => state.selected.has(id)).length;
+      box.checked = pageIds.length > 0 && sel === pageIds.length;
+      box.indeterminate = sel > 0 && sel < pageIds.length;
+    }
+    function updateBulk() {
+      const n = state.selected.size;
+      $('bulkBar').hidden = n === 0;
+      $('bulkCount').textContent = n;
+    }
+
+    $('selAll').addEventListener('change', () => {
+      const check = $('selAll').checked;
+      pageIds.forEach(id => check ? state.selected.add(id) : state.selected.delete(id));
+      renderLeads();
+    });
+
+    $('leadsBody').addEventListener('change', e => {
+      const cb = e.target.closest('.row-check');
+      if (!cb) return;
+      const id = +cb.dataset.id;
+      if (cb.checked) state.selected.add(id); else state.selected.delete(id);
+      updateSelAll();
+      updateBulk();
+    });
+
+    $('leadsBody').addEventListener('click', e => {
+      const act = e.target.closest('[data-act]');
+      if (act) {
+        const id = +act.dataset.id;
+        if (act.dataset.act === 'toggle') toggleStatus(id);
+        if (act.dataset.act === 'del') deleteLead(id);
+        return;
+      }
+      if (e.target.closest('a, input, button, label')) return;
+      const tr = e.target.closest('tr[data-id]');
+      if (tr) openDrawer(+tr.dataset.id);
+    });
+
+    /* Filtr yorliqlari va qidiruv */
+    $('leadTabs').addEventListener('click', e => {
+      const t = e.target.closest('.tab');
+      if (!t) return;
+      state.filter = t.dataset.filter;
+      state.page = 1;
+      renderLeads();
+    });
+    $('leadSearch').addEventListener('input', () => {
+      state.query = $('leadSearch').value;
+      state.page = 1;
+      renderLeads();
+    });
+
+    /* Sana oralig'i: jadval + CSV + boshqaruv grafiklari */
+    function applyRange() {
+      const f = $('dateFrom').value;
+      const t = $('dateTo').value;
+      state.from = f ? new Date(f + 'T00:00:00').getTime() : null;
+      state.to = t ? new Date(t + 'T23:59:59').getTime() : null;
+      state.page = 1;
+      renderAll();
+    }
+    $('dateFrom').addEventListener('change', applyRange);
+    $('dateTo').addEventListener('change', applyRange);
+    $('rangeClear').addEventListener('click', () => {
+      $('dateFrom').value = '';
+      $('dateTo').value = '';
+      applyRange();
+    });
+
+    /* Chop etish: joriy filtrdagi jadval */
+    $('printLeads').addEventListener('click', () => {
+      const parts = ['Sana: ' + new Date().toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric' })];
+      if (state.filter !== 'all') parts.push('Bosqich: ' + STAGES[state.filter].label);
+      if (state.from) parts.push('dan: ' + $('dateFrom').value);
+      if (state.to) parts.push('gacha: ' + $('dateTo').value);
+      parts.push('Jami: ' + filteredLeads().length + ' ta');
+      $('printMeta').textContent = parts.join(' · ');
+      if (state.view !== 'leads') switchView('leads');
+      printing = true;
+      renderLeads();
+      window.print();
+      printing = false;
+      renderLeads();
+    });
+
+    /* ---------- Ariza amallari ---------- */
+    async function toggleStatus(id) {
+      const l = getLeads().find(x => x.id === id);
+      if (!l) return;
+      const next = l.status === 'new' ? 'done' : 'new';
+      if (mode === 'server') {
+        try {
+          await api('/api/leads/' + id, { method: 'PATCH', body: JSON.stringify({ status: next }) });
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        const leads = getLeads();
+        const li = leads.find(x => x.id === id);
+        if (li) li.status = next;
+        setLeads(leads);
+      }
+      renderAll();
+      if (state.drawerId === id) renderDrawer();
+    }
+
+    async function deleteLead(id) {
+      if (!confirm("Bu arizani o'chirasizmi?")) return;
+      if (mode === 'server') {
+        try {
+          await api('/api/leads/' + id, { method: 'DELETE' });
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        setLeads(getLeads().filter(x => x.id !== id));
+      }
+      state.selected.delete(id);
+      if (state.drawerId === id) closeDrawer();
+      renderAll();
+      toast("Ariza o'chirildi");
+    }
+
+    $('bulkDone').addEventListener('click', async () => {
+      const ids = [...state.selected];
+      if (mode === 'server') {
+        try {
+          await Promise.all(ids.map(id =>
+            api('/api/leads/' + id, { method: 'PATCH', body: JSON.stringify({ status: 'done' }) })));
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        const leads = getLeads();
+        leads.forEach(l => { if (state.selected.has(l.id)) l.status = 'done'; });
+        setLeads(leads);
+      }
+      state.selected.clear();
+      renderAll();
+      toast(ids.length + " ta ariza bog'lanildi deb belgilandi");
+    });
+
+    $('bulkDel').addEventListener('click', async () => {
+      const ids = [...state.selected];
+      if (!confirm(ids.length + " ta ariza o'chiriladi. Davom etasizmi?")) return;
+      if (mode === 'server') {
+        try {
+          await Promise.all(ids.map(id => api('/api/leads/' + id, { method: 'DELETE' })));
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        setLeads(getLeads().filter(l => !state.selected.has(l.id)));
+      }
+      if (state.selected.has(state.drawerId)) closeDrawer();
+      state.selected.clear();
+      renderAll();
+      toast(ids.length + " ta ariza o'chirildi");
+    });
+
+    /* ---------- Yon oyna (drawer) ---------- */
+    let drawerLastFocus = null;
+    function openDrawer(id) {
+      drawerLastFocus = document.activeElement;
+      state.drawerId = id;
+      renderDrawer();
+      $('overlay').classList.add('show');
+      $('drawer').classList.add('open');
+      $('drawer').setAttribute('aria-hidden', 'false');
+      $('drawerClose').focus();
+    }
+    function closeDrawer() {
+      const wasOpen = state.drawerId !== null;
+      state.drawerId = null;
+      $('overlay').classList.remove('show');
+      $('drawer').classList.remove('open');
+      $('drawer').setAttribute('aria-hidden', 'true');
+      if (wasOpen && drawerLastFocus && drawerLastFocus.focus) drawerLastFocus.focus();
+    }
+    /* Fokus panel ichida qoladi */
+    $('drawer').addEventListener('keydown', e => {
+      if (e.key === 'Tab') trapFocus($('drawer'), e);
+    });
+    function renderDrawer() {
+      const l = getLeads().find(x => x.id === state.drawerId);
+      if (!l) { closeDrawer(); return; }
+      $('drawerBody').innerHTML =
+        '<div class="d-field"><span class="lbl">Ism</span><span class="val big">' + esc(l.name) + '</span></div>' +
+        '<div class="d-field"><span class="lbl">Bosqich</span>' +
+        '<div class="stage-pick" id="stagePick">' +
+        STAGE_ORDER.map(s =>
+          '<button type="button" class="stage-btn' + (stageOf(l) === s ? ' on' : '') + '" data-stage="' + s + '">' +
+          esc(STAGES[s].label) + '</button>').join('') +
+        '</div></div>' +
+        '<div class="d-field"><span class="lbl">Telefon</span><span class="val"><a href="' + telHref(l.phone) + '">' + esc(l.phone) + '</a></span></div>' +
+        '<div class="d-field"><span class="lbl">Kelgan vaqti</span><span class="val">' + esc(fmtDateLong(l.date)) + '</span></div>' +
+        '<div class="d-field"><span class="lbl">Izoh</span>' +
+        (l.message ? '<div class="d-msg">' + esc(l.message) + '</div>' : '<span class="val">—</span>') +
+        '</div>' +
+        '<div class="d-field"><span class="lbl">Izoh (ichki)</span>' +
+        '<textarea id="dNote" rows="3" maxlength="1000" placeholder="Faqat panelda ko\'rinadigan eslatma...">' + esc(l.note || '') + '</textarea>' +
+        '<div class="d-note-row"><button class="btn btn-ghost btn-sm" id="dNoteSave">Izohni saqlash</button></div>' +
+        '</div>';
+      $('drawerFoot').innerHTML =
+        /* Bosqich yuqoridagi tanlagich orqali o'zgaradi — bu yerda takrorlanmaydi */
+        '<a class="btn btn-primary" href="' + telHref(l.phone) + '">Qo\'ng\'iroq qilish</a>' +
+        '<button class="btn btn-danger" id="dDelete">O\'chirish</button>';
+      $('stagePick').addEventListener('click', e => {
+        const b = e.target.closest('[data-stage]');
+        if (b) setStage(l.id, b.dataset.stage);
+      });
+      $('dDelete').addEventListener('click', () => deleteLead(l.id));
+      $('dNoteSave').addEventListener('click', () => saveNote(l.id, $('dNote').value));
+    }
+
+    /* Ichki izohni saqlash: server — PATCH {note}, demo — localStorage */
+    async function saveNote(id, text) {
+      text = String(text || '').trim().slice(0, 1000);
+      if (mode === 'server') {
+        try {
+          await api('/api/leads/' + id, { method: 'PATCH', body: JSON.stringify({ note: text }) });
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        const leads = getLeads();
+        const l = leads.find(x => x.id === id);
+        if (!l) return;
+        if (text) l.note = text; else delete l.note;
+        setLeads(leads);
+      }
+      renderAll();
+      if (state.drawerId === id) renderDrawer();
+      toast(text ? 'Izoh saqlandi' : "Izoh o'chirildi");
+    }
+    $('drawerClose').addEventListener('click', closeDrawer);
+    $('overlay').addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && state.drawerId !== null) closeDrawer();
+    });
+
+    /* =====================================================
+       Buyruqlar paneli (Ctrl+K), tezkor tugmalar va fokus tutqichi
+       ===================================================== */
+
+    /* Modal ichida Tab bo'ylab harakatni ushlab turish */
+    function trapFocus(container, e) {
+      const f = container.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      const list = [...f].filter(el => el.offsetParent !== null || el === document.activeElement);
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+
+    /* Panel amallari — bo'limlar va tez-tez ishlatiladigan buyruqlar */
+    const COMMANDS = [
+      { label: 'Boshqaruv', hint: "Bo'lim · g d", run: () => switchView('dashboard') },
+      { label: 'Arizalar', hint: "Bo'lim · g a", run: () => switchView('leads') },
+      { label: 'Aloqa va narxlar', hint: "Bo'lim", run: () => switchView('content') },
+      { label: 'Sayt matnlari', hint: "Bo'lim · g m", run: () => switchView('texts') },
+      { label: 'Tizim', hint: "Bo'lim", run: () => switchView('settings') },
+      { label: 'CSV yuklab olish', hint: 'Amal', run: () => $('exportCsv').click() },
+      { label: 'Chop etish', hint: 'Amal', run: () => $('printLeads').click() },
+      { label: 'JSON eksport', hint: 'Amal', run: () => $('exportJson').click() },
+      { label: 'Yangi arizalar', hint: 'Filtr', run: () => { state.filter = 'new'; state.page = 1; switchView('leads'); } },
+      { label: 'Tezkor tugmalar', hint: 'Yordam · ?', run: () => openSheet() },
+      { label: 'Saytni ochish', hint: 'Amal', run: () => window.open('index.html', '_blank', 'noopener') },
+      { label: 'Chiqish', hint: 'Amal', run: () => $('logoutBtn').click() }
+    ];
+
+    let palItems = [];   // joriy natijalar
+    let palIndex = 0;
+    let lastFocus = null;
+
+    /* Oddiy "fuzzy": barcha belgilar ketma-ket uchrasa — moslik */
+    function fuzzy(hay, needle) {
+      hay = hay.toLowerCase();
+      needle = needle.toLowerCase().trim();
+      if (!needle) return true;
+      if (hay.indexOf(needle) !== -1) return true;
+      let i = 0;
+      for (const ch of needle) {
+        i = hay.indexOf(ch, i);
+        if (i === -1) return false;
+        i++;
+      }
+      return true;
+    }
+
+    function buildPalette() {
+      const q = $('paletteInput').value.trim();
+      const cmds = COMMANDS.filter(c => fuzzy(c.label + ' ' + c.hint, q)).slice(0, 8);
+      const leadHits = q
+        ? sortedLeads().filter(l =>
+            fuzzy(String(l.name || ''), q) ||
+            fuzzy(String(l.phone || ''), q) ||
+            fuzzy(String(l.note || ''), q)).slice(0, 6)
+        : sortedLeads().slice(0, 4);
+
+      palItems = [];
+      let html = '';
+      if (cmds.length) {
+        html += '<p class="pal-group">Bo\'limlar va amallar</p>';
+        cmds.forEach(c => {
+          const i = palItems.length;
+          palItems.push({ run: c.run });
+          html += '<button class="pal-item" data-i="' + i + '">' +
+            '<svg class="pal-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+            '<b>' + esc(c.label) + '</b><small>' + esc(c.hint) + '</small></button>';
+        });
+      }
+      if (leadHits.length) {
+        html += '<p class="pal-group">Arizalar</p>';
+        leadHits.forEach(l => {
+          const i = palItems.length;
+          palItems.push({ run: () => { switchView('leads'); openDrawer(l.id); } });
+          html += '<button class="pal-item" data-i="' + i + '">' +
+            '<svg class="pal-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+            '<b>' + esc(l.name) + '</b><small>' + esc(l.phone) + ' · ' + esc(STAGES[stageOf(l)].label) + '</small></button>';
+        });
+      }
+      $('paletteList').innerHTML = html || '<p class="pal-empty">Hech narsa topilmadi</p>';
+      palIndex = 0;
+      markPalSelection();
+    }
+
+    function markPalSelection() {
+      const nodes = $('paletteList').querySelectorAll('.pal-item');
+      nodes.forEach((n, i) => n.classList.toggle('sel', i === palIndex));
+      const sel = nodes[palIndex];
+      if (sel) sel.scrollIntoView({ block: 'nearest' });
+    }
+
+    function openPalette() {
+      lastFocus = document.activeElement;
+      $('paletteInput').value = '';
+      buildPalette();
+      $('paletteBack').classList.add('show');
+      $('paletteInput').focus();
+    }
+    function closePalette() {
+      $('paletteBack').classList.remove('show');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function paletteOpen() { return $('paletteBack').classList.contains('show'); }
+
+    function runPalItem(i) {
+      const item = palItems[i];
+      if (!item) return;
+      closePalette();
+      item.run();
+    }
+
+    $('openPalette').addEventListener('click', openPalette);
+    $('paletteInput').addEventListener('input', buildPalette);
+    $('paletteBack').addEventListener('mousedown', e => {
+      if (e.target === $('paletteBack')) closePalette();
+    });
+    $('paletteList').addEventListener('click', e => {
+      const b = e.target.closest('.pal-item');
+      if (b) runPalItem(+b.dataset.i);
+    });
+    $('palette').addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        palIndex = Math.min(palItems.length - 1, palIndex + 1);
+        markPalSelection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        palIndex = Math.max(0, palIndex - 1);
+        markPalSelection();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        runPalItem(palIndex);
+      } else if (e.key === 'Tab') {
+        trapFocus($('palette'), e);
+      }
+    });
+
+    /* Tezkor tugmalar ro'yxati */
+    function openSheet() {
+      lastFocus = document.activeElement;
+      $('sheetBack').classList.add('show');
+      $('sheetClose').focus();
+    }
+    function closeSheet() {
+      $('sheetBack').classList.remove('show');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function sheetOpen() { return $('sheetBack').classList.contains('show'); }
+    $('sheetClose').addEventListener('click', closeSheet);
+    $('sheetBack').addEventListener('mousedown', e => {
+      if (e.target === $('sheetBack')) closeSheet();
+    });
+    $('sheet').addEventListener('keydown', e => {
+      if (e.key === 'Tab') trapFocus($('sheet'), e);
+    });
+
+    /* Global tugmalar: Ctrl+K, g d / g a / g m, ? va Esc */
+    let gPending = false;
+    document.addEventListener('keydown', e => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '')) || e.target.isContentEditable;
+
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        paletteOpen() ? closePalette() : openPalette();
+        return;
+      }
+      if (e.key === 'Escape') {
+        if (paletteOpen()) { closePalette(); return; }
+        if (sheetOpen()) { closeSheet(); return; }
+        return; /* drawer'ni o'z ishlov beruvchisi yopadi */
+      }
+      if (typing || paletteOpen() || sheetOpen()) return;
+      if (!app.classList.contains('active')) return; /* kirishdan oldin ishlamaydi */
+
+      if (e.key === '?') { e.preventDefault(); openSheet(); return; }
+      if (e.key === 'g' || e.key === 'G') { gPending = true; setTimeout(() => { gPending = false; }, 1200); return; }
+      if (gPending) {
+        const k = e.key.toLowerCase();
+        gPending = false;
+        if (k === 'd') switchView('dashboard');
+        else if (k === 'a') switchView('leads');
+        else if (k === 'm') switchView('texts');
+      }
+    });
+
+    /* ---------- CSV eksport ---------- */
+    $('exportCsv').addEventListener('click', () => {
+      /* Joriy filtr va sana oralig'i eksportga ham qo'llanadi */
+      const leads = filteredLeads();
+      if (!leads.length) { toast("Eksport uchun ariza yo'q — filtrni tekshiring"); return; }
+      const rows = [['Sana', 'Ism', 'Telefon', 'Izoh', 'Ichki izoh', 'Bosqich']].concat(
+        leads.map(l => [
+          fmtDate(l.date), l.name, l.phone,
+          String(l.message || '').replace(/\r?\n/g, ' '),
+          String(l.note || '').replace(/\r?\n/g, ' '),
+          STAGES[stageOf(l)].label
+        ]));
+      const csv = '﻿' + rows.map(r =>
+        r.map(c => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+      downloadFile(csv, 'finbalans-arizalar.csv', 'text/csv;charset=utf-8');
+    });
+
+    function downloadFile(content, name, type) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([content], { type: type }));
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    /* ---------- Namuna ma'lumot ---------- */
+    function seedDemo() {
+      if (mode === 'server') return; /* server rejimida o'chirilgan — tugma disabled */
+      const now = Date.now();
+      const demo = [
+        { name: 'Otabek Yusupov',   phone: '+998 90 123 45 67', message: "MChJ ochmoqchimiz, QQS kerak bo'ladimi — maslahat kerak edi. Qachon bog'lansak bo'ladi?", off: 0.2,  st: 'new'  },
+        { name: 'Malika Azimova',   phone: '+998 93 456 78 90', message: 'YaTT uchun oylik xizmat narxi va shartnoma tafsilotlari qiziqtiradi', off: 0.9,  st: 'new'  },
+        { name: 'Sherzod Qodirov',  phone: '+998 97 234 56 78', message: '', off: 1.6,  st: 'new'  },
+        { name: 'Gulnora Ismoilova', phone: '+998 88 345 67 89', message: "Avvalgi buxgalterdan hisobni o'tkazib olish kerak. Hujjatlar tartibsiz holatda.", off: 3.4,  st: 'done', n: "Dushanba kuni qayta qo'ng'iroq qilish kelishildi" },
+        { name: 'Bekzod Tursunov',  phone: '+998 91 567 89 01', message: "Eksport bilan shug'ullanamiz, TIF bo'yicha tajribangiz bormi?", off: 5.2,  st: 'done' },
+        { name: 'Dilnoza Rahimova', phone: '+998 94 678 90 12', message: "Onlayn-do'kon yuritamiz, Payme va Click tushumlari bo'yicha soliq hisoboti kerak", off: 7.8,  st: 'new'  },
+        { name: 'Jasur Alimov',     phone: '+998 95 789 01 23', message: 'QQS qaytarish jarayonida yordam kerak edi', off: 10.5, st: 'done' },
+        { name: 'Nodira Karimova',  phone: '+998 99 890 12 34', message: 'Yillik hisobot muddati yaqinlashyapti, shoshilinch maslahat kerak', off: 13.1, st: 'done' }
+      ];
+      const leads = getLeads();
+      demo.forEach((d, i) => {
+        const lead = {
+          id: now - i - 1000,
+          date: new Date(now - d.off * DAY).toISOString(),
+          status: d.st,
+          name: d.name,
+          phone: d.phone,
+          message: d.message
+        };
+        if (d.n) lead.note = d.n;
+        leads.push(lead);
+      });
+      setLeads(leads);
+      renderAll();
+      toast("Namuna arizalar qo'shildi");
+    }
+    $('seedBtn').addEventListener('click', seedDemo);
+    $('dashSeed').addEventListener('click', seedDemo);
+
+    $('clearAll').addEventListener('click', async () => {
+      if (!getLeads().length) { toast("Arizalar allaqachon bo'sh"); return; }
+      if (!confirm("Barcha arizalar o'chiriladi. Davom etasizmi?")) return;
+      if (mode === 'server') {
+        try {
+          await api('/api/leads', { method: 'DELETE' });
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        setLeads([]);
+      }
+      state.selected.clear();
+      closeDrawer();
+      renderAll();
+      toast('Arizalar tozalandi');
+    });
+
+    /* ---------- Kontent ---------- */
+    const CONTENT_FIELDS = [
+      ['cPhone', 'phone'], ['cTelegram', 'telegram'], ['cEmail', 'email'],
+      ['cInstagram', 'instagram'], ['cFacebook', 'facebook'], ['cYoutube', 'youtube'],
+      ['cT1', 't1'], ['cT2', 't2'], ['cT3', 't3']
+    ];
+
+    async function loadContentForm() {
+      if (mode === 'server') {
+        try {
+          const res = await fetch('/api/content'); /* ochiq endpoint */
+          if (res.ok) contentCache = (await res.json()) || {};
+        } catch (e) { /* kesh saqlanib qoladi */ }
+      }
+      const c = getContent();
+      CONTENT_FIELDS.forEach(f => { $(f[0]).value = c[f[1]] || ''; });
+      pendingPhotos = {};
+      renderPhotoSlots();
+    }
+
+    $('saveContent').addEventListener('click', async () => {
+      const c = {};
+      CONTENT_FIELDS.forEach(f => {
+        let v = $(f[0]).value.trim();
+        if (f[1] === 'telegram') v = v.replace(/^@/, '');
+        if (v) c[f[1]] = v;
+      });
+      /* Sayt matnlari (i18n) saqlanib qolishi shart */
+      const prev = getContent();
+      if (prev.i18n) c.i18n = prev.i18n;
+
+      /* Jamoa suratlari: tanlanganlarini yuklab, photos'ni yig'amiz */
+      const photos = Object.assign({}, prev.photos || {});
+      const staged = Object.keys(pendingPhotos);
+      if (staged.length && mode === 'server') toast('Suratlar yuklanmoqda...');
+      try {
+        for (const key of staged) {
+          const st = pendingPhotos[key];
+          if (st === null) { delete photos[key]; continue; }
+          if (mode === 'server') {
+            const r = await api('/api/upload', {
+              method: 'POST',
+              body: JSON.stringify({ name: st.name, data: st.data })
+            });
+            if (!r || !r.path) { toast('Surat yuklanmadi — server javobi xato'); return; }
+            photos[key] = r.path;
+          } else {
+            photos[key] = st.data; /* demo: dataURL to'g'ridan-to'g'ri saqlanadi */
+          }
+        }
+      } catch (err) {
+        if (err && err.status === 400) toast('Surat qabul qilinmadi — JPG/PNG, 3 MB gacha');
+        else if (err && err.status) handleApiErr(err);
+        else toast("Surat yuklanmadi — server bilan aloqa yo'q");
+        return;
+      }
+      if (Object.keys(photos).length) c.photos = photos;
+
+      if (mode === 'server') {
+        try { await persistContent(c); }
+        catch (err) { handleApiErr(err); return; }
+        loadContentForm();
+        toast('Saqlandi — serverga yozildi');
+        return;
+      }
+      const ok = await persistContent(c);
+      if (!ok) { toast("Saqlab bo'lmadi — surat hajmi brauzer xotirasidan katta"); return; }
+      loadContentForm();
+      toast('Saqlandi — sayt sahifasini yangilang');
+    });
+
+    $('resetContent').addEventListener('click', async () => {
+      /* Aloqa/tarif kalitlari o'chiriladi; sayt matnlari (i18n) va suratlar qoladi */
+      const prev = getContent();
+      const c = {};
+      if (prev.i18n) c.i18n = prev.i18n;
+      if (prev.photos) c.photos = prev.photos;
+      if (mode === 'server') {
+        try { await persistContent(c); }
+        catch (err) { handleApiErr(err); return; }
+        loadContentForm();
+        toast('Asl qiymatlar qaytarildi');
+        return;
+      }
+      await persistContent(c);
+      loadContentForm();
+      toast('Asl qiymatlar qaytarildi');
+    });
+
+    /* =====================================================
+       Jamoa suratlari — content.photos {p1..p4}
+       Server rejimida fayl POST /api/upload orqali yuklanadi
+       (javob: {ok, path}), demo rejimida dataURL saqlanadi.
+       ===================================================== */
+    const PHOTO_SLOTS = [
+      { key: 'p1', name: 'Akmal Rahmonov',  def: 'img/team-akmal.jpg' },
+      { key: 'p2', name: 'Dilnoza Karimova', def: 'img/team-dilnoza.jpg' },
+      { key: 'p3', name: 'Jasur Alimov',    def: 'img/team-jasur.jpg' },
+      { key: 'p4', name: 'Nigora Salimova', def: 'img/team-nigora.jpg' }
+    ];
+    /* pendingPhotos[key]: {data,name} — yangi surat; null — asl holiga qaytarish */
+    let pendingPhotos = {};
+    let photoPickSlot = null;
+
+    function renderPhotoSlots() {
+      const saved = getContent().photos || {};
+      $('photoSlots').innerHTML = PHOTO_SLOTS.map(s => {
+        const st = pendingPhotos[s.key];
+        const overridden = saved[s.key] !== undefined;
+        let src, stateTxt, gold = true;
+        if (st === null) { src = s.def; stateTxt = "asl holiga qaytadi — saqlang"; }
+        else if (st) { src = st.data; stateTxt = "yangi surat — saqlang"; }
+        else if (overridden) { src = saved[s.key]; stateTxt = "o'zgartirilgan"; }
+        else { src = s.def; stateTxt = 'standart surat'; gold = false; }
+        const showReset = st ? true : (st === null ? false : overridden);
+        return '<div class="pslot' + (gold ? ' changed' : '') + '">' +
+          '<img class="pslot-img" src="' + esc(src) + '" alt="' + esc(s.name) + '">' +
+          '<div class="pslot-meta">' +
+          '<span class="pslot-name">' + esc(s.name) + '</span>' +
+          '<span class="pslot-state' + (gold ? ' gold' : '') + '">' + stateTxt + '</span>' +
+          '<div class="pslot-actions">' +
+          '<button type="button" class="btn btn-ghost btn-sm" data-pick="' + s.key + '">Surat tanlash</button>' +
+          (showReset ? '<button type="button" class="btn btn-ghost btn-sm" data-preset="' + s.key + '">Asl holiga</button>' : '') +
+          '</div></div></div>';
+      }).join('');
+    }
+
+    $('photoSlots').addEventListener('click', e => {
+      const pick = e.target.closest('[data-pick]');
+      if (pick) {
+        photoPickSlot = pick.dataset.pick;
+        $('photoFile').click();
+        return;
+      }
+      const pr = e.target.closest('[data-preset]');
+      if (pr) {
+        const key = pr.dataset.preset;
+        const saved = getContent().photos || {};
+        if (saved[key] !== undefined) {
+          pendingPhotos[key] = null;
+          toast("Surat asl holiga qaytadi — «Saqlash» bilan tasdiqlang");
+        } else {
+          delete pendingPhotos[key];
+          toast('Standart surat qaytarildi');
+        }
+        renderPhotoSlots();
+      }
+    });
+
+    $('photoFile').addEventListener('change', () => {
+      const file = $('photoFile').files[0];
+      const slot = photoPickSlot;
+      $('photoFile').value = '';
+      if (!file || !slot) return;
+      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+        toast('Faqat JPG yoki PNG surat tanlang');
+        return;
+      }
+      if (file.size > 3 * 1024 * 1024) {
+        toast('Surat hajmi 3 MB dan oshmasin');
+        return;
+      }
+      const ext = file.type === 'image/png' ? '.png' : '.jpg';
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingPhotos[slot] = { data: reader.result, name: 'team-' + slot + '-' + Date.now() + ext };
+        renderPhotoSlots();
+        toast("Surat tanlandi — «Saqlash» tugmasini bosing");
+      };
+      reader.onerror = () => toast("Faylni o'qib bo'lmadi");
+      reader.readAsDataURL(file);
+    });
+
+    /* =====================================================
+       Sayt matnlari (CMS) — content.i18n
+       Saqlanadigan shakl: {i18n: {uz: {kalit: matn}, ru: {...}, en: {...}}}
+       Faqat asl matndan FARQ qiladigan qiymatlar saqlanadi;
+       bo'sh/asl qiymat — kalit o'chiriladi (sayt standartni ishlatadi).
+       ===================================================== */
+
+    /* Kontentni bir joydan saqlash: server → PUT /api/content (to'liq obyekt),
+       demo → localStorage. Server faylni to'liq almashtiradi, shuning uchun
+       saqlashda i18n va boshqa kalitlarni birga yuborish shart. */
+    async function persistContent(c) {
+      if (mode === 'server') {
+        await api('/api/content', { method: 'PUT', body: JSON.stringify(c) });
+        contentCache = c;
+        return true;
+      }
+      try {
+        if (Object.keys(c).length) localStorage.setItem('finbalans-content', JSON.stringify(c));
+        else localStorage.removeItem('finbalans-content');
+        return true;
+      } catch (e) { return false; /* odatda: surat juda katta (localStorage to'ldi) */ }
+    }
+
+    /* Tahrirlanadigan kalitlar katalogi: guruh → [kalit, o'zbekcha yorliq] */
+    const I18N_GROUPS = [
+      { id: 'hero', name: 'Bosh ekran (Hero)', keys: [
+        ['hero.kicker', "Ustki kichik yozuv"],
+        ['hero.titleBase', "Sarlavha (doimiy qismi)"],
+        ['hero.lead', "Kirish matni"],
+        ['hero.cta1', "Asosiy tugma"],
+        ['hero.cta2', "Ikkilamchi tugma"],
+        ['hero.note', "Tugmalar ostidagi izoh"]
+      ]},
+      { id: 'services', name: 'Xizmatlar', keys: [
+        ['services.title', "Bo'lim sarlavhasi"],
+        ['services.sub', "Bo'lim kirish matni"],
+        ['services.s1t', "1-xizmat — nomi"], ['services.s1d', "1-xizmat — tavsifi"],
+        ['services.s2t', "2-xizmat — nomi"], ['services.s2d', "2-xizmat — tavsifi"],
+        ['services.s3t', "3-xizmat — nomi"], ['services.s3d', "3-xizmat — tavsifi"],
+        ['services.s4t', "4-xizmat — nomi"], ['services.s4d', "4-xizmat — tavsifi"], ['services.s4p', "4-xizmat — narx yozuvi"],
+        ['services.s5t', "5-xizmat — nomi"], ['services.s5d', "5-xizmat — tavsifi"], ['services.s5p', "5-xizmat — narx yozuvi"],
+        ['services.s6t', "6-xizmat — nomi"], ['services.s6d', "6-xizmat — tavsifi"], ['services.s6p', "6-xizmat — narx yozuvi"]
+      ]},
+      { id: 'pricing', name: 'Tariflar', keys: [
+        ['pricing.title', "Bo'lim sarlavhasi"],
+        ['pricing.sub', "Bo'lim kirish matni"],
+        ['pricing.t1name', "1-tarif — nomi"], ['pricing.t1for', "1-tarif — kimlar uchun"],
+        ['pricing.t1f1', "1-tarif — imkoniyat 1"], ['pricing.t1f2', "1-tarif — imkoniyat 2"],
+        ['pricing.t1f3', "1-tarif — imkoniyat 3"], ['pricing.t1f4', "1-tarif — imkoniyat 4"],
+        ['pricing.t2name', "2-tarif — nomi"], ['pricing.t2for', "2-tarif — kimlar uchun"],
+        ['pricing.t2f1', "2-tarif — imkoniyat 1"], ['pricing.t2f2', "2-tarif — imkoniyat 2"],
+        ['pricing.t2f3', "2-tarif — imkoniyat 3"], ['pricing.t2f4', "2-tarif — imkoniyat 4"],
+        ['pricing.t2f5', "2-tarif — imkoniyat 5"],
+        ['pricing.t3name', "3-tarif — nomi"], ['pricing.t3for', "3-tarif — kimlar uchun"],
+        ['pricing.t3f1', "3-tarif — imkoniyat 1"], ['pricing.t3f2', "3-tarif — imkoniyat 2"],
+        ['pricing.t3f3', "3-tarif — imkoniyat 3"], ['pricing.t3f4', "3-tarif — imkoniyat 4"],
+        ['pricing.t3f5', "3-tarif — imkoniyat 5"]
+      ]},
+      { id: 'guar', name: 'Javobgarlik', keys: [
+        ['guar.title', "Sarlavha"],
+        ['guar.lead', "Asosiy matn"],
+        ['guar.i1t', "1-band — sarlavha"], ['guar.i1d', "1-band — matn"],
+        ['guar.i2t', "2-band — sarlavha"], ['guar.i2d', "2-band — matn"],
+        ['guar.i3t', "3-band — sarlavha"], ['guar.i3d', "3-band — matn"]
+      ]},
+      { id: 'process', name: 'Jarayon (ish tartibi)', keys: [
+        ['process.title', "Sarlavha"],
+        ['process.s1t', "1-qadam — nomi"], ['process.s1d', "1-qadam — tavsifi"],
+        ['process.s2t', "2-qadam — nomi"], ['process.s2d', "2-qadam — tavsifi"],
+        ['process.s3t', "3-qadam — nomi"], ['process.s3d', "3-qadam — tavsifi"],
+        ['process.s4t', "4-qadam — nomi"], ['process.s4d', "4-qadam — tavsifi"]
+      ]},
+      { id: 'team', name: 'Jamoa', keys: [
+        ['team.title', "Sarlavha"],
+        ['team.sub', "Kirish matni"],
+        ['team.p1role', "1-xodim — lavozimi"], ['team.p2role', "2-xodim — lavozimi"],
+        ['team.p3role', "3-xodim — lavozimi"], ['team.p4role', "4-xodim — lavozimi"]
+      ]},
+      { id: 'reviews', name: 'Mijozlar fikrlari', keys: [
+        ['reviews.title', "Sarlavha"],
+        ['reviews.r1text', "1-fikr — matni"], ['reviews.r1role', "1-fikr — muallifi"],
+        ['reviews.r2text', "2-fikr — matni"], ['reviews.r2role', "2-fikr — muallifi"],
+        ['reviews.r3text', "3-fikr — matni"], ['reviews.r3role', "3-fikr — muallifi"]
+      ]},
+      { id: 'faq', name: 'Savol-javob (FAQ)', keys: [
+        ['faq.q1', "1-savol"], ['faq.a1', "1-javob"],
+        ['faq.q2', "2-savol"], ['faq.a2', "2-javob"],
+        ['faq.q3', "3-savol"], ['faq.a3', "3-javob"],
+        ['faq.q4', "4-savol"], ['faq.a4', "4-javob"],
+        ['faq.q5', "5-savol"], ['faq.a5', "5-javob"],
+        ['faq.q6', "6-savol"], ['faq.a6', "6-javob"]
+      ]},
+      { id: 'contact', name: "Aloqa bo'limi", keys: [
+        ['contact.title', "Sarlavha"],
+        ['contact.sub', "Kirish matni"],
+        ['contact.address', "Manzil"],
+        ['contact.hours', "Ish vaqti"],
+        ['form.success', "Forma — muvaffaqiyat xabari"]
+      ]}
+    ];
+
+    /* Asl matnlar (js/main.js dagi translations bilan bir xil) —
+       maydonlarni to'ldirish va "o'zgartirilgan"likni aniqlash uchun */
+    const I18N_DEFAULTS = {
+      uz: {
+        'hero.kicker': "Buxgalteriya byurosi · Toshkent",
+        'hero.titleBase': "Toshkentda buxgalteriya autsorsingi — ",
+        'hero.lead': "Hisobotlarni o'z vaqtida topshiramiz, soliqlarni to'g'ri hisoblaymiz, kadrlar hujjatlarini tartibda saqlaymiz. Biznesingizni xatolar va jarimalardan asraymiz.",
+        'hero.cta1': "Bepul konsultatsiya olish",
+        'hero.cta2': "Tariflarni ko'rish",
+        'hero.note': "Birinchi konsultatsiya bepul. Ish vaqtida 30 daqiqa ichida javob beramiz.",
+        'services.title': "Nima qilamiz",
+        'services.sub': "Kundalik hisob yuritishdan soliq tekshiruvlarida vakillikkacha. Asosiy xizmatlar oylik tarifga kiradi, bir martalik ishlar alohida baholanadi.",
+        'services.s1t': "Buxgalteriya hisobini yuritish",
+        'services.s1d': "1C va Didox'da ishlaymiz: birlamchi hujjatlar, bank operatsiyalari, elektron hisobvaraq-fakturalar (EHF), kirim-chiqim nazorati.",
+        'services.s2t': "Soliq hisobotlari",
+        'services.s2d': "Aylanma soliq, QQS, foyda va daromad soliqlari, ijtimoiy soliq — barchasi soliq.uz orqali muddatida topshiriladi.",
+        'services.s3t': "Ish haqi va kadrlar hisobi",
+        'services.s3d': "Mehnat shartnomalari, ta'til va kasallik varaqalari, daromad solig'i va ijtimoiy soliq hisob-kitobi.",
+        'services.s4t': "Hisobni tiklash",
+        'services.s4d': "Yuritilmagan yoki xato yuritilgan davrlar hisobini tartibga keltiramiz, aniqlangan xatolar bo'yicha aniqlashtirilgan hisobotlar topshiramiz.",
+        'services.s4p': "3 000 000 so'mdan, bir martalik",
+        'services.s5t': "Nol hisobot topshirish",
+        'services.s5d': "Faoliyat yuritmayotgan kompaniyalar uchun majburiy hisobotlarni topshirib boramiz.",
+        'services.s5p': "300 000 so'm / chorak",
+        'services.s6t': "Biznesni ro'yxatdan o'tkazish",
+        'services.s6d': "MChJ yoki YaTT ochish, soliq rejimini tanlash, bank hisob raqami va elektron imzo (ERI) rasmiylashtirish.",
+        'services.s6p': "1 500 000 so'm, bir martalik",
+        'pricing.title': "Narxlar",
+        'pricing.sub': "Aniq narx soliq rejimi, oylik operatsiyalar va xodimlar soniga bog'liq. Qo'ng'iroqda 10 daqiqada hisoblab beramiz.",
+        'pricing.t1name': "YaTT",
+        'pricing.t1for': "Yakka tartibdagi tadbirkorlar uchun",
+        'pricing.t1f1': "Oyiga 30 tagacha operatsiya",
+        'pricing.t1f2': "Daromad solig'i hisobotlari",
+        'pricing.t1f3': "soliq.uz va bank bilan ishlash",
+        'pricing.t1f4': "Telegram orqali maslahat",
+        'pricing.t2name': "MChJ · aylanma soliq",
+        'pricing.t2for': "Soddalashtirilgan rejimdagi kompaniyalar",
+        'pricing.t2f1': "Oyiga 100 tagacha operatsiya",
+        'pricing.t2f2': "Barcha soliq va statistika hisobotlari",
+        'pricing.t2f3': "5 xodimgacha ish haqi hisob-kitobi",
+        'pricing.t2f4': "Shaxsiy buxgalter",
+        'pricing.t2f5': "Oylik kirim-chiqim xulosasi",
+        'pricing.t3name': "MChJ · QQS",
+        'pricing.t3for': "Umumiy rejim, QQS to'lovchilar",
+        'pricing.t3f1': "QQS hisobi va EHF nazorati",
+        'pricing.t3f2': "Cheklanmagan hisobotlar",
+        'pricing.t3f3': "10 xodimgacha ish haqi hisob-kitobi",
+        'pricing.t3f4': "Soliq tekshiruvlarida vakillik",
+        'pricing.t3f5': "Bosh buxgalter darajasidagi mutaxassis",
+        'guar.title': "Xatolarimiz uchun o'zimiz javob beramiz",
+        'guar.lead': "Bizning aybimiz bilan jarima yoki penya hisoblansa — uni o'z hisobimizdan qoplaymiz. Bu og'zaki va'da emas: shartnomaning 6.2-bandida yozilgan, javobgarligimiz 50 mln so'mgacha sug'urtalangan.",
+        'guar.i1t': "Shartnoma namunasi — oldindan",
+        'guar.i1d': "Imzolashdan avval shartnoma matnini to'liq o'rganib chiqasiz. Masofadan, ERI orqali tuzish mumkin.",
+        'guar.i2t': "Maxfiylik",
+        'guar.i2d': "Moliyaviy ma'lumotlaringiz oshkor qilinmasligi shartnomadagi alohida NDA bandi bilan kafolatlanadi.",
+        'guar.i3t': "Ichki nazorat",
+        'guar.i3d': "Har bir buxgalterning ishi oyda bir marta ichki nazoratchi tomonidan tekshiriladi.",
+        'process.title': "Qanday boshlaymiz",
+        'process.s1t': "Ariza va qo'ng'iroq",
+        'process.s1d': "Formani to'ldirasiz — ish vaqtida 30 daqiqa ichida bog'lanib, faoliyatingiz va ehtiyojingizni aniqlaymiz.",
+        'process.s2t': "Hujjatlarni ko'rib chiqish",
+        'process.s2d': "Joriy hisob holatini bepul baholaymiz va operatsiyalar hajmidan kelib chiqib aniq narx aytamiz.",
+        'process.s3t': "Shartnoma",
+        'process.s3d': "Namunani oldindan yuboramiz, savollarni ko'rib chiqamiz. Ofisda yoki masofadan ERI bilan imzolaymiz.",
+        'process.s4t': "Ishni topshirasiz",
+        'process.s4d': "Hujjatlarni qabul qilamiz; avvalgi buxgalterdan ishlarni o'tkazib olishni o'zimiz tashkil qilamiz.",
+        'team.title': "Hisobingizni yuritadigan odamlar",
+        'team.sub': "Har bir mijozga aniq mas'ul buxgalter biriktiriladi — kim bilan ishlayotganingizni bilasiz.",
+        'team.p1role': "Asoschi, bosh buxgalter",
+        'team.p2role': "Soliq maslahatchisi",
+        'team.p3role': "Buxgalter",
+        'team.p4role': "Kadrlar va ish haqi bo'yicha mutaxassis",
+        'reviews.title': "Biz bilan ishlaydigan kompaniyalar",
+        'reviews.r1text': "«QQSga o'tganimizda hisobda xatolar chiqdi — FinBalans ikki oyda hammasini tartibga keltirdi va 14 mln so'm ortiqcha to'langan soliqni qaytarib oldi.»",
+        'reviews.r1role': "«TexnoPlast» MChJ direktori",
+        'reviews.r2text': "«Uch yildan beri birorta hisobot kechikmadi. Savolimga ish kunida bir soat ichida javob olaman — avvalgi buxgalterimiz bilan bunday bo'lmagan.»",
+        'reviews.r2role': "«FoodCity» moliya menejeri",
+        'reviews.r3text': "«Shtatdagi buxgalterga oyiga 8 mln so'm to'lardik. Endi xuddi shu hajmdagi ish 2,4 mln so'mga bajarilyapti — sifat esa yuqoriroq.»",
+        'reviews.r3role': "«LogiTrans» asoschisi",
+        'faq.q1': "Ish boshlash uchun qanday hujjatlar kerak?",
+        'faq.a1': "Guvohnoma, soliq.uz kabinetiga kirish, ERI kaliti, bank ko'chirmalari va mavjud bo'lsa — oxirgi topshirilgan hisobotlar. Ro'yxatni ariza qoldirganingizdan keyin yuboramiz; hujjatlarni Telegram orqali qabul qilamiz.",
+        'faq.q2': "Shartnomani masofadan tuzish mumkinmi?",
+        'faq.a2': "Ha. Shartnoma namunasini oldindan yuboramiz, kelishilgach ERI orqali masofadan imzolaymiz. Ofisga kelish shart emas.",
+        'faq.q3': "Sizning xatoingiz tufayli jarima kelsa nima bo'ladi?",
+        'faq.a3': "Jarima va penyani o'z hisobimizdan qoplaymiz — bu shartnomaning 6.2-bandida belgilangan. Javobgarligimiz 50 mln so'mgacha sug'urtalangan.",
+        'faq.q4': "Soliq rejimini almashtirsak nima o'zgaradi?",
+        'faq.a4': "O'tish hujjatlarini o'zimiz tayyorlaymiz va topshiramiz — bu tarifga kiradi. Tarif yangi rejimdagi ish hajmiga qarab qayta ko'rib chiqiladi va oldindan kelishiladi.",
+        'faq.q5': "Tarifga nima kiradi, kutilmagan qo'shimcha to'lovlar bo'lmaydimi?",
+        'faq.a5': "Tarif tarkibi shartnomaga ilova qilinadi: hisob yuritish, hisobotlar, kelishilgan miqdordagi xodimlar ish haqi. Tarifdan tashqari ishlar (masalan, hisobni tiklash) faqat oldindan kelishilgan narxda bajariladi.",
+        'faq.q6': "Narx nimaga bog'liq?",
+        'faq.a6': "To'rt omilga: soliq rejimi (aylanma soliq yoki QQS), oylik operatsiyalar soni, xodimlar soni va eksport-import mavjudligi. Shu ma'lumotlar bilan narxni 10 daqiqada aniq aytamiz.",
+        'contact.title': "Ariza qoldiring",
+        'contact.sub': "Ish vaqtida 30 daqiqa ichida qo'ng'iroq qilamiz: savollarga javob beramiz va biznesingiz uchun aniq narxni hisoblab beramiz.",
+        'contact.address': "Toshkent sh., Yakkasaroy tumani, Bobur ko'chasi, 20",
+        'contact.hours': "Dushanba – shanba, 9:00 – 18:00",
+        'form.success': "Rahmat, arizangiz qabul qilindi. Ish vaqtida 30 daqiqa ichida bog'lanamiz."
+      },
+      ru: {
+        'hero.kicker': "Бухгалтерское бюро · Ташкент",
+        'hero.titleBase': "Аутсорсинг бухгалтерии в Ташкенте — ",
+        'hero.lead': "Сдадим отчёты вовремя, правильно рассчитаем налоги, приведём в порядок кадровые документы. Убережём ваш бизнес от ошибок и штрафов.",
+        'hero.cta1': "Получить бесплатную консультацию",
+        'hero.cta2': "Посмотреть тарифы",
+        'hero.note': "Первая консультация бесплатна. Отвечаем в течение 30 минут в рабочее время.",
+        'services.title': "Что мы делаем",
+        'services.sub': "От ежедневного учёта до представительства при налоговых проверках. Основные услуги входят в месячный тариф, разовые работы оцениваются отдельно.",
+        'services.s1t': "Ведение бухгалтерского учёта",
+        'services.s1d': "Работаем в 1С и Didox: первичные документы, банковские операции, электронные счета-фактуры (ЭСФ), контроль прихода и расхода.",
+        'services.s2t': "Налоговая отчётность",
+        'services.s2d': "Налог с оборота, НДС, налог на прибыль, НДФЛ и социальный налог — всё сдаётся через soliq.uz в срок.",
+        'services.s3t': "Зарплата и кадровый учёт",
+        'services.s3d': "Трудовые договоры, отпуска и больничные, расчёт НДФЛ и социального налога.",
+        'services.s4t': "Восстановление учёта",
+        'services.s4d': "Приведём в порядок незакрытые или ошибочные периоды, сдадим уточнённую отчётность по найденным ошибкам.",
+        'services.s4p': "от 3 000 000 сум, разово",
+        'services.s5t': "Нулевая отчётность",
+        'services.s5d': "Для компаний, не ведущих деятельность, сдаём обязательные отчёты.",
+        'services.s5p': "300 000 сум / квартал",
+        'services.s6t': "Регистрация бизнеса",
+        'services.s6d': "Открытие ООО или ИП, выбор налогового режима, банковский счёт и электронная подпись (ЭЦП).",
+        'services.s6p': "1 500 000 сум, разово",
+        'pricing.title': "Цены",
+        'pricing.sub': "Точная цена зависит от налогового режима, числа операций в месяц и количества сотрудников. Рассчитаем за 10 минут по телефону.",
+        'pricing.t1name': "ИП (ЯТТ)",
+        'pricing.t1for': "Для индивидуальных предпринимателей",
+        'pricing.t1f1': "До 30 операций в месяц",
+        'pricing.t1f2': "Отчётность по налогу на доход",
+        'pricing.t1f3': "Работа с soliq.uz и банком",
+        'pricing.t1f4': "Консультации в Telegram",
+        'pricing.t2name': "ООО · налог с оборота",
+        'pricing.t2for': "Компании на упрощённом режиме",
+        'pricing.t2f1': "До 100 операций в месяц",
+        'pricing.t2f2': "Вся налоговая и статистическая отчётность",
+        'pricing.t2f3': "Расчёт зарплаты до 5 сотрудников",
+        'pricing.t2f4': "Персональный бухгалтер",
+        'pricing.t2f5': "Ежемесячная сводка прихода и расхода",
+        'pricing.t3name': "ООО · НДС",
+        'pricing.t3for': "Общий режим, плательщики НДС",
+        'pricing.t3f1': "Учёт НДС и контроль ЭСФ",
+        'pricing.t3f2': "Отчётность без ограничений",
+        'pricing.t3f3': "Расчёт зарплаты до 10 сотрудников",
+        'pricing.t3f4': "Представительство при налоговых проверках",
+        'pricing.t3f5': "Специалист уровня главного бухгалтера",
+        'guar.title': "За свои ошибки отвечаем сами",
+        'guar.lead': "Если штраф или пеня начислены по нашей вине — оплатим их из собственных средств. Это не обещание на словах: пункт 6.2 договора, ответственность застрахована на сумму до 50 млн сум.",
+        'guar.i1t': "Образец договора — заранее",
+        'guar.i1d': "Вы полностью изучаете текст договора до подписания. Можно заключить дистанционно, по ЭЦП.",
+        'guar.i2t': "Конфиденциальность",
+        'guar.i2d': "Неразглашение ваших финансовых данных закреплено отдельным пунктом договора (NDA).",
+        'guar.i3t': "Внутренний контроль",
+        'guar.i3d': "Работа каждого бухгалтера раз в месяц проверяется внутренним контролёром.",
+        'process.title': "Как мы начинаем",
+        'process.s1t': "Заявка и звонок",
+        'process.s1d': "Вы заполняете форму — в рабочее время перезвоним в течение 30 минут, выясним вид деятельности и задачи.",
+        'process.s2t': "Изучение документов",
+        'process.s2d': "Бесплатно оценим текущее состояние учёта и назовём точную цену исходя из объёма операций.",
+        'process.s3t': "Договор",
+        'process.s3d': "Заранее отправим образец, обсудим вопросы. Подписание в офисе или дистанционно по ЭЦП.",
+        'process.s4t': "Передача дел",
+        'process.s4d': "Принимаем документы; передачу дел от прежнего бухгалтера организуем сами.",
+        'team.title': "Люди, которые ведут ваш учёт",
+        'team.sub': "За каждым клиентом закрепляется ответственный бухгалтер — вы знаете, с кем работаете.",
+        'team.p1role': "Основатель, главный бухгалтер",
+        'team.p2role': "Налоговый консультант",
+        'team.p3role': "Бухгалтер",
+        'team.p4role': "Специалист по кадрам и зарплате",
+        'reviews.title': "Компании, которые с нами работают",
+        'reviews.r1text': "«При переходе на НДС в учёте обнаружились ошибки — FinBalans за два месяца навёл порядок и вернул 14 млн сум переплаченного налога.»",
+        'reviews.r1role': "директор ООО «TexnoPlast»",
+        'reviews.r2text': "«За три года ни один отчёт не был просрочен. На вопросы отвечают в течение часа в рабочий день — с прежним бухгалтером так не было.»",
+        'reviews.r2role': "финансовый менеджер «FoodCity»",
+        'reviews.r3text': "«Штатному бухгалтеру мы платили 8 млн сум в месяц. Сейчас тот же объём работы выполняется за 2,4 млн — а качество выше.»",
+        'reviews.r3role': "основатель «LogiTrans»",
+        'faq.q1': "Какие документы нужны для начала работы?",
+        'faq.a1': "Свидетельство, доступ к кабинету soliq.uz, ключ ЭЦП, банковские выписки и, если есть, последняя сданная отчётность. Список отправим после заявки; документы принимаем через Telegram.",
+        'faq.q2': "Можно ли заключить договор дистанционно?",
+        'faq.a2': "Да. Заранее отправим образец договора, после согласования подпишем дистанционно по ЭЦП. Приезжать в офис не обязательно.",
+        'faq.q3': "Что будет, если штраф придёт по вашей вине?",
+        'faq.a3': "Штраф и пеню оплатим из собственных средств — это закреплено в пункте 6.2 договора. Наша ответственность застрахована на сумму до 50 млн сум.",
+        'faq.q4': "Что изменится при смене налогового режима?",
+        'faq.a4': "Документы для перехода подготовим и сдадим сами — это входит в тариф. Тариф пересматривается по объёму работы на новом режиме и согласовывается заранее.",
+        'faq.q5': "Что входит в тариф, не будет ли неожиданных доплат?",
+        'faq.a5': "Состав тарифа прилагается к договору: ведение учёта, отчётность, расчёт зарплаты для согласованного числа сотрудников. Работы сверх тарифа (например, восстановление учёта) выполняются только по заранее согласованной цене.",
+        'faq.q6': "От чего зависит цена?",
+        'faq.a6': "От четырёх факторов: налоговый режим (налог с оборота или НДС), число операций в месяц, количество сотрудников и наличие ВЭД. С этими данными назовём точную цену за 10 минут.",
+        'contact.title': "Оставьте заявку",
+        'contact.sub': "В рабочее время перезвоним в течение 30 минут: ответим на вопросы и рассчитаем точную цену для вашего бизнеса.",
+        'contact.address': "г. Ташкент, Яккасарайский район, ул. Бабура, 20",
+        'contact.hours': "Понедельник – суббота, 9:00 – 18:00",
+        'form.success': "Спасибо, заявка принята. Перезвоним в течение 30 минут в рабочее время."
+      },
+      en: {
+        'hero.kicker': "Accounting bureau · Tashkent",
+        'hero.titleBase': "Accounting outsourcing in Tashkent — ",
+        'hero.lead': "We file reports on time, calculate taxes correctly and keep HR records in order — protecting your business from errors and fines.",
+        'hero.cta1': "Get a free consultation",
+        'hero.cta2': "View pricing",
+        'hero.note': "The first consultation is free. We reply within 30 minutes during business hours.",
+        'services.title': "What we do",
+        'services.sub': "From day-to-day bookkeeping to representation during tax inspections. Core services are included in the monthly plan; one-off work is priced separately.",
+        'services.s1t': "Bookkeeping",
+        'services.s1d': "We work in 1C and Didox: primary documents, bank transactions, electronic invoices (EHF), income and expense control.",
+        'services.s2t': "Tax reporting",
+        'services.s2d': "Turnover tax, VAT, profit and income taxes, social tax — all filed on time via soliq.uz.",
+        'services.s3t': "Payroll and HR records",
+        'services.s3d': "Employment contracts, vacation and sick leave, income tax and social tax calculation.",
+        'services.s4t': "Accounting recovery",
+        'services.s4d': "We clean up periods with missing or incorrect records and file amended reports for the errors found.",
+        'services.s4p': "from 3,000,000 UZS, one-time",
+        'services.s5t': "Zero reporting",
+        'services.s5d': "For dormant companies we file the mandatory reports.",
+        'services.s5p': "300,000 UZS / quarter",
+        'services.s6t': "Business registration",
+        'services.s6d': "LLC or sole-proprietor registration, tax regime selection, bank account and e-signature (ERI).",
+        'services.s6p': "1,500,000 UZS, one-time",
+        'pricing.title': "Pricing",
+        'pricing.sub': "The exact price depends on the tax regime, monthly transactions and headcount. We'll calculate it in 10 minutes over the phone.",
+        'pricing.t1name': "Sole proprietor",
+        'pricing.t1for': "For individual entrepreneurs (YaTT)",
+        'pricing.t1f1': "Up to 30 transactions per month",
+        'pricing.t1f2': "Income tax reporting",
+        'pricing.t1f3': "Work with soliq.uz and your bank",
+        'pricing.t1f4': "Consultations via Telegram",
+        'pricing.t2name': "LLC · turnover tax",
+        'pricing.t2for': "Companies on the simplified regime",
+        'pricing.t2f1': "Up to 100 transactions per month",
+        'pricing.t2f2': "All tax and statistical reports",
+        'pricing.t2f3': "Payroll for up to 5 employees",
+        'pricing.t2f4': "Dedicated accountant",
+        'pricing.t2f5': "Monthly income and expense summary",
+        'pricing.t3name': "LLC · VAT",
+        'pricing.t3for': "General regime, VAT payers",
+        'pricing.t3f1': "VAT accounting and EHF control",
+        'pricing.t3f2': "Unlimited reporting",
+        'pricing.t3f3': "Payroll for up to 10 employees",
+        'pricing.t3f4': "Representation during tax inspections",
+        'pricing.t3f5': "Chief-accountant-level specialist",
+        'guar.title': "We answer for our own mistakes",
+        'guar.lead': "If a fine or penalty is caused by our fault, we pay it from our own funds. Not a verbal promise: it is clause 6.2 of the contract, and our liability is insured for up to 50 million UZS.",
+        'guar.i1t': "Contract sample — in advance",
+        'guar.i1d': "You review the full contract text before signing. It can be concluded remotely with an e-signature.",
+        'guar.i2t': "Confidentiality",
+        'guar.i2d': "Non-disclosure of your financial data is secured by a dedicated NDA clause in the contract.",
+        'guar.i3t': "Internal review",
+        'guar.i3d': "Every accountant's work is checked monthly by an internal reviewer.",
+        'process.title': "How we start",
+        'process.s1t': "Request and call",
+        'process.s1d': "You fill in the form — we call back within 30 minutes during business hours to understand your activity and needs.",
+        'process.s2t': "Document review",
+        'process.s2d': "We assess your current books free of charge and quote an exact price based on transaction volume.",
+        'process.s3t': "Contract",
+        'process.s3d': "We send the sample in advance and discuss your questions. Signing in the office or remotely with an e-signature.",
+        'process.s4t': "Handover",
+        'process.s4d': "We take over your documents; we arrange the handover from your previous accountant ourselves.",
+        'team.title': "The people who keep your books",
+        'team.sub': "Every client gets a designated responsible accountant — you know exactly who you work with.",
+        'team.p1role': "Founder, chief accountant",
+        'team.p2role': "Tax consultant",
+        'team.p3role': "Accountant",
+        'team.p4role': "HR and payroll specialist",
+        'reviews.title': "Companies that work with us",
+        'reviews.r1text': "“When we switched to VAT, errors surfaced in our books — FinBalans sorted everything out in two months and recovered 14 million UZS of overpaid tax.”",
+        'reviews.r1role': "Director, TexnoPlast LLC",
+        'reviews.r2text': "“In three years not a single report has been late. I get answers within an hour on business days — it was never like that with our previous accountant.”",
+        'reviews.r2role': "Finance manager, FoodCity",
+        'reviews.r3text': "“We used to pay an in-house accountant 8 million UZS a month. Now the same workload is done for 2.4 million — at higher quality.”",
+        'reviews.r3role': "Founder, LogiTrans",
+        'faq.q1': "What documents are needed to start?",
+        'faq.a1': "Registration certificate, access to the soliq.uz account, e-signature key, bank statements and, if available, the last filed reports. We send the checklist after your request; documents are accepted via Telegram.",
+        'faq.q2': "Can the contract be concluded remotely?",
+        'faq.a2': "Yes. We send the contract sample in advance and, once agreed, sign remotely with an e-signature. Visiting the office is not required.",
+        'faq.q3': "What happens if a fine is caused by your mistake?",
+        'faq.a3': "We pay the fine and penalty from our own funds — this is fixed in clause 6.2 of the contract. Our liability is insured for up to 50 million UZS.",
+        'faq.q4': "What changes if we switch tax regimes?",
+        'faq.a4': "We prepare and file the transition documents ourselves — it's included in the plan. The plan is then reviewed for the workload on the new regime and agreed in advance.",
+        'faq.q5': "What's in the plan — will there be unexpected extra charges?",
+        'faq.a5': "The plan's scope is attached to the contract: bookkeeping, reporting, payroll for the agreed number of employees. Work beyond the plan (e.g. accounting recovery) is done only at a price agreed beforehand.",
+        'faq.q6': "What does the price depend on?",
+        'faq.a6': "Four factors: tax regime (turnover tax or VAT), monthly transaction count, headcount and whether you do foreign trade. With that information we quote an exact price in 10 minutes.",
+        'contact.title': "Leave a request",
+        'contact.sub': "We call back within 30 minutes during business hours: we'll answer your questions and calculate an exact price for your business.",
+        'contact.address': "Tashkent, Yakkasaray district, Bobur street, 20",
+        'contact.hours': "Monday – Saturday, 9:00 – 18:00",
+        'form.success': "Thank you, your request has been received. We'll call back within 30 minutes during business hours."
+      }
+    };
+
+    /* CMS holati */
+    let textsLang = 'uz';
+    let i18nDraft = { uz: {}, ru: {}, en: {} };
+    let textsDirty = false;
+    const openGroups = new Set(['hero']);
+
+    /* Saqlangan i18n'dan qoralama tayyorlash (dirty bo'lsa — saqlab qolamiz) */
+    function loadTextsDraft(force) {
+      if (textsDirty && !force) return;
+      const saved = getContent().i18n || {};
+      i18nDraft = { uz: {}, ru: {}, en: {} };
+      ['uz', 'ru', 'en'].forEach(l => {
+        if (saved[l] && typeof saved[l] === 'object') Object.assign(i18nDraft[l], saved[l]);
+      });
+      textsDirty = false;
+    }
+
+    /* Ko'rinish ochilganda: server rejimida avval kontentni yangilaymiz */
+    async function initTextsView() {
+      if (mode === 'server') {
+        try {
+          const res = await fetch('/api/content');
+          if (res.ok) contentCache = (await res.json()) || {};
+        } catch (e) { /* kesh yetarli */ }
+      }
+      loadTextsDraft(false);
+      renderTextGroups();
+      updateTextsBar();
+    }
+
+    function updateTextsBar() {
+      const n = Object.keys(i18nDraft[textsLang]).length;
+      $('i18nCount').textContent = n
+        ? n + " ta matn o'zgartirilgan (" + textsLang.toUpperCase() + ")"
+        : "Barcha matnlar asl holatda (" + textsLang.toUpperCase() + ")";
+      $('textsDirtyNote').hidden = !textsDirty;
+    }
+
+    function renderTextGroups() {
+      const lang = textsLang;
+      const defs = I18N_DEFAULTS[lang];
+      $('textGroups').innerHTML = I18N_GROUPS.map(g => {
+        const overCount = g.keys.filter(k => i18nDraft[lang][k[0]] !== undefined).length;
+        const fields = g.keys.map(pair => {
+          const key = pair[0], label = pair[1];
+          const def = defs[key] || '';
+          const overridden = i18nDraft[lang][key] !== undefined;
+          const val = overridden ? i18nDraft[lang][key] : def;
+          const long = (I18N_DEFAULTS.uz[key] || '').length > 70;
+          const cls = 'tfield' + (overridden ? ' over' : '');
+          const field = long
+            ? '<textarea class="' + cls + '" data-key="' + esc(key) + '" rows="3" maxlength="2000">' + esc(val) + '</textarea>'
+            : '<input type="text" class="' + cls + '" data-key="' + esc(key) + '" maxlength="2000" value="' + esc(val) + '">';
+          return '<div class="tfg' + (long ? ' tfg-wide' : '') + '">' +
+            '<label>' + esc(label) + '<span class="tkey">' + esc(key) + '</span></label>' +
+            field + '</div>';
+        }).join('');
+        return '<details class="tgroup" data-group="' + esc(g.id) + '"' + (openGroups.has(g.id) ? ' open' : '') + '>' +
+          '<summary>' +
+          '<span>' + esc(g.name) + '</span>' +
+          (overCount ? '<span class="tgroup-badge">' + overCount + '</span>' : '') +
+          '<button type="button" class="btn btn-ghost btn-sm tgroup-reset" data-reset="' + esc(g.id) + '" title="Bu guruh matnlarini joriy til uchun asl holiga qaytarish">Asl holiga</button>' +
+          '<svg class="tgroup-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+          '</summary>' +
+          '<div class="tgroup-body">' + fields + '</div>' +
+          '</details>';
+      }).join('');
+    }
+
+    /* Til yorliqlari */
+    $('langTabs').addEventListener('click', e => {
+      const t = e.target.closest('.tab');
+      if (!t || t.dataset.lang === textsLang) return;
+      textsLang = t.dataset.lang;
+      document.querySelectorAll('#langTabs .tab').forEach(b =>
+        b.classList.toggle('active', b.dataset.lang === textsLang));
+      renderTextGroups();
+      updateTextsBar();
+    });
+
+    /* Maydon tahriri: asl bilan bir xil yoki bo'sh — kalit o'chiriladi */
+    $('textGroups').addEventListener('input', e => {
+      const f = e.target.closest('.tfield');
+      if (!f) return;
+      const key = f.dataset.key;
+      const def = I18N_DEFAULTS[textsLang][key] || '';
+      const v = f.value;
+      if (!v.trim() || v === def) {
+        delete i18nDraft[textsLang][key];
+        f.classList.remove('over');
+      } else {
+        i18nDraft[textsLang][key] = v;
+        f.classList.add('over');
+      }
+      textsDirty = true;
+      updateTextsBar();
+    });
+
+    /* Guruhni asl holiga qaytarish (joriy til) */
+    $('textGroups').addEventListener('click', e => {
+      const rb = e.target.closest('[data-reset]');
+      if (!rb) return;
+      e.preventDefault(); /* summary yopilib-ochilib ketmasin */
+      const g = I18N_GROUPS.find(x => x.id === rb.dataset.reset);
+      if (!g) return;
+      const had = g.keys.some(k => i18nDraft[textsLang][k[0]] !== undefined);
+      g.keys.forEach(k => { delete i18nDraft[textsLang][k[0]]; });
+      if (had) textsDirty = true;
+      renderTextGroups();
+      updateTextsBar();
+      toast(had ? "Guruh asl holiga qaytarildi — saqlashni unutmang" : "Guruhda o'zgarish yo'q edi");
+    });
+
+    /* Ochiq/yopiq holatlarni eslab qolish */
+    $('textGroups').addEventListener('toggle', e => {
+      const d = e.target.closest('.tgroup');
+      if (!d) return;
+      if (d.open) openGroups.add(d.dataset.group);
+      else openGroups.delete(d.dataset.group);
+    }, true);
+
+    /* Saqlash: i18n'ni joriy kontent bilan birga yozamiz */
+    $('saveTexts').addEventListener('click', async () => {
+      const i18n = {};
+      ['uz', 'ru', 'en'].forEach(l => {
+        if (Object.keys(i18nDraft[l]).length) i18n[l] = Object.assign({}, i18nDraft[l]);
+      });
+      const c = Object.assign({}, getContent());
+      if (Object.keys(i18n).length) c.i18n = i18n;
+      else delete c.i18n;
+      if (mode === 'server') {
+        try { await persistContent(c); }
+        catch (err) { handleApiErr(err); return; }
+      } else {
+        const ok = await persistContent(c);
+        if (!ok) { toast("Saqlab bo'lmadi — brauzer xotirasi to'ldi"); return; }
+      }
+      textsDirty = false;
+      renderTextGroups();
+      updateTextsBar();
+      toast("Sayt matnlari saqlandi — sayt yangilanganda qo'llanadi");
+    });
+
+    /* ---------- Sozlamalar: login va parolni almashtirish ----------
+       Joriy parol brauzerda TEKSHIRILMAYDI — u serverga yuboriladi va
+       qarorni faqat server qabul qiladi (POST /api/credentials).
+       Muvaffaqiyatda joriy sessiya tokeni kuchda qoladi. ---------- */
+
+    /* Server xato kodlari -> foydalanuvchiga ko'rinadigan matn */
+    const CRED_ERRORS = {
+      'wrong current password': "Joriy parol noto'g'ri",
+      'bad login': "Login 3–40 belgidan iborat bo'lsin, bo'sh joy va ':' bo'lmasin",
+      'weak password': "Parol kamida 6 belgi bo'lsin",
+      'nothing to change': "O'zgartirish uchun yangi login yoki parol kiriting",
+      'too many attempts': "Juda ko'p urinish, biroz kutib qayta urining"
+    };
+
+    function setCredError(msg) {
+      const el = $('credError');
+      el.textContent = msg || '';
+      el.classList.toggle('show', !!msg);
+    }
+
+    /* Yangi loginni yon panelga, sessionStorage'ga va placeholder'ga qo'llash */
+    function applyLogin(login) {
+      if (!login) return;
+      currentLogin = login;
+      try { sessionStorage.setItem('fb-admin-name', login); } catch (e) {}
+      $('adminName').textContent = login;
+      $('credLogin').placeholder = login;
+    }
+
+    /* Tizim bo'limi ochilganda joriy loginni serverdan olamiz */
+    async function loadAdminLogin() {
+      if (!token) return;
+      let res;
+      try { res = await fetch('/api/me', { headers: { 'X-Admin-Token': token } }); }
+      catch (e) { return; } /* vaqtinchalik uzilish — placeholder eski holida qoladi */
+      if (res.status === 401) { sessionExpired(); return; }
+      if (!res.ok) return;
+      let data = null;
+      try { data = await res.json(); } catch (e) {}
+      if (data && data.login) applyLogin(data.login);
+    }
+
+    $('credForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const current = $('credCurrent').value;
+      const login = $('credLogin').value.trim();
+      const pass = $('credPass').value;
+      const pass2 = $('credPass2').value;
+
+      /* Brauzerda faqat shakl tekshiruvi — parol solishtirilmaydi */
+      if (!current) { setCredError('Joriy parolni kiriting'); $('credCurrent').focus(); return; }
+      if ((pass || pass2) && pass !== pass2) {
+        setCredError('Yangi parollar mos kelmadi');
+        $('credPass2').focus();
+        return;
+      }
+      if (!login && !pass) { setCredError(CRED_ERRORS['nothing to change']); $('credLogin').focus(); return; }
+
+      setCredError('');
+      const btn = $('credSave');
+      btn.disabled = true;
+
+      let res;
+      try {
+        res = await fetch('/api/credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+          body: JSON.stringify({ current: current, login: login, password: pass })
+        });
+      } catch (err) {
+        btn.disabled = false;
+        setCredError("Server bilan aloqa yo'q");
+        return;
+      }
+
+      let data = null;
+      try { data = await res.json(); } catch (err) {}
+      btn.disabled = false;
+      const code = (data && data.error) || '';
+
+      if (!res.ok) {
+        /* 401 ikki xil bo'lishi mumkin: sessiya tugagan yoki joriy parol xato */
+        if (res.status === 401 && code !== 'wrong current password') { sessionExpired(); return; }
+        if (res.status === 429) { setCredError(CRED_ERRORS['too many attempts']); return; }
+        setCredError(CRED_ERRORS[code] || ('Server xatosi (' + res.status + ')'));
+        if (code === 'wrong current password') {
+          $('credCurrent').value = '';
+          $('credCurrent').focus();
+        }
+        return;
+      }
+
+      /* Muvaffaqiyat — joriy sessiya kuchda qoladi, qayta kirish shart emas */
+      applyLogin((data && data.login) || login || currentLogin);
+      $('credCurrent').value = '';
+      $('credPass').value = '';
+      $('credPass2').value = '';
+      $('credLogin').value = '';
+      setCredError('');
+      toast('Saqlandi — boshqa qurilmalardagi sessiyalar yakunlandi');
+    });
+
+    /* ---------- Sozlamalar: zaxira ---------- */
+    $('exportJson').addEventListener('click', () => {
+      const data = { leads: getLeads(), content: getContent() };
+      downloadFile(JSON.stringify(data, null, 2), 'finbalans-backup.json', 'application/json');
+      toast('Zaxira nusxa yuklab olindi');
+    });
+
+    $('importBtn').addEventListener('click', () => {
+      if (mode === 'server') return; /* server rejimida import o'chirilgan — tugma disabled */
+      $('importFile').click();
+    });
+
+    $('importFile').addEventListener('change', () => {
+      const file = $('importFile').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        let data;
+        try { data = JSON.parse(reader.result); }
+        catch (e) { toast("Fayl o'qilmadi — JSON formati noto'g'ri"); $('importFile').value = ''; return; }
+        const hasLeads = data && Array.isArray(data.leads);
+        const hasContent = data && data.content && typeof data.content === 'object';
+        if (!hasLeads && !hasContent) {
+          toast("Fayl tarkibi mos emas (leads/content topilmadi)");
+          $('importFile').value = '';
+          return;
+        }
+        const n = hasLeads ? data.leads.length : 0;
+        if (!confirm('Import: ' + n + " ta ariza va kontent sozlamalari yuklanadi. Joriy ma'lumotlar almashtiriladi. Davom etasizmi?")) {
+          $('importFile').value = '';
+          return;
+        }
+        if (hasLeads) {
+          /* Shaklni tozalab saqlaymiz */
+          const clean = data.leads
+            .filter(l => l && typeof l === 'object')
+            .map(l => {
+              const item = {
+                id: Number(l.id) || Date.now() + Math.floor(Math.random() * 1000),
+                date: l.date && !isNaN(new Date(l.date)) ? new Date(l.date).toISOString() : new Date().toISOString(),
+                status: l.status === 'done' ? 'done' : 'new',
+                name: String(l.name || ''),
+                phone: String(l.phone || ''),
+                message: String(l.message || '')
+              };
+              if (typeof l.note === 'string' && l.note.trim()) item.note = l.note.slice(0, 1000);
+              return item;
+            });
+          setLeads(clean);
+        }
+        if (hasContent) {
+          try { localStorage.setItem('finbalans-content', JSON.stringify(data.content)); } catch (e) {}
+        }
+        state.selected.clear();
+        state.page = 1;
+        renderAll();
+        loadContentForm();
+        loadTextsDraft(true);
+        renderTextGroups();
+        updateTextsBar();
+        toast("Ma'lumotlar import qilindi");
+        $('importFile').value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    $('wipeAll').addEventListener('click', async () => {
+      if (!confirm("Barcha arizalar va kontent o'zgarishlari o'chiriladi. Davom etasizmi?")) return;
+      if (!confirm("Ishonchingiz komilmi? Bu amalni ortga qaytarib bo'lmaydi.")) return;
+      if (mode === 'server') {
+        try {
+          await api('/api/leads', { method: 'DELETE' });
+          await api('/api/content', { method: 'PUT', body: '{}' });
+          contentCache = {};
+          await refreshLeads();
+        } catch (err) { handleApiErr(err); return; }
+      } else {
+        try {
+          localStorage.removeItem('finbalans-leads');
+          localStorage.removeItem('finbalans-content');
+        } catch (e) {}
+      }
+      setStageMap({});
+      state.selected.clear();
+      state.page = 1;
+      closeDrawer();
+      renderAll();
+      loadContentForm();
+      loadTextsDraft(true);
+      renderTextGroups();
+      updateTextsBar();
+      toast("Barcha ma'lumotlar tozalandi");
+    });
+
+    /* ---------- Umumiy render ---------- */
+    /* Yon-jadvaldan o'chirilgan arizalar belgilarini tozalash */
+    function pruneStageMap() {
+      if (loading) return;
+      const map = getStageMap();
+      const keys = Object.keys(map);
+      if (!keys.length) return;
+      const ids = new Set(getLeads().map(l => String(l.id)));
+      const left = {};
+      let changed = false;
+      keys.forEach(k => { if (ids.has(k)) left[k] = map[k]; else changed = true; });
+      if (changed) setStageMap(left);
+    }
+
+    function renderAll() {
+      pruneStageMap();
+      renderCounters();
+      renderDashboard();
+      renderLeads();
+    }
+
+    $('todayDate').textContent = new Date().toLocaleDateString('uz-UZ', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+
+    /* Banner yopish */
+    $('bannerClose').addEventListener('click', () => {
+      bannerDismissed = true;
+      $('offlineBanner').hidden = true;
+    });
+
+    /* Yo'riqnomani yopish (qayta ko'rsatilmaydi) */
+    $('welcomeClose').addEventListener('click', () => {
+      try { localStorage.setItem('fb-admin-welcome', '1'); } catch (e) {}
+      $('welcomeStrip').hidden = true;
+    });
+
+    /* Sessiya tekshiruvi — token bo'lsa serverdan tasdiqlab panelni ochamiz.
+       Panel serversiz ishlamaydi (login/parol faqat serverda tekshiriladi). */
+    (async function init() {
+      /* file:// ustida API'ga yetib bo'lmaydi — ma'lumot ekrani */
+      if (!isHttp()) { showNoServer(); return; }
+
+      let saved = '';
+      try { saved = sessionStorage.getItem('fb-admin-token') || ''; } catch (e) {}
+
+      if (saved) {
+        /* Avvalgi sessiya — panel karkasi darhol ko'rsatiladi,
+           ma'lumot kelguncha skeleton turadi */
+        token = saved;
+        loading = true;
+        loginScreen.style.display = 'none';
+        app.classList.add('active');
+        renderDashboard();
+        renderLeads();
+        const r = await validateToken();
+        if (r === 'ok') {
+          mode = 'server';
+          try { currentLogin = sessionStorage.getItem('fb-admin-name') || ''; } catch (e) {}
+          showApp();
+          return;
+        }
+        if (r === 'unauthorized') { sessionExpired(); return; } /* token muddati tugagan */
+        /* server javob bermadi */
+        token = '';
+        app.classList.remove('active');
+        loginScreen.style.display = '';
+        showNoServer();
+        return;
+      }
+
+      /* Token yo'q — server mavjudligini tekshiramiz: har qanday HTTP javob
+         (401 ham) server ishlayotganini bildiradi */
+      try {
+        await fetch('/api/leads');
+        $('loginUser').focus();
+      } catch (e) {
+        showNoServer();
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinBalans — Toshkentda buxgalteriya xizmatlari</title>
+  <meta name="description" content="MChJ va YaTT uchun buxgalteriya autsorsingi Toshkentda. Soliq hisobotlari, ish haqi, kadrlar hisobi. Javobgarlik shartnomada, 50 mln so'mgacha sug'urtalangan.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2310233B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23fff' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FinBalans — Toshkentda buxgalteriya xizmatlari">
+  <meta property="og:description" content="MChJ va YaTT uchun buxgalteriya autsorsingi. Javobgarlik shartnomada, 50 mln so'mgacha sug'urtalangan.">
+  <meta property="og:locale" content="uz_UZ">
+  <meta property="og:image" content="img/gold.jpg">
+  <link rel="preload" as="image" href="img/gold.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AccountingService",
+    "name": "FinBalans",
+    "description": "MChJ va YaTT uchun buxgalteriya autsorsingi Toshkentda",
+    "telephone": "+998712004567",
+    "email": "info@finbalans.uz",
+    "foundingDate": "2018",
+    "priceRange": "600 000 - 2 400 000 UZS/oy",
+    "openingHours": "Mo-Sa 09:00-18:00",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Bobur ko'chasi, 20, Yakkasaroy tumani",
+      "addressLocality": "Toshkent",
+      "addressCountry": "UZ"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="loader" id="loader" aria-hidden="true">
+    <span class="loader-brand">FinBalans<span class="brand-dot">.</span></span>
+    <span class="loader-bar"></span>
+  </div>
+
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#top" data-i18n="a11y.skip">Mazmunga o'tish</a>
+
+
+  <!-- ===================== Header ===================== -->
+  <header class="site-header overlay" id="siteHeader">
+    <div class="container header-inner">
+      <a href="#top" class="brand">FinBalans<span class="brand-dot">.</span></a>
+
+      <nav class="nav" id="nav">
+        <a href="#services" data-i18n="nav.services">Xizmatlar</a>
+        <a href="#pricing" data-i18n="nav.pricing">Narxlar</a>
+        <a href="#team" data-i18n="nav.team">Jamoa</a>
+        <a href="#faq" data-i18n="nav.faq">Savol-javob</a>
+        <a href="#contact" data-i18n="nav.contact">Aloqa</a>
+        <a href="tel:+998712004567" class="nav-mobile-only">+998 71 200 45 67</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="lang" role="group" aria-label="Til" data-i18n-attr="aria-label:a11y.langGroup">
+          <button class="lang-btn" data-lang="uz"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#1EB5E4"/><rect y="5.4" width="24" height="5.2" fill="#fff"/><rect y="10.6" width="24" height="5.4" fill="#27A052" rx="0"/><rect y="4.9" width="24" height="0.9" fill="#D6322E"/><rect y="10.2" width="24" height="0.9" fill="#D6322E"/></svg>Uz</button><!--
+       --><button class="lang-btn" data-lang="ru"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect y="5.3" width="24" height="5.4" fill="#2E5AA7"/><rect y="10.7" width="24" height="5.3" fill="#D6322E"/></svg>Ру</button><!--
+       --><button class="lang-btn" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#2A3F8F"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3"/><path d="M0 0l24 16M24 0L0 16" stroke="#D6322E" stroke-width="1.3"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5"/><path d="M12 0v16M0 8h24" stroke="#D6322E" stroke-width="2.6"/></svg>En</button>
+        </div>
+        <a class="header-phone" href="tel:+998712004567">+998 71 200 45 67</a>
+        <a href="#contact" class="btn btn-primary btn-header" data-i18n="nav.cta">Konsultatsiya</a>
+        <button class="burger" id="burger" aria-label="Menyu" aria-expanded="false" data-i18n-attr="aria-label:a11y.menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Markaziy bank kursi: header ostidagi ikkinchi qator.
+         Header bilan birga harakatlanadi - kontent ustiga tushmaydi. -->
+    <div class="rates-strip" id="ratesBar" hidden>
+      <div class="container rates-strip-inner">
+        <span class="rates-label">
+          <span data-i18n="rates.label">Markaziy bank kursi</span>
+          <span class="rates-date" id="ratesDate"></span>
+        </span>
+        <div class="rates-view">
+          <div class="rates-track">
+            <ul class="rates-list" id="ratesList"></ul>
+            <ul class="rates-list" id="ratesList2" aria-hidden="true"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" tabindex="-1">
+
+    <!-- ===================== Hero — to'liq ekranli ===================== -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <img class="hero-slide active" src="img/gold.jpg" alt="" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
+        <img class="hero-slide" data-src="img/dollars.jpg" alt="" width="1800" height="1200" decoding="async">
+        <img class="hero-slide" data-src="img/office.jpg" alt="" width="1800" height="1202" decoding="async">
+      </div>
+
+      <svg class="hero-chart" aria-hidden="true" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none">
+        <defs><linearGradient id="hcFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#B8902D" stop-opacity="0.30"/><stop offset="1" stop-color="#B8902D" stop-opacity="0"/>
+        </linearGradient></defs>
+        <!-- O'sib boruvchi ustunlar: har qanday odam "o'sish" deb o'qiydi -->
+        <g fill="rgba(184,144,45,0.20)">
+          <rect x="110" y="636" width="120" height="64" rx="3"/>
+          <rect x="370" y="596" width="120" height="104" rx="3"/>
+          <rect x="630" y="540" width="120" height="160" rx="3"/>
+          <rect x="890" y="472" width="120" height="228" rx="3"/>
+          <rect x="1150" y="396" width="120" height="304" rx="3" fill="rgba(184,144,45,0.32)"/>
+        </g>
+        <path class="hero-chart-area" d="M-20 668 C240 650 400 610 620 566 C840 522 1000 480 1180 434 L1450 372 L1450 700 L-20 700 Z" fill="url(#hcFill)"/>
+        <path class="hero-chart-line" d="M170 640 L430 600 L690 544 L950 476 L1210 400 L1330 366" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M1296 352l40-12-16 38" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="170" cy="640" r="5" fill="currentColor"/>
+        <circle cx="430" cy="600" r="5" fill="currentColor"/>
+        <circle cx="690" cy="544" r="5" fill="currentColor"/>
+        <circle cx="950" cy="476" r="5" fill="currentColor"/>
+        <circle class="hero-chart-dot" cx="1210" cy="400" r="6" fill="currentColor"/>
+      </svg>
+      <span class="hero-chart-badge" aria-hidden="true">▲ +87%</span>
+      <div class="container hero-content">
+        <p class="hero-kicker" data-i18n="hero.kicker">Buxgalteriya byurosi · Toshkent</p>
+        <h1><span data-i18n="hero.titleBase">Toshkentda buxgalteriya autsorsingi&nbsp;— </span><span class="typed-wrap"><span id="typedText">MChJ uchun</span></span></h1>
+        <p class="lead" data-i18n="hero.lead">Hisobotlarni o'z vaqtida topshiramiz, soliqlarni to'g'ri hisoblaymiz, kadrlar hujjatlarini tartibda saqlaymiz. Biznesingizni xatolar va jarimalardan asraymiz.</p>
+        <div class="hero-actions">
+          <span class="cta-pulse-wrap"><a href="#contact" class="btn btn-light" data-i18n="hero.cta1">Bepul konsultatsiya olish</a></span>
+          <a href="#pricing" class="link-arrow link-arrow-light" data-i18n="hero.cta2">Tariflarni ko'rish</a>
+        </div>
+        <div class="hero-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2.5 0-4-1.2-4-2.9C8 3.4 9.6 3 10.6 3c1.6 0 2.4 2 1.4 5zM12 8c2.5 0 4-1.2 4-2.9C16 3.4 14.4 3 13.4 3c-1.6 0-2.4 2-1.4 5z"/></svg><span data-i18n="hero.chip1">Birinchi konsultatsiya bepul</span></span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V6l-8-3-8 3v6c0 6 8 10 8 10z"/><path d="M9.5 12l2 2 3.5-4"/></svg><span data-i18n="hero.chip2">50 mln so'mgacha kafolat</span></span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span data-i18n="hero.chip3">30 daqiqa ichida javob</span></span>
+        </div>
+      </div>
+
+      <div class="container hero-facts">
+        <dl class="facts">
+          <div class="fact">
+            <dt>2018</dt>
+            <dd data-i18n="facts.f1">yildan beri ishlaymiz</dd>
+          </div>
+          <div class="fact">
+            <dt><span class="counter" data-count="127">127</span> <span class="fact-trend" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l5.5-5.5 4 4L20 7"/><path d="M14.5 7H20v5.5"/></svg></span></dt>
+            <dd data-i18n="facts.f2">kompaniya doimiy xizmatda</dd>
+          </div>
+          <div class="fact">
+            <dt><span class="counter" data-count="2340">2 340</span> <span class="fact-trend" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l5.5-5.5 4 4L20 7"/><path d="M14.5 7H20v5.5"/></svg></span></dt>
+            <dd data-i18n="facts.f3">hisobot muddatida topshirilgan</dd>
+          </div>
+          <div class="fact">
+            <dt data-i18n="facts.f4num">50 mln</dt>
+            <dd data-i18n="facts.f4">so'mgacha javobgarlik sug'urtalangan</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+      </div>
+    </div>
+
+    <!-- ===================== Services ===================== -->
+    <section class="section" id="services">
+      <div class="container services-grid">
+        <div class="services-head" data-num="01" data-reveal="left">
+          <p class="kicker"><span class="kicker-num">01</span><span data-i18n="services.kicker">Xizmatlar</span></p>
+          <h2 data-i18n="services.title">Nima qilamiz</h2>
+          <p class="section-sub" data-i18n="services.sub">Kundalik hisob yuritishdan soliq tekshiruvlarida vakillikkacha. Asosiy xizmatlar oylik tarifga kiradi, bir martalik ishlar alohida baholanadi.</p>
+          <a href="#pricing" class="link-arrow" data-i18n="services.link">Tariflar va narxlar</a>
+        </div>
+
+        <ol class="service-list stagger from-right" data-reveal>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M8 16h2M14 12h2M14 16h2"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s1t">Buxgalteriya hisobini yuritish</h3>
+              <p data-i18n="services.s1d">1C va Didox'da ishlaymiz: birlamchi hujjatlar, bank operatsiyalari, elektron hisobvaraq-fakturalar (EHF), kirim-chiqim nazorati.</p>
+            </div>
+            <span class="service-price" data-i18n="services.inTariff">tarif tarkibida</span>
+          </li>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s2t">Soliq hisobotlari</h3>
+              <p data-i18n="services.s2d">Aylanma soliq, QQS, foyda va daromad soliqlari, ijtimoiy soliq — barchasi soliq.uz orqali muddatida topshiriladi.</p>
+            </div>
+            <span class="service-price" data-i18n="services.inTariff">tarif tarkibida</span>
+          </li>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17.5" cy="14.5" r="3"/><path d="M17.5 13.3v2.4"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s3t">Ish haqi va kadrlar hisobi</h3>
+              <p data-i18n="services.s3d">Mehnat shartnomalari, ta'til va kasallik varaqalari, daromad solig'i va ijtimoiy soliq hisob-kitobi.</p>
+            </div>
+            <span class="service-price" data-i18n="services.inTariff">tarif tarkibida</span>
+          </li>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s4t">Hisobni tiklash</h3>
+              <p data-i18n="services.s4d">Yuritilmagan yoki xato yuritilgan davrlar hisobini tartibga keltiramiz, aniqlangan xatolar bo'yicha aniqlashtirilgan hisobotlar topshiramiz.</p>
+            </div>
+            <span class="service-price" data-i18n="services.s4p">3 000 000 so'mdan, bir martalik</span>
+          </li>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><circle cx="12" cy="14" r="3"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s5t">Nol hisobot topshirish</h3>
+              <p data-i18n="services.s5d">Faoliyat yuritmayotgan kompaniyalar uchun majburiy hisobotlarni topshirib boramiz.</p>
+            </div>
+            <span class="service-price" data-i18n="services.s5p">300 000 so'm / chorak</span>
+          </li>
+          <li class="service-row">
+            <span class="service-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg></span>
+            <div class="service-body">
+              <h3 data-i18n="services.s6t">Biznesni ro'yxatdan o'tkazish</h3>
+              <p data-i18n="services.s6d">MChJ yoki YaTT ochish, soliq rejimini tanlash, bank hisob raqami va elektron imzo (ERI) rasmiylashtirish.</p>
+            </div>
+            <span class="service-price" data-i18n="services.s6p">1 500 000 so'm, bir martalik</span>
+          </li>
+        </ol>
+
+        <div class="industries" data-reveal>
+          <span class="industries-label" data-i18n="ind.label">Biz ishlaydigan sohalar</span>
+          <ul class="chips">
+            <li data-i18n="ind.i1">Savdo</li>
+            <li data-i18n="ind.i2">Ishlab chiqarish</li>
+            <li data-i18n="ind.i3">Xizmat ko'rsatish</li>
+            <li data-i18n="ind.i4">IT</li>
+            <li data-i18n="ind.i5">Qurilish</li>
+            <li data-i18n="ind.i6">Logistika</li>
+            <li data-i18n="ind.i7">Umumiy ovqatlanish</li>
+            <li data-i18n="ind.i8">Eksport-import</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===================== Marquee-lenta ===================== -->
+    <div class="txt-marquee" aria-hidden="true">
+      <div class="txt-marquee-track">
+        <span data-i18n="marquee.text">Buxgalteriya hisobi — Soliq hisobotlari — Ish haqi va kadrlar — Moliyaviy xotirjamlik — </span><span data-i18n="marquee.text">Buxgalteriya hisobi — Soliq hisobotlari — Ish haqi va kadrlar — Moliyaviy xotirjamlik — </span>
+      </div>
+      <div class="txt-marquee-track txt-marquee-rev">
+        <span id="marquee2a"></span><span id="marquee2b"></span>
+      </div>
+    </div>
+
+
+    <!-- ===================== Pricing ===================== -->
+    <section class="section section-gray" id="pricing">
+      <div class="container">
+        <div class="section-head" data-num="02" data-reveal>
+          <svg class="pricing-growth" aria-hidden="true" viewBox="0 0 320 140" fill="none">
+            <path d="M10 122 C68 118 92 94 132 88 C176 82 192 54 234 46 L288 24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M277 18l13.5-2.5-4.5 12.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="122" r="4.5" fill="currentColor"/>
+            <circle cx="132" cy="88" r="3.5" fill="currentColor" opacity="0.6"/>
+            <circle cx="234" cy="46" r="3.5" fill="currentColor" opacity="0.6"/>
+          </svg>
+          <p class="kicker"><span class="kicker-num">02</span><span data-i18n="pricing.kicker">Tariflar</span></p>
+          <h2 data-i18n="pricing.title">Narxlar</h2>
+          <p class="section-sub" data-i18n="pricing.sub">Aniq narx soliq rejimi, oylik operatsiyalar va xodimlar soniga bog'liq. Qo'ng'iroqda 10 daqiqada hisoblab beramiz.</p>
+        </div>
+
+        <div class="tariffs stagger" data-reveal>
+          <article class="tariff">
+            <span class="tariff-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="9" rx="6.5" ry="2.6"/><path d="M5.5 9v6c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6V9"/></svg></span>
+            <h3 data-i18n="pricing.t1name">YaTT</h3>
+            <p class="tariff-for" data-i18n="pricing.t1for">Yakka tartibdagi tadbirkorlar uchun</p>
+            <p class="tariff-price"><span data-i18n="pricing.t1price">600 000</span> <span class="tariff-unit" data-i18n="pricing.unit">so'mdan / oyiga</span></p>
+            <ul class="tariff-list">
+              <li data-i18n="pricing.t1f1">Oyiga 30 tagacha operatsiya</li>
+              <li data-i18n="pricing.t1f2">Daromad solig'i hisobotlari</li>
+              <li data-i18n="pricing.t1f3">soliq.uz va bank bilan ishlash</li>
+              <li data-i18n="pricing.t1f4">Telegram orqali maslahat</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline" data-i18n="pricing.cta">Ariza qoldirish</a>
+          </article>
+
+          <article class="tariff tariff-main">
+            <p class="tariff-tag" data-i18n="pricing.tag">Ko'p tanlanadi</p>
+            <span class="tariff-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="6.5" ry="2.4"/><path d="M5.5 6v4.5c0 1.3 2.9 2.4 6.5 2.4s6.5-1.1 6.5-2.4V6M5.5 10.5V15c0 1.3 2.9 2.4 6.5 2.4s6.5-1.1 6.5-2.4v-4.5"/></svg></span>
+            <h3 data-i18n="pricing.t2name">MChJ · aylanma soliq</h3>
+            <p class="tariff-for" data-i18n="pricing.t2for">Soddalashtirilgan rejimdagi kompaniyalar</p>
+            <p class="tariff-price"><span data-i18n="pricing.t2price">1 200 000</span> <span class="tariff-unit" data-i18n="pricing.unit">so'mdan / oyiga</span></p>
+            <ul class="tariff-list">
+              <li data-i18n="pricing.t2f1">Oyiga 100 tagacha operatsiya</li>
+              <li data-i18n="pricing.t2f2">Barcha soliq va statistika hisobotlari</li>
+              <li data-i18n="pricing.t2f3">5 xodimgacha ish haqi hisob-kitobi</li>
+              <li data-i18n="pricing.t2f4">Shaxsiy buxgalter</li>
+              <li data-i18n="pricing.t2f5">Oylik kirim-chiqim xulosasi</li>
+            </ul>
+            <a href="#contact" class="btn btn-light" data-i18n="pricing.cta">Ariza qoldirish</a>
+          </article>
+
+          <article class="tariff">
+            <span class="tariff-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="4.8" rx="6.5" ry="2.2"/><path d="M5.5 4.8v4c0 1.2 2.9 2.2 6.5 2.2s6.5-1 6.5-2.2v-4M5.5 8.8v4c0 1.2 2.9 2.2 6.5 2.2s6.5-1 6.5-2.2v-4M5.5 12.8v4c0 1.2 2.9 2.2 6.5 2.2s6.5-1 6.5-2.2v-4"/></svg></span>
+            <h3 data-i18n="pricing.t3name">MChJ · QQS</h3>
+            <p class="tariff-for" data-i18n="pricing.t3for">Umumiy rejim, QQS to'lovchilar</p>
+            <p class="tariff-price"><span data-i18n="pricing.t3price">2 400 000</span> <span class="tariff-unit" data-i18n="pricing.unit">so'mdan / oyiga</span></p>
+            <ul class="tariff-list">
+              <li data-i18n="pricing.t3f1">QQS hisobi va EHF nazorati</li>
+              <li data-i18n="pricing.t3f2">Cheklanmagan hisobotlar</li>
+              <li data-i18n="pricing.t3f3">10 xodimgacha ish haqi hisob-kitobi</li>
+              <li data-i18n="pricing.t3f4">Soliq tekshiruvlarida vakillik</li>
+              <li data-i18n="pricing.t3f5">Bosh buxgalter darajasidagi mutaxassis</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline" data-i18n="pricing.cta">Ariza qoldirish</a>
+          </article>
+        </div>
+
+        <div class="pricing-notes" data-reveal>
+          <p data-i18n="pricing.note1">Eksport-import (TIF) bilan ishlovchi kompaniyalar uchun xizmat 2 000 000 so'mdan boshlanadi va alohida kelishiladi.</p>
+          <p data-i18n="pricing.note2">Tarifdan ortiq har bir xodimning ish haqi hisob-kitobi — 50 000 so'm / oy. Yillik shartnomada 10% chegirma.</p>
+          <p class="pricing-date" data-i18n="pricing.note3">Narxlar 2026-yil avgust holatiga ko'rsatilgan.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===================== Narx kalkulyatori ===================== -->
+    
+
+    <!-- ===================== Taqqoslash ===================== -->
+    <section class="section section-gray" id="compare">
+      <div class="container">
+        <div class="section-head" data-num="03" data-reveal>
+          <p class="kicker"><span class="kicker-num">03</span><span data-i18n="compare.kicker">Taqqoslash</span></p>
+          <h2 data-i18n="compare.title">Shtatdagi buxgalter yoki autsorsing?</h2>
+          <p class="section-sub" data-i18n="compare.sub">Raqamlar bilan solishtirganda farq yaqqol ko'rinadi.</p>
+        </div>
+        <div class="compare-wrap" data-reveal="right">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th></th>
+                <th data-i18n="compare.colA">Shtatdagi buxgalter</th>
+                <th class="compare-us">FinBalans</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th data-i18n="compare.r1l">Oylik xarajat</th>
+                <td data-i18n="compare.r1a">8–12 mln so'm + ish o'rni va soliqlar</td>
+                <td class="compare-us" data-i18n="compare.r1b">600 ming – 2,4 mln so'm, boshqa xarajatsiz</td>
+              </tr>
+              <tr>
+                <th data-i18n="compare.r2l">Ta'til va kasallik</th>
+                <td data-i18n="compare.r2a">Hisob to'xtab qoladi</td>
+                <td class="compare-us" data-i18n="compare.r2b">Jamoa uzluksiz ishlaydi</td>
+              </tr>
+              <tr>
+                <th data-i18n="compare.r3l">Xato uchun javobgarlik</th>
+                <td data-i18n="compare.r3a">Amalda undirib bo'lmaydi</td>
+                <td class="compare-us" data-i18n="compare.r3b">Shartnomada: 50 mln so'mgacha sug'urta</td>
+              </tr>
+              <tr>
+                <th data-i18n="compare.r4l">Bilim doirasi</th>
+                <td data-i18n="compare.r4a">Bitta mutaxassis imkoniyati</td>
+                <td class="compare-us" data-i18n="compare.r4b">Buxgalter + soliq maslahatchisi + kadrlar</td>
+              </tr>
+              <tr>
+                <th data-i18n="compare.r5l">Sifat nazorati</th>
+                <td data-i18n="compare.r5a">Rahbar o'zi tekshirishi kerak</td>
+                <td class="compare-us" data-i18n="compare.r5b">Oylik ichki nazorat</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ---------- Tejash grafigi ---------- --></div>
+    </section>
+
+    <!-- ===================== Guarantee — to'q band ===================== -->
+    <section class="guarantee" id="guarantee">
+      <div class="container">
+        <div class="guarantee-grid">
+          <div class="guarantee-head" data-num="04" data-reveal>
+            <p class="kicker kicker-light"><span class="kicker-num">04</span><span data-i18n="guar.kicker">Javobgarlik</span></p>
+            <h2 data-i18n="guar.title">Xatolarimiz uchun o'zimiz javob beramiz</h2>
+            <p class="guarantee-lead" data-i18n="guar.lead">Bizning aybimiz bilan jarima yoki penya hisoblansa — uni o'z hisobimizdan qoplaymiz. Bu og'zaki va'da emas: shartnomaning 6.2-bandida yozilgan, javobgarligimiz 50 mln so'mgacha sug'urtalangan.</p>
+          </div>
+          <figure class="guarantee-media" data-reveal="left">
+            <img src="img/handshake.jpg" alt="Shartnoma imzolash" data-i18n-attr="alt:guar.imgAlt" width="1200" height="801" loading="lazy" decoding="async">
+          </figure>
+        </div>
+        <div class="guarantee-items stagger" data-reveal>
+          <div class="guarantee-item">
+            <span class="guar-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V6l-8-3-8 3v6c0 6 8 10 8 10z"/><path d="M9.5 12l2 2 3.5-4"/></svg></span>
+            <h3 data-i18n="guar.i1t">Shartnoma namunasi — oldindan</h3>
+            <p data-i18n="guar.i1d">Imzolashdan avval shartnoma matnini to'liq o'rganib chiqasiz. Masofadan, ERI orqali tuzish mumkin.</p>
+          </div>
+          <div class="guarantee-item">
+            <span class="guar-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <h3 data-i18n="guar.i2t">Maxfiylik</h3>
+            <p data-i18n="guar.i2d">Moliyaviy ma'lumotlaringiz oshkor qilinmasligi shartnomadagi alohida NDA bandi bilan kafolatlanadi.</p>
+          </div>
+          <div class="guarantee-item">
+            <span class="guar-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+            <h3 data-i18n="guar.i3t">Ichki nazorat</h3>
+            <p data-i18n="guar.i3d">Har bir buxgalterning ishi oyda bir marta ichki nazoratchi tomonidan tekshiriladi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Process ===================== -->
+    <section class="section" id="process">
+      <div class="container">
+        <div class="section-head" data-num="05" data-reveal>
+          <p class="kicker"><span class="kicker-num">05</span><span data-i18n="process.kicker">Ish tartibi</span></p>
+          <h2 data-i18n="process.title">Qanday boshlaymiz</h2>
+        </div>
+        <ol class="steps stagger from-left" data-reveal>
+          <li class="step">
+            <div class="step-head">
+              <span class="step-num">1</span>
+              <span class="step-time" data-i18n="process.s1time">30 daqiqa</span>
+            </div>
+            <h3 data-i18n="process.s1t">Ariza va qo'ng'iroq</h3>
+            <p data-i18n="process.s1d">Formani to'ldirasiz — ish vaqtida 30 daqiqa ichida bog'lanib, faoliyatingiz va ehtiyojingizni aniqlaymiz.</p>
+          </li>
+          <li class="step">
+            <div class="step-head">
+              <span class="step-num">2</span>
+              <span class="step-time" data-i18n="process.s2time">1–2 kun</span>
+            </div>
+            <h3 data-i18n="process.s2t">Hujjatlarni ko'rib chiqish</h3>
+            <p data-i18n="process.s2d">Joriy hisob holatini bepul baholaymiz va operatsiyalar hajmidan kelib chiqib aniq narx aytamiz.</p>
+          </li>
+          <li class="step">
+            <div class="step-head">
+              <span class="step-num">3</span>
+              <span class="step-time" data-i18n="process.s3time">1 kun</span>
+            </div>
+            <h3 data-i18n="process.s3t">Shartnoma</h3>
+            <p data-i18n="process.s3d">Namunani oldindan yuboramiz, savollarni ko'rib chiqamiz. Ofisda yoki masofadan ERI bilan imzolaymiz.</p>
+          </li>
+          <li class="step">
+            <div class="step-head">
+              <span class="step-num">4</span>
+              <span class="step-time" data-i18n="process.s4time">1 hafta ichida</span>
+            </div>
+            <h3 data-i18n="process.s4t">Ishni topshirasiz</h3>
+            <p data-i18n="process.s4d">Hujjatlarni qabul qilamiz; avvalgi buxgalterdan ishlarni o'tkazib olishni o'zimiz tashkil qilamiz.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== Oltin-band (CTA) ===================== -->
+    <section class="image-band image-zoom" data-reveal>
+      <img src="img/gold-2.jpg" alt="Oltin tangalar o'sish dinamikasida" data-i18n-attr="alt:about.imgAlt" width="1800" height="1200" loading="lazy" decoding="async">
+      <div class="money-overlay">
+        <h2 data-i18n="cta.title">Buxgalteriyani ishonchli qo'llarga topshiring</h2>
+        <a href="#contact" class="btn btn-light" data-i18n="hero.cta1">Bepul konsultatsiya olish</a>
+      </div>
+    </section>
+
+    <!-- ===================== Team ===================== -->
+    <section class="section" id="team">
+      <div class="container">
+        <div class="section-head" data-num="06" data-reveal>
+          <p class="kicker"><span class="kicker-num">06</span><span data-i18n="team.kicker">Jamoa</span></p>
+          <h2 data-i18n="team.title">Hisobingizni yuritadigan odamlar</h2>
+          <p class="section-sub" data-i18n="team.sub">Har bir mijozga aniq mas'ul buxgalter biriktiriladi — kim bilan ishlayotganingizni bilasiz.</p>
+        </div>
+        <div class="team-grid stagger" data-reveal>
+          <figure class="person">
+            <span class="person-photo" data-name="Akmal Rahmonov"><img src="img/team-akmal.jpg" alt="Akmal Rahmonov" width="600" height="900" loading="lazy" decoding="async"></span>
+            <figcaption>
+              <strong>Akmal Rahmonov</strong>
+              <span data-i18n="team.p1role">Asoschi, bosh buxgalter</span>
+              <small data-i18n="team.p1cred">14 yillik tajriba · Soliq maslahatchisi sertifikati</small>
+            </figcaption>
+          </figure>
+          <figure class="person">
+            <span class="person-photo" data-name="Dilnoza Karimova"><img src="img/team-dilnoza.jpg" alt="Dilnoza Karimova" width="600" height="900" loading="lazy" decoding="async"></span>
+            <figcaption>
+              <strong>Dilnoza Karimova</strong>
+              <span data-i18n="team.p2role">Soliq maslahatchisi</span>
+              <small data-i18n="team.p2cred">QQS va eksport-import bo'yicha 9 yil</small>
+            </figcaption>
+          </figure>
+          <figure class="person">
+            <span class="person-photo" data-name="Jasur Alimov"><img src="img/team-jasur.jpg" alt="Jasur Alimov" width="600" height="400" loading="lazy" decoding="async"></span>
+            <figcaption>
+              <strong>Jasur Alimov</strong>
+              <span data-i18n="team.p3role">Buxgalter</span>
+              <small data-i18n="team.p3cred">MChJ va YaTT hisobi bo'yicha 6 yil</small>
+            </figcaption>
+          </figure>
+          <figure class="person">
+            <span class="person-photo" data-name="Nigora Salimova"><img src="img/team-nigora.jpg" alt="Nigora Salimova" width="600" height="755" loading="lazy" decoding="async"></span>
+            <figcaption>
+              <strong>Nigora Salimova</strong>
+              <span data-i18n="team.p4role">Kadrlar va ish haqi bo'yicha mutaxassis</span>
+              <small data-i18n="team.p4cred">Mehnat qonunchiligi bo'yicha 8 yil</small>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Reviews ===================== -->
+    <section class="section section-gray" id="reviews">
+      <div class="container">
+        <div class="section-head" data-num="07" data-reveal>
+          <p class="kicker"><span class="kicker-num">07</span><span data-i18n="reviews.kicker">Mijozlar tajribasi</span></p>
+          <h2 data-i18n="reviews.title">Biz bilan ishlaydigan kompaniyalar</h2>
+        </div>
+
+        <div class="reviews-carousel" id="reviewsCarousel" data-reveal="right">
+          <div class="reviews-viewport">
+            <div class="reviews-track" id="reviewsTrack">
+              <blockquote class="review-slide">
+                <p data-i18n="reviews.r1text">«QQSga o'tganimizda hisobda xatolar chiqdi — FinBalans ikki oyda hammasini tartibga keltirdi va 14 mln so'm ortiqcha to'langan soliqni qaytarib oldi.»</p>
+                <footer>
+                  <strong>Aziz Karimov</strong>
+                  <span data-i18n="reviews.r1role">«TexnoPlast» MChJ direktori</span>
+                </footer>
+              </blockquote>
+              <blockquote class="review-slide">
+                <p data-i18n="reviews.r2text">«Uch yildan beri birorta hisobot kechikmadi. Savolimga ish kunida bir soat ichida javob olaman — avvalgi buxgalterimiz bilan bunday bo'lmagan.»</p>
+                <footer>
+                  <strong>Nilufar Rashidova</strong>
+                  <span data-i18n="reviews.r2role">«FoodCity» moliya menejeri</span>
+                </footer>
+              </blockquote>
+              <blockquote class="review-slide">
+                <p data-i18n="reviews.r3text">«Shtatdagi buxgalterga oyiga 8 mln so'm to'lardik. Endi xuddi shu hajmdagi ish 2,4 mln so'mga bajarilyapti — sifat esa yuqoriroq.»</p>
+                <footer>
+                  <strong>Jasur To'rayev</strong>
+                  <span data-i18n="reviews.r3role">«LogiTrans» asoschisi</span>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+          <div class="reviews-nav">
+            <button type="button" class="rev-arrow" id="revPrev" aria-label="Oldingi fikr" data-i18n-attr="aria-label:reviews.prev">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="reviews-dots" id="revDots"></div>
+            <button type="button" class="rev-arrow" id="revNext" aria-label="Keyingi fikr" data-i18n-attr="aria-label:reviews.next">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section" id="faq">
+      <div class="container faq-wrap">
+        <div class="section-head" data-num="08" data-reveal>
+          <p class="kicker"><span class="kicker-num">08</span><span data-i18n="faq.kicker">Savol-javob</span></p>
+          <h2 data-i18n="faq.title">Ko'p so'raladigan savollar</h2>
+        </div>
+        <div class="faq-list stagger from-right" data-reveal>
+          <details class="faq-item">
+            <summary data-i18n="faq.q1">Ish boshlash uchun qanday hujjatlar kerak?</summary>
+            <p data-i18n="faq.a1">Guvohnoma, soliq.uz kabinetiga kirish, ERI kaliti, bank ko'chirmalari va mavjud bo'lsa — oxirgi topshirilgan hisobotlar. Ro'yxatni ariza qoldirganingizdan keyin yuboramiz; hujjatlarni Telegram orqali qabul qilamiz.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q2">Shartnomani masofadan tuzish mumkinmi?</summary>
+            <p data-i18n="faq.a2">Ha. Shartnoma namunasini oldindan yuboramiz, kelishilgach ERI orqali masofadan imzolaymiz. Ofisga kelish shart emas.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q3">Sizning xatoingiz tufayli jarima kelsa nima bo'ladi?</summary>
+            <p data-i18n="faq.a3">Jarima va penyani o'z hisobimizdan qoplaymiz — bu shartnomaning 6.2-bandida belgilangan. Javobgarligimiz 50 mln so'mgacha sug'urtalangan.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q4">Soliq rejimini almashtirsak nima o'zgaradi?</summary>
+            <p data-i18n="faq.a4">O'tish hujjatlarini o'zimiz tayyorlaymiz va topshiramiz — bu tarifga kiradi. Tarif yangi rejimdagi ish hajmiga qarab qayta ko'rib chiqiladi va oldindan kelishiladi.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q5">Tarifga nima kiradi, kutilmagan qo'shimcha to'lovlar bo'lmaydimi?</summary>
+            <p data-i18n="faq.a5">Tarif tarkibi shartnomaga ilova qilinadi: hisob yuritish, hisobotlar, kelishilgan miqdordagi xodimlar ish haqi. Tarifdan tashqari ishlar (masalan, hisobni tiklash) faqat oldindan kelishilgan narxda bajariladi.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q6">Narx nimaga bog'liq?</summary>
+            <p data-i18n="faq.a6">To'rt omilga: soliq rejimi (aylanma soliq yoki QQS), oylik operatsiyalar soni, xodimlar soni va eksport-import mavjudligi. Shu ma'lumotlar bilan narxni 10 daqiqada aniq aytamiz.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA band ===================== -->
+    <section class="cta-band">
+      <div class="container cta-inner" data-reveal>
+        <h2 data-i18n="cta.title">Buxgalteriyani ishonchli qo'llarga topshiring</h2>
+        <div class="cta-actions">
+          <a href="#contact" class="btn btn-light" data-i18n="hero.cta1">Bepul konsultatsiya olish</a>
+          <a href="tel:+998712004567" class="cta-phone">+998 71 200 45 67</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Contact ===================== -->
+    <section class="section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-form-col" data-reveal="left">
+          <p class="kicker"><span class="kicker-num">09</span><span data-i18n="contact.kicker">Aloqa</span></p>
+          <h2 data-i18n="contact.title">Ariza qoldiring</h2>
+          <p class="section-sub" data-i18n="contact.sub">Ish vaqtida 30 daqiqa ichida qo'ng'iroq qilamiz: savollarga javob beramiz va biznesingiz uchun aniq narxni hisoblab beramiz.</p>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="form-group">
+              <label for="name" data-i18n="form.name">Ismingiz</label>
+              <input type="text" id="name" name="name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="phone" data-i18n="form.phone">Telefon raqamingiz</label>
+              <input type="tel" id="phone" name="phone" required placeholder="+998 __ ___ __ __" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label for="message"><span data-i18n="form.message">Izoh</span> <em class="optional" data-i18n="form.optional">(ixtiyoriy)</em></label>
+              <textarea id="message" name="message" rows="3"></textarea>
+            </div>
+            <div class="form-hp" aria-hidden="true">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+            </div>
+            <label class="consent">
+              <input type="checkbox" id="consent" required>
+              <span data-i18n="form.consent">Shaxsiy ma'lumotlarimni qayta ishlashga rozilik bildiraman</span>
+            </label>
+            <p class="consent-more"><a href="privacy.html" data-i18n="footer.privacy">Maxfiylik siyosati</a></p>
+            <button type="submit" class="btn btn-primary btn-submit" data-i18n="form.submit">Ariza yuborish</button>
+            <p class="form-invalid" id="formInvalid" hidden role="alert" data-i18n="form.invalid">Iltimos, belgilangan maydonlarni to'ldiring va rozilik bandini belgilang.</p>
+            <p class="form-success" id="formSuccess" hidden role="status" data-i18n="form.success">Rahmat, arizangiz qabul qilindi. Ish vaqtida 30 daqiqa ichida bog'lanamiz.</p>
+            <p class="form-error" id="formError" hidden role="alert">
+              <span data-i18n="form.error">Xatolik yuz berdi — ariza yuborilmadi. Iltimos, to'g'ridan-to'g'ri bog'laning:</span>
+              <a href="https://t.me/finbalans" target="_blank" rel="noopener">@finbalans</a> ·
+              <a href="tel:+998712004567">+998 71 200 45 67</a>
+            </p>
+          </form>
+        </div>
+
+        <div class="contact-info-col" data-reveal="right">
+          <ul class="contact-list">
+            <li>
+              <span class="contact-label" data-i18n="contact.phoneLabel">Telefon</span>
+              <a href="tel:+998712004567">+998 71 200 45 67</a>
+            </li>
+            <li>
+              <span class="contact-label">Telegram</span>
+              <a href="https://t.me/finbalans" target="_blank" rel="noopener">@finbalans</a>
+            </li>
+            <li>
+              <span class="contact-label">E-mail</span>
+              <a href="mailto:info@finbalans.uz">info@finbalans.uz</a>
+            </li>
+            <li>
+              <span class="contact-label" data-i18n="contact.addressLabel">Manzil</span>
+              <span data-i18n="contact.address">Toshkent sh., Yakkasaroy tumani, Bobur ko'chasi, 20</span>
+            </li>
+            <li>
+              <span class="contact-label" data-i18n="contact.hoursLabel">Ish vaqti</span>
+              <span data-i18n="contact.hours">Dushanba – shanba, 9:00 – 18:00</span>
+            </li>
+          </ul>
+          <div class="contact-socials">
+            <span class="contact-label" data-i18n="contact.socials">Ijtimoiy tarmoqlar</span>
+            <div class="socials">
+              <a href="https://t.me/finbalans" data-social="telegram" target="_blank" rel="noopener" aria-label="Telegram">
+                <svg viewBox="0 0 24 24" class="ic-fill"><path d="M21.9 4.6c.2-1-.7-1.8-1.6-1.4L2.7 10.1c-1 .4-1 1.9.1 2.2l4.5 1.4 1.7 5.4c.3 1 1.6 1.2 2.2.4l2.5-3 4.6 3.4c.8.6 2 .2 2.2-.8l1.4-14.5zM9.1 13.2l8.5-5.4c.4-.2.7.3.4.6l-7 6.5-.3 3-1.6-4.7z"/></svg>
+              </a>
+              <a href="https://instagram.com/finbalans" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </a>
+              <a href="https://facebook.com/finbalans" data-social="facebook" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="https://youtube.com/@finbalans" data-social="youtube" target="_blank" rel="noopener" aria-label="YouTube">
+                <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="map">
+            <iframe title="FinBalans — xaritada" data-i18n-attr="title:contact.mapTitle" src="https://maps.google.com/maps?q=Bobur+ko%27chasi+20,+Yakkasaroy+tumani,+Toshkent&t=&z=16&ie=UTF8&iwloc=&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-mega" aria-hidden="true">FinBalans<span>.</span></p>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="brand brand-light">FinBalans<span class="brand-dot">.</span></p>
+          <p class="footer-tagline" data-i18n="footer.tagline">MChJ va YaTT uchun buxgalteriya autsorsingi. Toshkent, 2018-yildan beri.</p>
+          <div class="socials socials-dark">
+            <a href="https://t.me/finbalans" data-social="telegram" target="_blank" rel="noopener" aria-label="Telegram">
+              <svg viewBox="0 0 24 24" class="ic-fill"><path d="M21.9 4.6c.2-1-.7-1.8-1.6-1.4L2.7 10.1c-1 .4-1 1.9.1 2.2l4.5 1.4 1.7 5.4c.3 1 1.6 1.2 2.2.4l2.5-3 4.6 3.4c.8.6 2 .2 2.2-.8l1.4-14.5zM9.1 13.2l8.5-5.4c.4-.2.7.3.4.6l-7 6.5-.3 3-1.6-4.7z"/></svg>
+            </a>
+            <a href="https://instagram.com/finbalans" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="https://facebook.com/finbalans" data-social="facebook" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://youtube.com/@finbalans" data-social="youtube" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <p class="footer-heading" data-i18n="footer.colServices">Xizmatlar</p>
+          <a href="#services" data-i18n="services.s1t">Buxgalteriya hisobini yuritish</a>
+          <a href="#services" data-i18n="services.s2t">Soliq hisobotlari</a>
+          <a href="#services" data-i18n="services.s3t">Ish haqi va kadrlar hisobi</a>
+          <a href="#services" data-i18n="services.s4t">Hisobni tiklash</a>
+          <a href="#services" data-i18n="services.s6t">Biznesni ro'yxatdan o'tkazish</a>
+        </div>
+        <div class="footer-col">
+          <p class="footer-heading" data-i18n="footer.colCompany">Kompaniya</p>
+          <a href="#pricing" data-i18n="nav.pricing">Narxlar</a>
+          <a href="#team" data-i18n="nav.team">Jamoa</a>
+          <a href="#faq" data-i18n="nav.faq">Savol-javob</a>
+          <a href="#contact" data-i18n="nav.contact">Aloqa</a>
+        </div>
+        <div class="footer-col">
+          <p class="footer-heading" data-i18n="footer.colContact">Aloqa</p>
+          <a href="tel:+998712004567">+998 71 200 45 67</a>
+          <a href="https://t.me/finbalans" target="_blank" rel="noopener">@finbalans</a>
+          <a href="mailto:info@finbalans.uz">info@finbalans.uz</a>
+          <span data-i18n="contact.hours">Dushanba – shanba, 9:00 – 18:00</span>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p>
+          <span data-i18n="footer.legalName">«FINBALANS» MChJ</span> ·
+          <span data-i18n="footer.stir">STIR: 309 415 782</span> ·
+          <span data-i18n="contact.address">Toshkent sh., Yakkasaroy tumani, Bobur ko'chasi, 20</span>
+        </p>
+        <p>
+          © 2018–<span id="year">2026</span> FinBalans ·
+          <a href="privacy.html" data-i18n="footer.privacy">Maxfiylik siyosati</a> ·
+          <a href="admin.html" class="footer-admin" rel="nofollow">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span data-i18n="footer.admin">Xodimlar uchun kirish</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <a class="float-tg" id="floatTg" href="https://t.me/finbalans" data-social="telegram" target="_blank" rel="noopener" aria-label="Telegram orqali yozish" data-i18n-attr="aria-label:a11y.tg">
+    <svg viewBox="0 0 24 24"><path d="M21.9 4.6c.2-1-.7-1.8-1.6-1.4L2.7 10.1c-1 .4-1 1.9.1 2.2l4.5 1.4 1.7 5.4c.3 1 1.6 1.2 2.2.4l2.5-3 4.6 3.4c.8.6 2 .2 2.2-.8l1.4-14.5zM9.1 13.2l8.5-5.4c.4-.2.7.3.4.6l-7 6.5-.3 3-1.6-4.7z"/></svg>
+  </a>
+
+  <button type="button" class="back-top" id="backTop" aria-label="Yuqoriga qaytish" data-i18n-attr="aria-label:a11y.toTop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <div class="mobile-cta" id="mobileCta">
+    <a href="tel:+998712004567" class="mobile-cta-btn mobile-cta-call" data-i18n="mobilebar.call">Qo'ng'iroq qilish</a>
+    <a href="#contact" class="mobile-cta-btn mobile-cta-form" data-i18n="mobilebar.form">Ariza qoldirish</a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

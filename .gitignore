@@ -1,0 +1,12 @@
+# Maxfiy ma'lumotlar — hech qachon repoga tushmaydi
+data/
+*.log
+
+# Vaqtinchalik fayllar
+_shot.html
+_ashot.html
+__cred-test.html
+node_modules/
+.vercel
+.DS_Store
+Thumbs.db
