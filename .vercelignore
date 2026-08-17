@@ -1,0 +1,10 @@
+# Vercelga yuklanmaydigan fayllar
+data/
+img/_bak/
+node_modules/
+server.js
+start-site.bat
+_shot.html
+_ashot.html
+__cred-test.html
+*.log
