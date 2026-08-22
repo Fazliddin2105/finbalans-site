@@ -1268,7 +1268,62 @@ function setNav(open) {
   nav.classList.toggle('open', open);
   burger.setAttribute('aria-expanded', String(open));
   document.documentElement.classList.toggle('nav-open', open);
+
+  /* Ochilganda fokus panelning birinchi havolasiga o'tadi. Sichqoncha
+     bilan ochganda ham zarar qilmaydi, klaviatura bilan ochganda esa
+     shart: aks holda keyingi Tab panelni "sakrab o'tib", ortidagi
+     ko'rinmas elementlarga tushardi. */
+  if (open) {
+    const first = nav.querySelector('a, button');
+    if (first) first.focus();
+  }
 }
+
+/* ---------------- Ochiq menyuda fokus tuzog'i ----------------
+   TOPILGAN XATO: menyu ochiq turганda Tab fokusni panel ichiga emas,
+   uning ORTIDAGI elementlarga - kurs lentasi, hero tugmalari,
+   tariflar havolasiga - olib ketardi. Klaviatura yoki skrinrider
+   bilan ishlaydigan odam menyuni ochadi-yu, undan foydalana olmasdi.
+
+   Panel faqat burger ko'rinib turgan kengliklarda (<=1000px)
+   ochiladi, shuning uchun tuzoq ham faqat o'sha holatda ishlaydi -
+   desktopdagi gorizontal menyuga tegmaydi. */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Tab' || !nav.classList.contains('open')) return;
+
+  /* Tuzoq chegarasi - butun sarlavha bloki: panel havolalari, til
+     tugmalari, burger va kurs lentasi. Menyu ochiq turganda aynan
+     shular ko'rinib turadi, qolgani panel ortida qoladi.
+     Elementlar DOM tartibida olinadi - shunda halqa Tab bosish
+     tartibiga mos tushadi. */
+  const header = document.getElementById('siteHeader');
+  if (!header) return;
+
+  const items = [...header.querySelectorAll(
+    'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  )].filter(el => {
+    if (el.offsetParent === null && el !== burger) return false;   /* ko'rinmaydiganlar */
+    const cs = getComputedStyle(el);
+    return cs.visibility !== 'hidden' && cs.display !== 'none';
+  });
+  if (!items.length) return;
+
+  const first = items[0];
+  const last = items[items.length - 1];
+  const active = document.activeElement;
+
+  if (!header.contains(active)) {
+    /* Fokus qandaydir yo'l bilan tashqarida qolsa - qaytariladi */
+    e.preventDefault();
+    first.focus();
+  } else if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
 
 burger.addEventListener('click', () => setNav(!nav.classList.contains('open')));
 
