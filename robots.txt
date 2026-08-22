@@ -1,0 +1,10 @@
+# FinBalans — buxgalteriya xizmatlari
+
+User-agent: *
+Allow: /
+
+# Boshqaruv paneli qidiruvga tushmasin
+Disallow: /admin.html
+Disallow: /api/
+
+Sitemap: https://finbalans.vercel.app/sitemap.xml

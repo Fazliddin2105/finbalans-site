@@ -6,13 +6,26 @@
   <title>FinBalans — Toshkentda buxgalteriya xizmatlari</title>
   <meta name="description" content="MChJ va YaTT uchun buxgalteriya autsorsingi Toshkentda. Soliq hisobotlari, ish haqi, kadrlar hisobi. Javobgarlik shartnomada, 50 mln so'mgacha sug'urtalangan.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2310233B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23fff' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Shriftlar o'z serverimizda (@font-face css/style.css boshida).
+       Google Fonts'da birinchi bo'yash ikkita begona ulanish va
+       ikki bosqichli so'rov zanjirini kutardi.
+       Bu ikkitasi birinchi ekrandagi matnni chizadi: sarlavha
+       (Lora 600) va matn (Golos 400). Qolganlari unicode-range
+       bo'yicha kerak bo'lganda yuklanadi. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="fonts/lora-600-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="fonts/golos-text-400-latin.woff2">
   <!-- Telefon brauzerining tepa paneli sayt bilan bir rangda bo'ladi
        (Chrome/Android, Safari 15+). Header foni bilan bir xil navy. -->
   <meta name="theme-color" content="#10233B">
   <link rel="canonical" href="https://finbalans.vercel.app/">
+  <!-- Uch til bitta sahifada (JS almashtiradi), shuning uchun uchalasi
+       ham shu manzilga ishora qiladi. x-default - o'zbekcha. -->
+  <link rel="alternate" hreflang="uz" href="https://finbalans.vercel.app/">
+  <link rel="alternate" hreflang="ru" href="https://finbalans.vercel.app/">
+  <link rel="alternate" hreflang="en" href="https://finbalans.vercel.app/">
+  <link rel="alternate" hreflang="x-default" href="https://finbalans.vercel.app/">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="FinBalans">
@@ -56,6 +69,65 @@
     }
   }
   </script>
+  <!-- Savol-javob: Google qidiruv natijasida ochiladigan ro'yxat
+       sifatida ko'rsatishi uchun. Matnlar sahifadagi bilan bir xil -
+       aks holda Google strukturali ma'lumotni rad etadi. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Ish boshlash uchun qanday hujjatlar kerak?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Guvohnoma, soliq.uz kabinetiga kirish, ERI kaliti, bank ko'chirmalari va mavjud bo'lsa — oxirgi topshirilgan hisobotlar. Ro'yxatni ariza qoldirganingizdan keyin yuboramiz; hujjatlarni Telegram orqali qabul qilamiz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Shartnomani masofadan tuzish mumkinmi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ha. Shartnoma namunasini oldindan yuboramiz, kelishilgach ERI orqali masofadan imzolaymiz. Ofisga kelish shart emas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Sizning xatoingiz tufayli jarima kelsa nima bo'ladi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Jarima va penyani o'z hisobimizdan qoplaymiz — bu shartnomaning 6.2-bandida belgilangan. Javobgarligimiz 50 mln so'mgacha sug'urtalangan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Soliq rejimini almashtirsak nima o'zgaradi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O'tish hujjatlarini o'zimiz tayyorlaymiz va topshiramiz — bu tarifga kiradi. Tarif yangi rejimdagi ish hajmiga qarab qayta ko'rib chiqiladi va oldindan kelishiladi."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Tarifga nima kiradi, kutilmagan qo'shimcha to'lovlar bo'lmaydimi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tarif tarkibi shartnomaga ilova qilinadi: hisob yuritish, hisobotlar, kelishilgan miqdordagi xodimlar ish haqi. Tarifdan tashqari ishlar (masalan, hisobni tiklash) faqat oldindan kelishilgan narxda bajariladi."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Narx nimaga bog'liq?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To'rt omilga: soliq rejimi (aylanma soliq yoki QQS), oylik operatsiyalar soni, xodimlar soni va eksport-import mavjudligi. Shu ma'lumotlar bilan narxni 10 daqiqada aniq aytamiz."
+        }
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -86,9 +158,9 @@
 
       <div class="header-right">
         <div class="lang" role="group" aria-label="Til" data-i18n-attr="aria-label:a11y.langGroup">
-          <button class="lang-btn" data-lang="uz"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#1EB5E4"/><rect y="5.4" width="24" height="5.2" fill="#fff"/><rect y="10.6" width="24" height="5.4" fill="#27A052" rx="0"/><rect y="4.9" width="24" height="0.9" fill="#D6322E"/><rect y="10.2" width="24" height="0.9" fill="#D6322E"/></svg>Uz</button><!--
-       --><button class="lang-btn" data-lang="ru"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect y="5.3" width="24" height="5.4" fill="#2E5AA7"/><rect y="10.7" width="24" height="5.3" fill="#D6322E"/></svg>Ру</button><!--
-       --><button class="lang-btn" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#2A3F8F"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3"/><path d="M0 0l24 16M24 0L0 16" stroke="#D6322E" stroke-width="1.3"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5"/><path d="M12 0v16M0 8h24" stroke="#D6322E" stroke-width="2.6"/></svg>En</button>
+          <button class="lang-btn" data-lang="uz"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#1EB5E4"/><rect y="5.4" width="24" height="5.2" fill="#fff"/><rect y="10.6" width="24" height="5.4" fill="#27A052" rx="0"/><rect y="4.9" width="24" height="0.9" fill="#D6322E"/><rect y="10.2" width="24" height="0.9" fill="#D6322E"/></svg>UZ</button><!--
+       --><button class="lang-btn" data-lang="ru"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect y="5.3" width="24" height="5.4" fill="#2E5AA7"/><rect y="10.7" width="24" height="5.3" fill="#D6322E"/></svg>RU</button><!--
+       --><button class="lang-btn" data-lang="en"><svg class="lang-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#2A3F8F"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3"/><path d="M0 0l24 16M24 0L0 16" stroke="#D6322E" stroke-width="1.3"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5"/><path d="M12 0v16M0 8h24" stroke="#D6322E" stroke-width="2.6"/></svg>EN</button>
         </div>
         <a class="header-phone" href="tel:+998712004567">+998 71 200 45 67</a>
         <a href="#contact" class="btn btn-primary btn-header" data-i18n="nav.cta">Konsultatsiya</a>

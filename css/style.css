@@ -1,4 +1,345 @@
 /* =========================================================
+   Shriftlar — o'z serverimizda (Google Fonts'dan emas)
+   ---------------------------------------------------------
+   Ilgari shriftlar fonts.googleapis.com dan olinardi. Bu
+   birinchi bo'yashdan oldin ikkita qo'shimcha ulanish
+   (DNS + TLS) va ikkita so'rov zanjiri degani edi: avval
+   CSS, keyin undan woff2 manzillari. Sekin 4G'da bu LCP'ni
+   ~1 soniyaga kechiktirardi - va LCP elementi aynan matn
+   (.hero .lead).
+
+   Endi fayllar sayt bilan bir domendan, HTTP/2 orqali
+   parallel keladi; eng kerakli ikkitasi <head> da preload
+   qilinadi.
+
+   Faqat kerakli subsetlar: latin, latin-ext (o'zbek),
+   cyrillic, cyrillic-ext (rus). Vietnam, math va symbols
+   olib tashlandi. unicode-range tufayli brauzer sahifadagi
+   matnga kerak bo'lganini gina yuklaydi.
+
+   Yangilash: fonts.googleapis.com/css2 dan CSS oling va
+   shu jadvalni qayta yasang.
+   ========================================================= */
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-400-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-500-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-500-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-600-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-600-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/golos-text-700-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/golos-text-700-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/golos-text-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/golos-text-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500i-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500i-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500i-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500i-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/lora-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/lora-600-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/lora-600-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/lora-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/lora-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* ---------------------------------------------------------
+   Metrikasi moslangan zaxira shriftlar
+   ---------------------------------------------------------
+   Shrift yuklanguncha matn tizim shriftida chiziladi. Muammo
+   shundaki, ularning o'lchamlari boshqacha: Georgia Lora'dan
+   ~10% keng, Segoe UI esa Golos'dan ~9% tor. Shu sabab
+   sarlavha zaxira shriftda boshqacha qatorlarga bo'linar,
+   haqiqiy shrift kelganda esa qayta joylashardi - hero
+   sakrardi (CLS).
+
+   Quyidagi ikki oila o'sha tizim shriftlarini brend
+   shriftining o'lchamlariga "cho'zadi": size-adjust harflar
+   kengligini, ascent/descent esa qator balandligini
+   tenglashtiradi. Natijada almashinuv paytida hech narsa
+   siljimaydi.
+
+   Qiymatlar taxmin emas - canvas measureText bilan ikkala
+   shriftda bir xil matn o'lchanib olindi. Shriftlar
+   almashtirilsa, qaytadan o'lchash kerak.
+   --------------------------------------------------------- */
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Times'), local('Liberation Serif');
+  size-adjust: 90.65%;
+  ascent-override: 111.42%;
+  descent-override: 29.78%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Golos Fallback';
+  src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial'), local('Liberation Sans');
+  size-adjust: 108.72%;
+  ascent-override: 90.14%;
+  descent-override: 20.24%;
+  line-gap-override: 0%;
+}
+
+/* =========================================================
    FinBalans — buxgalteriya xizmatlari
    Boy tahririy uslub: to'liq ekranli fotoli hero, serif
    sarlavhalar, to'q ko'k bandlar, yumshoq animatsiyalar.
@@ -28,8 +369,8 @@
   --border: #E3E7EB;
   --border-navy: rgba(255, 255, 255, 0.16);
   --radius: 6px;
-  --font: 'Golos Text', 'Segoe UI', Tahoma, sans-serif;
-  --serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --font: 'Golos Text', 'Golos Fallback', 'Segoe UI', Tahoma, sans-serif;
+  --serif: 'Lora', 'Lora Fallback', Georgia, 'Times New Roman', serif;
 
   /* Tepa va past qatlamlarning o'lchov tokenlari. Bir joyda turadi,
      shuning uchun hero paddingi, anker sakrashi va suzuvchi tugmalar
@@ -2682,6 +3023,13 @@ body.has-rates .hero { padding-top: 194px; }
   width: 19px;
   height: 19px;
   border-radius: 50%;
+  /* Tizim shrifti, brend shrifti emas. Sabab: uchta belgidan bittasi -
+     rubl ₽ (U+20BD) - Golos'ning "latin-ext" subsetida yotadi. O'zbekcha
+     sahifada boshqa hech qanday latin-ext belgi yo'q, ya'ni 19px doiradagi
+     bitta belgi uchun 18.7 KB qo'shimcha shrift fayli tortilardi.
+     $ € ₽ - valyuta belgilari, harf emas: tizim shriftida ham bir xil
+     ko'rinadi. */
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   font-style: normal;
   font-size: 11.5px;
   font-weight: 700;
@@ -3657,3 +4005,161 @@ body.has-rates .hero { padding-top: 150px; }
    o'ram yo'qdagidek qoladi.
    ========================================================= */
 picture { display: contents; }
+
+/* =========================================================
+   CHOP ETISH
+   ---------------------------------------------------------
+   Buxgalteriya byurosining mijozlari tariflarni va rekvizitlarni
+   qog'ozga chiqaradi - rahbariyatga ko'rsatish, taqqoslash uchun.
+   Sozlamasiz chop etilganda sahifa to'q ko'k fon, kesilgan
+   karusel va ishlamaydigan tugmalar bilan chiqadi.
+
+   Bu yerda sayt hujjatga aylanadi: bezaklar olib tashlanadi,
+   matn qora rangda, uch tarif yonma-yon, havolalar ostiga
+   manzil chiqariladi.
+   ========================================================= */
+@media print {
+  /* Fon bo'yashini majburlamaymiz - printerlar odatda o'chirib
+     qo'yadi va natija kutilganidan boshqacha chiqadi */
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html { overflow-x: visible; }
+  body { padding-bottom: 0; font-size: 11pt; line-height: 1.45; }
+
+  /* Ekran uchun mo'ljallangan boshqaruv elementlari qog'ozda keraksiz */
+  .site-header,
+  .rates-strip,
+  .nav,
+  .burger,
+  .lang,
+  .mobile-cta,
+  .back-top,
+  .float-tg,
+  .loader,
+  .scroll-progress,
+  .skip-link,
+  .hero-bg,
+  .hero-chart,
+  .txt-marquee,
+  .image-band,
+  .map,
+  .reviews-nav,
+  .reviews-dots,
+  .tariffs-dots,
+  .footer-mega,
+  .section-head[data-num]::before,
+  .services-head[data-num]::before,
+  .guarantee-head[data-num]::before { display: none !important; }
+
+  /* Paydo bo'lish animatsiyasi chop etishda "ko'rinmagan" bo'lib
+     qolmasin - hamma narsa ochiq holatda */
+  [data-reveal],
+  .stagger > *,
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  /* Hero: fotosiz, oddiy sarlavha bloki */
+  .hero {
+    min-height: auto !important;
+    padding: 0 0 18pt !important;
+    color: #000 !important;
+  }
+  .hero h1 { font-size: 22pt; }
+  .hero .lead { font-size: 11pt; }
+  .hero-actions,
+  .hero-chips { display: none !important; }
+  .facts { padding: 0 !important; }
+
+  .section,
+  .guarantee,
+  .cta-band { padding: 14pt 0 !important; }
+  .container { max-width: none !important; padding: 0 !important; }
+
+  /* Ekranda ikki ustunli gridlar qog'ozda sig'maydi - bir ustunga */
+  .services-grid,
+  .guarantee-grid,
+  .contact-grid { grid-template-columns: 1fr !important; gap: 12pt !important; }
+  .services-head { position: static !important; margin-bottom: 10pt !important; }
+  .guarantee-items { grid-template-columns: repeat(3, 1fr) !important; gap: 10pt !important; }
+  .steps { grid-template-columns: repeat(2, 1fr) !important; gap: 10pt !important; }
+  .team-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8pt !important; }
+  .service-row { grid-template-columns: 1fr auto !important; gap: 8pt !important; padding: 6pt 0 !important; }
+  .service-ic { display: none !important; }
+
+  /* Sahifa ichidagi navigatsiya tugmalari qog'ozda ishlamaydi */
+  .btn,
+  .link-arrow,
+  .cta-actions,
+  .services-head .btn { display: none !important; }
+  h2 { font-size: 15pt; }
+  h3 { font-size: 12pt; }
+
+  /* Tariflar: karusel emas, uchalasi yonma-yon */
+  .tariffs {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10pt !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+  .tariff {
+    flex: none !important;
+    border: 1pt solid #999 !important;
+    padding: 8pt !important;
+  }
+  .tariff .btn { display: none !important; }
+
+  /* Taqqoslash: kartalar emas, haqiqiy jadval */
+  .compare-wrap { overflow: visible !important; }
+  .compare { display: table !important; width: 100% !important; min-width: 0 !important; }
+  .compare thead { display: table-header-group !important; }
+  .compare tbody { display: table-row-group !important; }
+  .compare tr { display: table-row !important; border: 0 !important; padding: 0 !important; }
+  .compare th,
+  .compare td {
+    display: table-cell !important;
+    border: 1pt solid #999 !important;
+    padding: 4pt 6pt !important;
+    margin: 0 !important;
+  }
+  .compare td::before { content: none !important; }
+
+  /* Savol-javob to'liq ochiq chiqadi */
+  .faq-item[open] .faq-a,
+  .faq-item .faq-a { display: block !important; height: auto !important; }
+  .faq-item summary::after { content: none !important; }
+
+  /* Havolalar: qog'ozda bosib bo'lmaydi - manzil matn bo'lib chiqadi.
+     Ichki ankerlar va tel/mailto bundan mustasno (ular ma'nosiz uzun). */
+  .contact-list a::after,
+  .footer-legal a::after { content: ' (' attr(href) ')'; font-size: 9pt; }
+  .contact-list a[href^="tel:"]::after,
+  .contact-list a[href^="mailto:"]::after { content: none; }
+
+  /* Bo'linmasligi kerak bo'lgan bloklar */
+  .tariff,
+  .service-row,
+  .guarantee-item,
+  .step,
+  .person,
+  .faq-item,
+  .compare tr { break-inside: avoid; page-break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+
+  .footer { border-top: 1pt solid #999 !important; padding: 12pt 0 0 !important; }
+  .footer-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10pt !important; }
+  .socials { display: none !important; }
+
+  @page { margin: 14mm; }
+}

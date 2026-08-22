@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahifa topilmadi — FinBalans</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#10233B">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2310233B'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23fff' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* To'q fonli bitta ekran: sarlavha, izoh va chiqish yo'llari.
+       Sayt uslubidan foydalanadi - alohida dizayn yasalmagan. */
+    body { background: var(--navy); color: var(--on-navy); }
+    .nf {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    .nf-code {
+      font-family: var(--serif);
+      font-size: clamp(64px, 16vw, 120px);
+      font-weight: 600;
+      line-height: 1;
+      color: var(--accent-soft);
+      margin-bottom: 8px;
+    }
+    .nf h1 {
+      color: #fff;
+      font-size: clamp(26px, 5vw, 38px);
+      margin-bottom: 14px;
+    }
+    .nf-text { color: var(--on-navy-muted); font-size: 16px; margin-bottom: 30px; }
+    .nf-links { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+    .nf-links .btn { min-height: 48px; display: inline-flex; align-items: center; }
+    /* .btn-outline oq fon uchun (oltin matn, oltin hoshiya) - to'q fonda
+       o'qilmaydi. Shu sahifadagi ikkinchi tugma uchun yorug' variant. */
+    .nf-links .btn-ghost {
+      background: transparent;
+      color: var(--on-navy);
+      border-color: var(--border-navy);
+    }
+    .nf-links .btn-ghost:hover { background: rgba(255,255,255,0.07); border-color: var(--accent-soft); }
+    .nf-more {
+      border-top: 1px solid var(--border-navy);
+      padding-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 26px;
+    }
+    .nf-more a {
+      color: var(--on-navy-muted);
+      font-size: 15px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .nf-more a:hover { color: #fff; }
+    @media (max-width: 460px) {
+      .nf-links { flex-direction: column; align-items: stretch; }
+      .nf-links .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="nf">
+    <p class="nf-code" aria-hidden="true">404</p>
+    <h1>Bunday sahifa yo'q</h1>
+    <p class="nf-text">Havola eskirgan yoki manzil xato yozilgan bo'lishi mumkin.
+       Quyidagilardan birini tanlang — yoki shunchaki qo'ng'iroq qiling,
+       ish vaqtida 30 daqiqa ichida javob beramiz.</p>
+
+    <div class="nf-links">
+      <a href="/" class="btn btn-light">Bosh sahifaga qaytish</a>
+      <a href="tel:+998712004567" class="btn btn-ghost">+998 71 200 45 67</a>
+    </div>
+
+    <nav class="nf-more" aria-label="Sayt bo'limlari">
+      <a href="/#services">Xizmatlar</a>
+      <a href="/#pricing">Narxlar</a>
+      <a href="/#faq">Savol-javob</a>
+      <a href="/#contact">Aloqa</a>
+    </nav>
+  </main>
+</body>
+</html>

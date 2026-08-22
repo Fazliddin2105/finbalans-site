@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sayt bitta sahifadan iborat (bo'limlar ankerlar bilan) + maxfiylik
+     siyosati. Uch til bitta manzilda, JS bilan almashadi - shuning
+     uchun hreflang uchalasini ham shu URL ga yo'naltiradi. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://finbalans.vercel.app/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="uz" href="https://finbalans.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://finbalans.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://finbalans.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://finbalans.vercel.app/"/>
+  </url>
+  <url>
+    <loc>https://finbalans.vercel.app/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
