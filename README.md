@@ -67,6 +67,20 @@ TG_TOKEN=<bot-token> TG_CHAT=<chat-id> node server.js
 - Brute-force cheklovi, sessiya muddati, xavfsizlik sarlavhalari
 - `data/` papkasi web orqali ochilmaydi va git repoga qo'shilmaydi
 
+## Shriftlar
+
+`fonts/` — Lora va Golos Text, o'z serverimizda, **variable** ko'rinishda:
+bitta fayl butun og'irlik oralig'ini qamraydi. `@font-face` ta'riflari
+`css/style.css` boshida (alohida so'rov bo'lmasin uchun).
+
+`unicode-range` tufayli brauzer kerakligini gina yuklaydi — o'zbekcha
+sahifa 3 ta fayl (114 KB), kirill fayllari faqat ruscha versiyada.
+
+Yonida "metrikasi moslangan zaxira" oilalar turadi (`Lora Fallback`,
+`Golos Fallback`): shrift yuklanguncha tizim shrifti aynan o'sha
+kenglik va balandlikda chiziladi, shuning uchun almashinuvda sahifa
+sakramaydi (CLS ~0).
+
 ## Suratlar
 
 Har bir surat `<picture>` ichida: brauzer WebP va o'z ekraniga mos
