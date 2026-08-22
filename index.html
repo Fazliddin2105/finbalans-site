@@ -16,6 +16,8 @@
         href="fonts/lora-var-latin.woff2">
   <link rel="preload" as="font" type="font/woff2" crossorigin
         href="fonts/golos-text-var-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="fonts/lora-var-i-latin.woff2">
   <!-- Telefon brauzerining tepa paneli sayt bilan bir rangda bo'ladi
        (Chrome/Android, Safari 15+). Header foni bilan bir xil navy. -->
   <meta name="theme-color" content="#10233B">
@@ -128,6 +130,13 @@
     ]
   }
   </script>
+  <!-- `js` sinfi bu yerda qo'yiladi, main.js da emas. Sabab: main.js
+       endi `defer` bilan yuklanadi va HTML tahlil qilinib bo'lgach
+       ishga tushadi. Sinf o'sha paytda qo'yilsa, paydo bo'lish
+       animatsiyasi kechikib yoqilar va bo'limlar avval ko'rinib,
+       keyin g'oyib bo'lardi. Inline skript birinchi bo'yashdan
+       oldin bajariladi. -->
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -880,6 +889,8 @@
     <a href="#contact" class="mobile-cta-btn mobile-cta-form" data-i18n="mobilebar.form">Ariza qoldirish</a>
   </div>
 
-  <script src="js/main.js"></script>
+  <!-- defer: skript birinchi bo'yashni to'smaydi. Ilgari u
+       render-blocking edi va FCP ni ~0.9 soniyaga kechiktirardi. -->
+  <script src="js/main.js" defer></script>
 </body>
 </html>
