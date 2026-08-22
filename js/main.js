@@ -1406,7 +1406,12 @@ form.addEventListener('submit', e => {
   const data = {
     name: name.value.trim(),
     phone: phone.value.trim(),
-    message: form.message.value.trim()
+    message: form.message.value.trim(),
+    /* Honeypot: odam uni ko'rmaydi (forma tashqarisiga chiqarilgan),
+       shuning uchun bo'sh keladi. Bot to'ldirsa - server indamay
+       tashlab yuboradi. Ilgari bu maydon umuman yuborilmasdi, ya'ni
+       serverdagi tekshiruv hech qachon ishlamasdi. */
+    company: (form.company && form.company.value) || ''
   };
 
   if (!FORM_ENDPOINT) {
