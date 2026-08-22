@@ -1644,9 +1644,20 @@ frameUpdate();
 /* ---------------- Hero: fon slaydshousi (krossfeyd + Ken Burns) ---------------- */
 const heroSlides = document.querySelectorAll('.hero-bg img');
 
-/* 2-3-slaydlar kechiktirib yuklanadi (data-src): birinchi bo'yashda faqat
-   gold.jpg tortiladi, qolganlari load'da yoki birinchi almashinuvdan oldin */
+/* 2-3-slaydlar kechiktirib yuklanadi: birinchi bo'yashda faqat
+   birinchi slayd tortiladi, qolganlari load'da yoki birinchi
+   almashinuvdan oldin.
+
+   Slaydlar <picture> ichida: <source data-srcset> ni ham
+   ko'chirish kerak, aks holda brauzer WebP variantlarini
+   ko'rmay, faqat zaxira JPEG'ni yuklaydi. Tartib muhim -
+   avval <source>, keyin <img>: <img src> qo'yilishi bilan
+   brauzer tanlovni boshlaydi. */
 function loadDeferredHeroSlides() {
+  document.querySelectorAll('.hero-bg source[data-srcset]').forEach(src => {
+    src.srcset = src.dataset.srcset;
+    src.removeAttribute('data-srcset');
+  });
   document.querySelectorAll('.hero-bg img[data-src]').forEach(img => {
     img.src = img.dataset.src;
     img.removeAttribute('data-src');

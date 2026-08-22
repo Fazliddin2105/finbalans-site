@@ -57,7 +57,7 @@ TG_TOKEN=<bot-token> TG_CHAT=<chat-id> node server.js
 | `privacy.html` | Maxfiylik siyosati |
 | `server.js` | Server: sayt + API + Telegram + kurslar |
 | `css/style.css`, `js/main.js` | Dizayn va skriptlar |
-| `img/` | Suratlar |
+| `img/` | Suratlar: asl `.jpg` + WebP variantlari (`-400`, `-640`, `-800`, `-1080`, `-1600`) |
 | `data/` | Arizalar, kontent, admin ma'lumotlari (repoga tushmaydi) |
 
 ## Xavfsizlik
@@ -66,6 +66,15 @@ TG_TOKEN=<bot-token> TG_CHAT=<chat-id> node server.js
 - Kirish server tomonda tekshiriladi, brauzerga faqat sessiya tokeni beriladi
 - Brute-force cheklovi, sessiya muddati, xavfsizlik sarlavhalari
 - `data/` papkasi web orqali ochilmaydi va git repoga qo'shilmaydi
+
+## Suratlar
+
+Har bir surat `<picture>` ichida: brauzer WebP va o'z ekraniga mos
+o'lchamni tanlaydi, `<img src>` esa eski brauzerlar uchun asl JPEG
+bo'lib qoladi. Telefonda rasm trafigi 1 202 KB dan 323 KB ga tushdi.
+
+Yangi surat qo'shsangiz variantlarini ham yasang — aks holda
+`<picture>` faqat asl JPEG'ni beradi (ishlaydi, lekin og'ir).
 
 ## Ishga tushirishdan oldin almashtiring
 

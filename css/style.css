@@ -12,7 +12,12 @@
   --navy-2: #0B1A2C;         /* footer */
   --on-navy: #E8EDF3;        /* to'q fondagi matn */
   --on-navy-muted: #9DAFC2;  /* to'q fondagi ikkinchi matn */
-  --accent: #8F6E1F;         /* brend rang (oltin, matn uchun) */
+  /* Oltin matn rangi. #8F6E1F edi - oq fonda 4.75 (AA), lekin
+     kul rang bo'limlarda 4.43 va oltin tusli fonda 4.22, ya'ni
+     WCAG AA (4.5) dan past. #85651C uchala fonda ham o'tadi:
+     oq 5.42 / kul 5.05 / oltin tus 4.81. Ko'zga sezilmaydigan
+     farq, lekin quyoshda telefon ekranida o'qish osonlashadi. */
+  --accent: #85651C;         /* brend rang (oltin, matn uchun) */
   --accent-dark: #6E551A;
   --accent-soft: #D9BC6B;    /* to'q fondagi oltin */
   --accent-tint: #F7F1E3;
@@ -43,6 +48,20 @@ html {
      balandligidan hisoblanadi (76 + 26 + 1px chiziq) */
   scroll-padding-top: calc(var(--hdr-h) + var(--rates-h) + 8px);
   -webkit-tap-highlight-color: transparent;
+
+  /* ---------- Gorizontal siljishga qarshi qalqon ----------
+     Bezak animatsiyasi sahifani hech qachon yon tomonga
+     sudray olmasligi kerak. Aniq holat: `.stagger.from-right`
+     ko'rinishdan oldin bolalarini translateX(40px) qiladi -
+     768-1024px oralig'ida .container chetlarida 40px zaxira
+     yo'q va hujjat kengayib ketardi (pastda 16px gorizontal
+     scrollbar chiqardi).
+
+     `clip`, `hidden` emas: `hidden` scroll konteyner yaratib,
+     .services-head dagi `position: sticky` ni ishdan chiqaradi.
+     `clip` esa faqat kesadi - sticky ham, smooth scroll ham,
+     scroll-padding ham o'z holicha qoladi. */
+  overflow-x: clip;
 }
 
 body {
@@ -106,7 +125,11 @@ h3 {
 .kicker-num {
   font-family: var(--serif);
   font-size: 15px;
-  color: var(--gold);
+  /* --gold (#B8902D) bezak rangi: hoshiya, gradient, ikonka uchun.
+     Matn sifatida u oq fonda atigi 2.97 beradi (AA uchun 4.5 kerak),
+     shuning uchun raqamlar matn-darajali oltinni oladi. To'q
+     fonlarda .kicker-light uni --accent-soft ga almashtiradi. */
+  color: var(--accent);
   letter-spacing: 0;
   order: 2;
   margin-left: auto;
@@ -660,7 +683,9 @@ html.js [data-reveal].visible {
   font-family: var(--serif);
   font-size: 44px;
   font-weight: 600;
-  color: var(--gold);
+  /* 44px - katta matn, AA uchun 3.0 kerak; --gold oq fonda 2.97
+     bilan shundan ham past qolardi */
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -996,11 +1021,8 @@ html.js [data-reveal].visible {
   .services-grid { grid-template-columns: 1fr; gap: 48px; }
   .services-head { position: relative; top: auto; }
 
-  .tariffs { grid-template-columns: 1fr; max-width: 520px; }
   .guarantee-grid { grid-template-columns: 1fr; gap: 44px; margin-bottom: 56px; }
-  .guarantee-items { grid-template-columns: 1fr; gap: 26px; }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  .team-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: 1fr; gap: 56px; }
   /* minmax(0, 1fr): ustun ichidagi min-content (4 ta ijtimoiy ikonka
      = 190px) trekni kengaytirib, o'ng ustunni ekrandan chiqarib
@@ -1100,9 +1122,14 @@ html.js [data-reveal].visible {
 
 /* Hero slaydshou: kinematik Ken Burns — har slayd doim harakatda
    (uzluksiz infinite alternate, sinf almashganda sakrash bo'lmaydi) */
-.hero-bg img:nth-child(1) { animation: kenZoomIn 8s ease-in-out infinite alternate; }
-.hero-bg img:nth-child(2) { animation: kenPan 9s ease-in-out infinite alternate; }
-.hero-bg img:nth-child(3) { animation: kenZoomOutPan 10s ease-in-out infinite alternate; }
+/* Har bir slayd o'z Ken Burns harakatini oladi.
+   Selektor <picture> orqali yoziladi: suratlar WebP + o'lchamlar
+   uchun <picture> ichiga o'ralgan, shuning uchun <img> endi
+   .hero-bg ning emas, o'z <picture> sining birinchi bolasi -
+   `.hero-bg img:nth-child(N)` uchalasiga ham kenZoomIn berardi. */
+.hero-bg > :nth-child(1) img { animation: kenZoomIn 8s ease-in-out infinite alternate; }
+.hero-bg > :nth-child(2) img { animation: kenPan 9s ease-in-out infinite alternate; }
+.hero-bg > :nth-child(3) img { animation: kenZoomOutPan 10s ease-in-out infinite alternate; }
 @keyframes kenZoomIn {
   from { transform: scale(1); }
   to { transform: scale(1.05); }
@@ -2951,7 +2978,7 @@ body.has-rates .hero { padding-top: 150px; }
      shunda sarlavha ostidagi 34px bo'sh joy yo'qoladi). */
   .hero h1 .typed-wrap { display: block; min-height: 2.28em; }
   #typedText { display: block; }
-  .hero .lead { font-size: 15.5px; line-height: 1.55; margin-bottom: 18px; }
+  .hero .lead { font-size: 15.5px; line-height: 1.55; margin-bottom: 15px; }
 
   /* ---------- Hero: CTA ustun bo'lib joylashadi ---------- */
   .hero-actions {
@@ -3001,12 +3028,17 @@ body.has-rates .hero { padding-top: 150px; }
   /* ---------- Faktlar: panel uchun joy qoldiradi ---------- */
   .facts {
     grid-template-columns: 1fr 1fr;
-    gap: 16px 14px;
-    padding: 16px 0 calc(var(--cta-h) + 12px);
+    gap: 13px 14px;
+    padding: 13px 0 calc(var(--cta-h) + 12px);
   }
   .fact::before { width: 22px; margin-bottom: 8px; }
   .fact dt { font-size: 25px; }
-  .fact dd { font-size: 12.5px; margin-top: 3px; max-width: 15ch; }
+  /* max-width: 15ch edi - 12.5px shriftda bu ~94px, holbuki
+     ustunning o'zi 164px. To'rtinchi izoh ("so'mgacha javobgarlik
+     sug'urtalangan") shu sabab uch qatorga bo'linib, hero'ni 21px
+     cho'zardi va oxirgi qator yopishqoq panel ostida qolardi.
+     Ustunning o'zi allaqachon kenglikni cheklaydi. */
+  .fact dd { font-size: 12.5px; margin-top: 3px; max-width: none; }
 
   /* ---------- Past qatlam: panel + suzuvchi tugmalar ----------
      Hammasi bitta --cta-h tokenidan hisoblanadi, shuning uchun
@@ -3046,13 +3078,6 @@ body.has-rates .hero { padding-top: 150px; }
   body.at-footer .float-tg,
   body.at-footer .back-top { opacity: 0; pointer-events: none; }
 
-  /* ---------- Paydo bo'lish: mobil ekranda faqat vertikal ----------
-     translateX(40px) hujjatni 16px kengaytirib, butun sahifani yon
-     tomonga sudralishiga sabab bo'lardi */
-  html.js [data-reveal="left"],
-  html.js [data-reveal="right"] { transform: translateY(28px); }
-  html.js .stagger.from-right:not(.visible) > *,
-  html.js .stagger.from-left:not(.visible) > * { transform: translateY(20px); }
 
   /* ---------- Xizmat qatorlari ---------- */
   .service-row { grid-template-columns: 44px 1fr; column-gap: 14px; padding: 24px 0; }
@@ -3234,62 +3259,6 @@ body.has-rates .hero { padding-top: 150px; }
 
 @media (max-width: 720px) {
 
-  /* ---------- 1. Tariflar: uch karta → suriladigan karusel ----------
-     Vertikal ustunda uchta karta 2 079px (2.5 ekran) egallardi va
-     uchinchi tarifni deyarli hech kim ko'rmasdi. Karuselda uchalasi
-     ~700px'da turadi, yon tomondan keyingi karta "qarab" turgani
-     surish mumkinligini aytadi (ko'rsatma matn kerak emas). */
-  .tariffs {
-    display: flex;
-    grid-template-columns: none;
-    gap: 14px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 24px;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* -24px/+24px = .container paddingi: birinchi karta sarlavha
-       bilan bir chizidan boshlanadi, oxirgisi ekran chetigacha */
-    margin-inline: -24px;
-    /* tepada 18px — .tariff-tag (top: -11px) kesilmasligi uchun */
-    padding: 18px 24px 14px;
-  }
-  .tariffs::-webkit-scrollbar { display: none; }
-  .tariff {
-    flex: 0 0 86%;
-    scroll-snap-align: start;
-    padding: 26px 20px;
-  }
-  /* Karusel oxirida o'ng chetdagi soya yo'qoladi (JS data-scroll qo'yadi) */
-  .tariffs[data-scroll="start"],
-  .tariffs[data-scroll="mid"] {
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-  }
-
-  /* Karusel nuqtalari: qaysi tarifda turganini ko'rsatadi.
-     Ko'rinishi 8px, bosiladigan maydoni 44px (::before). */
-  .tariffs-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 6px;
-  }
-  .tariffs-dot {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: var(--border);
-    cursor: pointer;
-    transition: background 0.25s ease, width 0.25s ease;
-  }
-  .tariffs-dot::before { content: ''; position: absolute; inset: -18px -9px; }
-  .tariffs-dot[aria-current="true"] { width: 22px; border-radius: 999px; background: var(--gold); }
-
   .pricing-notes { margin-top: 18px; }
   .pricing-notes p { font-size: 13.5px; line-height: 1.55; }
 
@@ -3303,7 +3272,12 @@ body.has-rates .hero { padding-top: 150px; }
 
   /* ---------- 3. Kafolat va bosqichlar ---------- */
   .guarantee-grid { gap: 30px; margin-bottom: 30px; }
-  .guarantee-items { gap: 18px; }
+  /* Bitta ustun: asosiy uslubdagi `repeat(3, 1fr)` telefonda
+     bandlarni 90px kenglikdagi tor ustunlarga siqib qo'yardi
+     (va hujjatni 4px kengaytirardi). Ilgari bu qoida 1000px
+     blokida turgan edi - planshet layouti ajratilganda shu
+     yerga ko'chirildi. */
+  .guarantee-items { grid-template-columns: 1fr; gap: 18px; }
   .guarantee-item { padding-top: 18px; }
   .guarantee-item p { font-size: 14.5px; line-height: 1.55; }
   .steps { gap: 22px; }
@@ -3401,7 +3375,7 @@ body.has-rates .hero { padding-top: 150px; }
    min-width bilan yoziladi: shartsiz `display: none` qoidasi
    fayl oxirida turgani uchun @media 720px ichidagi `flex` ni
    jimgina bekor qilardi (bir xil aniqlik, keyingi qoida yutadi). */
-@media (min-width: 721px) {
+@media (min-width: 1001px) {
   .tariffs-dots { display: none; }
 }
 
@@ -3544,3 +3518,142 @@ body.has-rates .hero { padding-top: 150px; }
   /* Ichki oltin nur kartada ortiqcha - o'chiriladi */
   .compare td.compare-us::after { display: none; }
 }
+
+/* =========================================================
+   PAYDO BO'LISH ANIMATSIYASI — sensorli kengliklarda vertikal
+   ---------------------------------------------------------
+   Desktopda bo'limlar yon tomondan silliq kirib keladi: keng
+   ekranda .container chetida bo'sh joy bor, harakat chiroyli
+   ko'rinadi.
+
+   1000px'gacha esa bunday zaxira yo'q - blok ekran chetiga
+   tegib turadi va yon tomonga siljish shunchaki kesiladi
+   (html{overflow-x:clip}), ya'ni harakat yarim ko'rinadi.
+   Shu bois bu kengliklarda yo'nalish vertikalga almashadi:
+   bir xil ritm, lekin harakat to'liq ko'rinadi.
+
+   Chegara qayerdan: .container eni 1180px, harakat masofasi
+   40px. Ikki chetda 40px zaxira bo'lishi uchun ekran kamida
+   1180 + 40 + 40 = 1260px bo'lishi kerak. Shundan tor har
+   qanday ekranda - planshet ham, kichik noutbuk ham -
+   yo'nalish vertikalga o'tadi.
+   ========================================================= */
+@media (max-width: 1259px) {
+  html.js [data-reveal="left"],
+  html.js [data-reveal="right"] { transform: translateY(28px); }
+  html.js .stagger.from-right:not(.visible) > *,
+  html.js .stagger.from-left:not(.visible) > * { transform: translateY(20px); }
+}
+
+/* =========================================================
+   TARIF KARUSELI — telefon va planshet (<=1000px)
+   ---------------------------------------------------------
+   Desktopda uchta karta yonma-yon turadi. Undan tor ekranda
+   ular vertikal ustunga tushardi:
+     - telefonda 2 079px (2.5 ekran) - uchinchi tarifni
+       deyarli hech kim ko'rmasdi;
+     - planshetda esa bundan ham yomon: `max-width: 520px`
+       tufayli kartalar 720-950px maydonning chap yarmida
+       tor ustun bo'lib qolar, o'ng tomonda 200-400px bo'sh
+       joy turardi. Tugallanmagan sahifa taassuroti.
+
+   Ikkalasi ham sensorli ekran, shuning uchun ikkalasiga bir
+   yechim: surma karusel. Kartaning eni min(86%, 420px) -
+   telefonda bitta karta + keyingisining cheti, planshetda
+   ikkitasi ko'rinadi. Yon tomondan "qarab" turgan karta
+   surish mumkinligini ko'rsatma matnsiz aytadi.
+   ========================================================= */
+@media (max-width: 1000px) {
+  .tariffs {
+    display: flex;
+    grid-template-columns: none;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 24px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* -24px/+24px = .container paddingi: birinchi karta sarlavha
+       bilan bir chizidan boshlanadi, oxirgisi ekran chetigacha */
+    margin-inline: -24px;
+    /* tepada 18px — .tariff-tag (top: -11px) kesilmasligi uchun */
+    padding: 18px 24px 14px;
+  }
+  .tariffs::-webkit-scrollbar { display: none; }
+  .tariff {
+    flex: 0 0 min(86%, 420px);
+    scroll-snap-align: start;
+    padding: 26px 20px;
+  }
+  /* Karusel oxirida o'ng chetdagi soya yo'qoladi (JS data-scroll qo'yadi) */
+  .tariffs[data-scroll="start"],
+  .tariffs[data-scroll="mid"] {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
+  }
+
+  /* Karusel nuqtalari: qaysi tarifda turganini ko'rsatadi.
+     Ko'rinishi 8px, bosiladigan maydoni 44px (::before). */
+  .tariffs-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .tariffs-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background 0.25s ease, width 0.25s ease;
+  }
+  .tariffs-dot::before { content: ''; position: absolute; inset: -18px -9px; }
+  .tariffs-dot[aria-current="true"] { width: 22px; border-radius: 999px; background: var(--gold); }
+}
+
+/* =========================================================
+   PLANSHET (721-1000px) — o'z layouti bor
+   ---------------------------------------------------------
+   Bu oraliq "o'lik zona" edi: mobil qoidalar (<=720px) yetib
+   kelmasdi, desktop qoidalari esa bitta ustunga tushib
+   ketardi. Natijada iPad'da (768/834px) sahifa ham telefon,
+   ham desktop versiyasidan BALAND chiqardi:
+   768px -> 14 435px, holbuki 720px -> 12 264px.
+
+   Bu yerda oraliq o'z layoutini oladi: keng ekranda nima
+   ikki ustunga sig'sa - ikki ustunda turadi.
+   ========================================================= */
+@media (min-width: 721px) and (max-width: 1000px) {
+  /* Jamoa: 4 ta portret. `repeat(2, 1fr)` da har bir surat
+     380-410px kenglikda bo'lib, 4/5 nisbatda ~500px balandlik
+     olardi - bo'lim 1 723px ga cho'zilardi. To'rt ustunda
+     surat ~170px, bo'lim esa uch baravar past. */
+  .team-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .person strong { font-size: 16px; }
+  .person span { font-size: 13.5px; }
+  .person small { font-size: 12.5px; }
+
+  /* Kafolat bandlari: bitta ustunda 950px maydonda cho'zilib
+     yotardi - ikki ustun bu kenglikka mos */
+  .guarantee-items { grid-template-columns: repeat(2, 1fr); gap: 24px 28px; }
+
+  /* Bosqichlar va footer allaqachon ikki ustunda (yuqoridagi
+     1000px bloki) - o'zgarishsiz qoladi */
+}
+
+
+/* =========================================================
+   <picture> — layoutga aralashmaydi
+   ---------------------------------------------------------
+   Suratlar WebP va moslashuvchan o'lchamlar uchun <picture>
+   ichiga o'ralgan. `display: contents` o'ram qutisini butunlay
+   olib tashlaydi: <img> ning joylashuvi, position: absolute
+   uchun containing block va grid/flex ichidagi xatti-harakati
+   o'ram yo'qdagidek qoladi.
+   ========================================================= */
+picture { display: contents; }

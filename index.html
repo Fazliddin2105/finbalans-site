@@ -9,12 +9,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Telefon brauzerining tepa paneli sayt bilan bir rangda bo'ladi
+       (Chrome/Android, Safari 15+). Header foni bilan bir xil navy. -->
+  <meta name="theme-color" content="#10233B">
+  <link rel="canonical" href="https://finbalans.vercel.app/">
+
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FinBalans">
   <meta property="og:title" content="FinBalans — Toshkentda buxgalteriya xizmatlari">
   <meta property="og:description" content="MChJ va YaTT uchun buxgalteriya autsorsingi. Javobgarlik shartnomada, 50 mln so'mgacha sug'urtalangan.">
   <meta property="og:locale" content="uz_UZ">
-  <meta property="og:image" content="img/gold.jpg">
-  <link rel="preload" as="image" href="img/gold.jpg">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:url" content="https://finbalans.vercel.app/">
+  <!-- Telegram/Facebook/LinkedIn nisbiy manzilni o'qiy olmaydi -
+       havola ulashilganda surat ko'rinishi uchun to'liq URL kerak -->
+  <meta property="og:image" content="https://finbalans.vercel.app/img/gold.jpg">
+  <meta property="og:image:width" content="1800">
+  <meta property="og:image:height" content="1013">
+  <meta property="og:image:alt" content="FinBalans — buxgalteriya xizmatlari">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FinBalans — Toshkentda buxgalteriya xizmatlari">
+  <meta name="twitter:description" content="MChJ va YaTT uchun buxgalteriya autsorsingi. Javobgarlik shartnomada, 50 mln so'mgacha sug'urtalangan.">
+  <meta name="twitter:image" content="https://finbalans.vercel.app/img/gold.jpg">
+
+  <!-- LCP surati: brauzer <picture> ni o'qigunicha kutmasdan,
+       aynan o'zi tanlaydigan o'lchamni oldindan tortadi -->
+  <link rel="preload" as="image" type="image/webp"
+        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -99,9 +121,20 @@
     <!-- ===================== Hero — to'liq ekranli ===================== -->
     <section class="hero">
       <div class="hero-bg" aria-hidden="true">
-        <img class="hero-slide active" src="img/gold.jpg" alt="" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
-        <img class="hero-slide" data-src="img/dollars.jpg" alt="" width="1800" height="1200" decoding="async">
-        <img class="hero-slide" data-src="img/office.jpg" alt="" width="1800" height="1202" decoding="async">
+        <!-- WebP + o'lchamlar: telefon 1 800px suratni tortmaydi.
+             <img src> - eski brauzerlar uchun zaxira (asl JPEG). -->
+        <picture>
+          <source type="image/webp" srcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" sizes="100vw">
+          <img class="hero-slide active" src="img/gold.jpg" alt="" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
+        </picture>
+        <picture>
+          <source type="image/webp" data-srcset="img/dollars-640.webp 640w, img/dollars-800.webp 800w, img/dollars-1080.webp 1080w, img/dollars-1600.webp 1600w" sizes="100vw">
+          <img class="hero-slide" data-src="img/dollars.jpg" alt="" width="1800" height="1200" decoding="async">
+        </picture>
+        <picture>
+          <source type="image/webp" data-srcset="img/office-640.webp 640w, img/office-800.webp 800w, img/office-1080.webp 1080w, img/office-1600.webp 1600w" sizes="100vw">
+          <img class="hero-slide" data-src="img/office.jpg" alt="" width="1800" height="1202" decoding="async">
+        </picture>
       </div>
 
       <svg class="hero-chart" aria-hidden="true" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none">
@@ -390,7 +423,7 @@
             <p class="guarantee-lead" data-i18n="guar.lead">Bizning aybimiz bilan jarima yoki penya hisoblansa — uni o'z hisobimizdan qoplaymiz. Bu og'zaki va'da emas: shartnomaning 6.2-bandida yozilgan, javobgarligimiz 50 mln so'mgacha sug'urtalangan.</p>
           </div>
           <figure class="guarantee-media" data-reveal="left">
-            <img src="img/handshake.jpg" alt="Shartnoma imzolash" data-i18n-attr="alt:guar.imgAlt" width="1200" height="801" loading="lazy" decoding="async">
+            <picture><source type="image/webp" srcset="img/handshake-640.webp 640w, img/handshake-800.webp 800w, img/handshake-1080.webp 1080w" sizes="(max-width: 1000px) 95vw, (max-width: 1180px) 40vw, 442px"><img src="img/handshake.jpg" alt="Shartnoma imzolash" data-i18n-attr="alt:guar.imgAlt" width="1200" height="801" loading="lazy" decoding="async"></picture>
           </figure>
         </div>
         <div class="guarantee-items stagger" data-reveal>
@@ -459,7 +492,7 @@
 
     <!-- ===================== Oltin-band (CTA) ===================== -->
     <section class="image-band image-zoom" data-reveal>
-      <img src="img/gold-2.jpg" alt="Oltin tangalar o'sish dinamikasida" data-i18n-attr="alt:about.imgAlt" width="1800" height="1200" loading="lazy" decoding="async">
+      <picture><source type="image/webp" srcset="img/gold-2-640.webp 640w, img/gold-2-800.webp 800w, img/gold-2-1080.webp 1080w, img/gold-2-1600.webp 1600w" sizes="100vw"><img src="img/gold-2.jpg" alt="Oltin tangalar o'sish dinamikasida" data-i18n-attr="alt:about.imgAlt" width="1800" height="1200" loading="lazy" decoding="async"></picture>
       <div class="money-overlay">
         <h2 data-i18n="cta.title">Buxgalteriyani ishonchli qo'llarga topshiring</h2>
         <a href="#contact" class="btn btn-light" data-i18n="hero.cta1">Bepul konsultatsiya olish</a>
@@ -476,7 +509,7 @@
         </div>
         <div class="team-grid stagger" data-reveal>
           <figure class="person">
-            <span class="person-photo" data-name="Akmal Rahmonov"><img src="img/team-akmal.jpg" alt="Akmal Rahmonov" width="600" height="900" loading="lazy" decoding="async"></span>
+            <span class="person-photo" data-name="Akmal Rahmonov"><picture><source type="image/webp" srcset="img/team-akmal-400.webp 400w, img/team-akmal-600.webp 600w" sizes="(max-width: 720px) 45vw, (max-width: 1000px) 22vw, 264px"><img src="img/team-akmal.jpg" alt="Akmal Rahmonov" width="600" height="900" loading="lazy" decoding="async"></picture></span>
             <figcaption>
               <strong>Akmal Rahmonov</strong>
               <span data-i18n="team.p1role">Asoschi, bosh buxgalter</span>
@@ -484,7 +517,7 @@
             </figcaption>
           </figure>
           <figure class="person">
-            <span class="person-photo" data-name="Dilnoza Karimova"><img src="img/team-dilnoza.jpg" alt="Dilnoza Karimova" width="600" height="900" loading="lazy" decoding="async"></span>
+            <span class="person-photo" data-name="Dilnoza Karimova"><picture><source type="image/webp" srcset="img/team-dilnoza-400.webp 400w, img/team-dilnoza-600.webp 600w" sizes="(max-width: 720px) 45vw, (max-width: 1000px) 22vw, 264px"><img src="img/team-dilnoza.jpg" alt="Dilnoza Karimova" width="600" height="900" loading="lazy" decoding="async"></picture></span>
             <figcaption>
               <strong>Dilnoza Karimova</strong>
               <span data-i18n="team.p2role">Soliq maslahatchisi</span>
@@ -492,7 +525,7 @@
             </figcaption>
           </figure>
           <figure class="person">
-            <span class="person-photo" data-name="Jasur Alimov"><img src="img/team-jasur.jpg" alt="Jasur Alimov" width="600" height="400" loading="lazy" decoding="async"></span>
+            <span class="person-photo" data-name="Jasur Alimov"><picture><source type="image/webp" srcset="img/team-jasur-400.webp 400w, img/team-jasur-600.webp 600w" sizes="(max-width: 720px) 45vw, (max-width: 1000px) 22vw, 264px"><img src="img/team-jasur.jpg" alt="Jasur Alimov" width="600" height="400" loading="lazy" decoding="async"></picture></span>
             <figcaption>
               <strong>Jasur Alimov</strong>
               <span data-i18n="team.p3role">Buxgalter</span>
@@ -500,7 +533,7 @@
             </figcaption>
           </figure>
           <figure class="person">
-            <span class="person-photo" data-name="Nigora Salimova"><img src="img/team-nigora.jpg" alt="Nigora Salimova" width="600" height="755" loading="lazy" decoding="async"></span>
+            <span class="person-photo" data-name="Nigora Salimova"><picture><source type="image/webp" srcset="img/team-nigora-400.webp 400w, img/team-nigora-600.webp 600w" sizes="(max-width: 720px) 45vw, (max-width: 1000px) 22vw, 264px"><img src="img/team-nigora.jpg" alt="Nigora Salimova" width="600" height="755" loading="lazy" decoding="async"></picture></span>
             <figcaption>
               <strong>Nigora Salimova</strong>
               <span data-i18n="team.p4role">Kadrlar va ish haqi bo'yicha mutaxassis</span>
