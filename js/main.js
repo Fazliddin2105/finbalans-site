@@ -219,6 +219,7 @@ const translations = {
     'contact.hours': "Dushanba – shanba, 9:00 – 18:00",
     'contact.socials': "Ijtimoiy tarmoqlar",
     'contact.mapTitle': "FinBalans — xaritada",
+    'contact.mapOpen': "Xaritada ochish",
 
     'form.name': "Ismingiz",
     'form.phone': "Telefon raqamingiz",
@@ -496,6 +497,7 @@ const translations = {
     'contact.hours': "Понедельник – суббота, 9:00 – 18:00",
     'contact.socials': "Мы в соцсетях",
     'contact.mapTitle': "FinBalans на карте",
+    'contact.mapOpen': "Открыть на карте",
 
     'form.name': "Ваше имя",
     'form.phone': "Номер телефона",
@@ -773,6 +775,7 @@ const translations = {
     'contact.hours': "Monday – Saturday, 9:00 – 18:00",
     'contact.socials': "Social media",
     'contact.mapTitle': "FinBalans on the map",
+    'contact.mapOpen': "Open in Maps",
 
     'form.name': "Your name",
     'form.phone': "Phone number",
@@ -1060,12 +1063,68 @@ let currentLang = 'uz';
 /* ---------------- Hero: almashinib turuvchi so'z (krossfeyd) ---------------- */
 const typedEl = document.getElementById('typedText');
 let typedTimer = null;
+let typedWords = [];
+
+/* ---------------- Almashuvchi so'z uchun joy ----------------
+   Sarlavhaning oxirgi so'zi har 3.5 sekundda almashadi. Agar
+   maydon balandligi belgilanmasa, uzun variant ("TIF
+   kompaniyalari uchun") qatorga sig'may, butun hero sakraydi.
+
+   Ilgari CSS'da qat'iy `min-height: 2.28em` turardi - ya'ni
+   doim ikki qator. Lekin 390px va undan keng ekranda barcha
+   so'zlar (uch tilda ham) bitta qatorga sig'adi: sarlavha
+   ostida 34px bo'sh joy qolib, "sahifa buzuq" taassurotini
+   berardi. Endi joy o'lchab belgilanadi: eng baland variant
+   qancha joy olsa, shuncha. 360px'da bu ikki qator, 390px'da
+   bitta qator - hech qanday sehrli breakpoint kerak emas va
+   matn o'zgarsa ham o'zi moslashadi. */
+function fitTypedBox(words) {
+  const wrap = typedEl && typedEl.closest('.typed-wrap');
+  if (!wrap || !words.length) return;
+
+  const saved = typedEl.textContent;
+  /* O'lchov paytida animatsiya sinflari balandlikka ta'sir
+     qilmasligi uchun ular vaqtincha olib turiladi */
+  const hadOut = typedEl.classList.contains('word-out');
+  const hadIn = typedEl.classList.contains('word-in');
+  typedEl.classList.remove('word-out', 'word-in');
+
+  wrap.style.minHeight = '0px';
+  let max = 0;
+  for (const w of words) {
+    typedEl.textContent = w;
+    max = Math.max(max, wrap.getBoundingClientRect().height);
+  }
+
+  typedEl.textContent = saved;
+  if (hadOut) typedEl.classList.add('word-out');
+  if (hadIn) typedEl.classList.add('word-in');
+  /* Yarim piksel yaxlitlanishi qatorni kesib qo'ymasligi uchun +1 */
+  wrap.style.minHeight = max ? Math.ceil(max) + 1 + 'px' : '';
+}
+
+/* Ekran burilganda yoki o'lcham o'zgarganda qayta o'lchanadi */
+let typedFitTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(typedFitTimer);
+  typedFitTimer = setTimeout(() => fitTypedBox(typedWords), 150);
+}, { passive: true });
+
+/* Shrift yuklangach yana bir marta. Birinchi o'lchov sahifa
+   tahlil qilinayotganda bo'ladi - o'shanda Lora hali yuklanmagan
+   va zaxira shrift (Georgia) kengroq: so'z ikki qatorga o'ralib,
+   maydon keraksiz baland belgilanib qolardi. */
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => fitTypedBox(typedWords));
+}
 
 function startTyping(words) {
   if (!typedEl || !words.length) return;
   clearTimeout(typedTimer);
   typedEl.classList.remove('word-out', 'word-in');
   typedEl.textContent = words[0];
+  typedWords = words;
+  fitTypedBox(words);
 
   if (REDUCED_MOTION || words.length < 2) return;
 
@@ -1203,16 +1262,31 @@ const header = document.getElementById('siteHeader');
 const burger = document.getElementById('burger');
 const nav = document.getElementById('nav');
 
-burger.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
+/* Menyu holati bitta joyda: panel, burger va sahifa scroll qulfi
+   doim bir-biriga mos bo'ladi (html.nav-open -> overflow: hidden) */
+function setNav(open) {
+  nav.classList.toggle('open', open);
   burger.setAttribute('aria-expanded', String(open));
-});
+  document.documentElement.classList.toggle('nav-open', open);
+}
+
+burger.addEventListener('click', () => setNav(!nav.classList.contains('open')));
 
 nav.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  });
+  link.addEventListener('click', () => setNav(false));
+});
+
+/* Panel tashqarisiga teginish yoki Escape - menyu yopiladi */
+document.addEventListener('click', e => {
+  if (!nav.classList.contains('open')) return;
+  if (nav.contains(e.target) || burger.contains(e.target)) return;
+  setNav(false);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && nav.classList.contains('open')) {
+    setNav(false);
+    burger.focus();
+  }
 });
 
 /* ---------------- Telefon maskasi ---------------- */
@@ -1253,6 +1327,17 @@ const formInvalid = document.getElementById('formInvalid');
 const consent = document.getElementById('consent');
 const submitBtn = form.querySelector('.btn-submit');
 
+/* Xabar qutisi ko'rinadigan joyga suriladi. Mobil ekranda tugma
+   yopishqoq panel ustida turadi, xabar esa uning ostiga chiqib
+   ketardi: foydalanuvchi tozalangan formani ko'rib, ariza
+   ketgan-ketmaganini bilmasdi. */
+function revealFormMsg(box) {
+  if (!box) return;
+  box.setAttribute('tabindex', '-1');
+  box.scrollIntoView({ block: 'center', behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
+  box.focus({ preventScroll: true });
+}
+
 function showSuccess() {
   /* Forma tozalanadi va ochiq qoladi - foydalanuvchi xatoni tuzatib
      yoki ikkinchi ariza yuborib olishi mumkin */
@@ -1260,6 +1345,7 @@ function showSuccess() {
   submitBtn.disabled = false;
   formError.hidden = true;
   formSuccess.hidden = false;
+  revealFormMsg(formSuccess);
 }
 
 /* Arizani admin panel o'qiy olishi uchun localStorage'ga yozamiz */
@@ -1346,6 +1432,7 @@ form.addEventListener('submit', e => {
     .catch(() => {
       submitBtn.disabled = false;
       formError.hidden = false;
+      revealFormMsg(formError);
     });
 });
 
@@ -1676,6 +1763,36 @@ if (backTopBtn) {
   });
 }
 
+/* ---------------- Past qatlam: forma va footer ustida bo'shatiladi ----------------
+   Mobil ekranda yopishqoq panelning oltin "Ariza qoldirish" tugmasi
+   formaning haqiqiy "Ariza yuborish" tugmasidan 20px pastda turadi
+   (bir xil rang, o'xshash matn), suzuvchi doiralar esa footer
+   havolalarini bosib qoladi. Bo'lim ko'rinsa - qatlam ketadi.
+   Sinflar body'da, ko'rinish qoidalari CSS'da (faqat <=720px). */
+if ('IntersectionObserver' in window) {
+  const contactSection = document.getElementById('contact');
+  if (contactSection) {
+    new IntersectionObserver(entries => {
+      document.body.classList.toggle('at-contact', entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px -30% 0px' }).observe(contactSection);
+  }
+
+  const footerSection = document.querySelector('.footer');
+  if (footerSection) {
+    new IntersectionObserver(entries => {
+      document.body.classList.toggle('at-footer', entries[0].isIntersecting);
+    }, { threshold: 0 }).observe(footerSection);
+  }
+}
+
+/* ---------------- Xarita: teginib faollashtiriladi ----------------
+   Aks holda xarita ustidan boshlangan barmoq harakati sahifani
+   emas, Google Maps'ni suradi ("scroll tutqichi") */
+const mapWrap = document.querySelector('.map');
+if (mapWrap) {
+  mapWrap.addEventListener('click', () => mapWrap.classList.add('map-live'));
+}
+
 /* ---------------- Jamoa suratlari: yengil 3D tilt ---------------- */
 if (window.matchMedia('(pointer: fine)').matches && !REDUCED_MOTION) {
   document.querySelectorAll('.person-photo').forEach(photo => {
@@ -1708,3 +1825,141 @@ document.getElementById('year').textContent = new Date().getFullYear();
 let savedLang = 'uz';
 try { savedLang = localStorage.getItem('finbalans-lang') || 'uz'; } catch (e) { /* xotira bloklangan */ }
 setLanguage(savedLang);
+
+
+/* =========================================================
+   MOBIL KARUSELLAR — chet belgisi va nuqtalar
+   ---------------------------------------------------------
+   Telefonda ikkita gorizontal suriladigan qator bor: hero
+   ishonch chiplari va tarif kartalari. Ikkalasida ham oxirgi
+   element ekran chetida kesilib turadi. Kesilgan element
+   "sayt buzilgan" degan taassurot qoldiradi — shuning uchun:
+
+   - data-scroll="start|mid|end" atributi qo'yiladi, CSS esa
+     boshi/o'rtasida o'ng chetga soya (mask) beradi: "davomi bor"
+   - tariflarga nuqtalar qo'shiladi: uchta tarifdan qaysi
+     birida turgani ko'rinadi va bosib o'tish mumkin
+
+   Hammasi progressiv: JS ishlamasa qator oddiy suriladi.
+   ========================================================= */
+(function () {
+  /* ---------- Chet holati: start / mid / end ---------- */
+  function markEdges(el) {
+    const max = el.scrollWidth - el.clientWidth;
+    /* Surish imkoni yo'q (hammasi sig'gan) — soya ham kerak emas */
+    if (max <= 4) { el.removeAttribute('data-scroll'); return; }
+    const x = el.scrollLeft;
+    el.setAttribute('data-scroll', x <= 4 ? 'start' : x >= max - 4 ? 'end' : 'mid');
+  }
+
+  function watchEdges(el) {
+    if (!el) return;
+    markEdges(el);
+    el.addEventListener('scroll', () => markEdges(el), { passive: true });
+    window.addEventListener('resize', () => markEdges(el), { passive: true });
+    /* Til almashganda matn uzunligi (va scrollWidth) o'zgaradi */
+    if ('ResizeObserver' in window) new ResizeObserver(() => markEdges(el)).observe(el);
+  }
+
+  watchEdges(document.querySelector('.hero-chips'));
+
+  /* ---------- Tarif karuseli + nuqtalar ---------- */
+  const tariffs = document.querySelector('.tariffs');
+  if (!tariffs) return;
+  watchEdges(tariffs);
+
+  const cards = [...tariffs.querySelectorAll('.tariff')];
+  if (cards.length < 2) return;
+
+  const dots = document.createElement('div');
+  dots.className = 'tariffs-dots';
+  /* Nuqtalar - ko'rish uchun qulaylik, mazmun kartalarda.
+     Skrinriderga takroriy ro'yxat bo'lib eshitilmasligi kerak. */
+  dots.setAttribute('aria-hidden', 'true');
+
+  cards.forEach((card, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tariffs-dot';
+    b.tabIndex = -1;
+    b.addEventListener('click', () => {
+      /* scroll-padding-inline: 24px hisobga olinadi */
+      tariffs.scrollTo({
+        left: card.offsetLeft - tariffs.offsetLeft - 24,
+        behavior: REDUCED_MOTION ? 'auto' : 'smooth',
+      });
+    });
+    dots.appendChild(b);
+    if (i === 0) b.setAttribute('aria-current', 'true');
+  });
+  tariffs.after(dots);
+
+  const dotList = [...dots.children];
+
+  /* Markazga eng yaqin karta faol deb belgilanadi: yarmigacha
+     surilganda ham nuqta to'g'ri kartani ko'rsatadi */
+  function syncDots() {
+    const mid = tariffs.scrollLeft + tariffs.clientWidth / 2;
+    let best = 0, bestD = Infinity;
+    cards.forEach((c, i) => {
+      const d = Math.abs(c.offsetLeft - tariffs.offsetLeft + c.offsetWidth / 2 - mid);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    dotList.forEach((d, i) => {
+      if (i === best) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
+    });
+  }
+
+  let raf = 0;
+  tariffs.addEventListener('scroll', () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; syncDots(); });
+  }, { passive: true });
+  syncDots();
+})();
+
+
+/* =========================================================
+   TAQQOSLASH JADVALI — katak yorliqlari
+   ---------------------------------------------------------
+   Telefonda jadval kartalarga bo'linadi (CSS'da) va har bir
+   katak ustida o'z ustunining nomi turishi kerak: aks holda
+   "600 ming - 2,4 mln so'm" qaysi tomonga tegishli ekani
+   noma'lum bo'lib qoladi.
+
+   Nomlar HTML'ga qo'lda yozilmaydi - <thead> dan olinadi:
+   sayt uch tilda ishlaydi va matnlar admin panelidan ham
+   o'zgaradi. MutationObserver o'sha o'zgarishlarni kuzatadi,
+   shuning uchun til almashganda yorliqlar o'zi yangilanadi.
+   ========================================================= */
+(function () {
+  const table = document.querySelector('.compare');
+  if (!table) return;
+
+  const headCells = [...table.querySelectorAll('thead th')];
+  if (headCells.length < 2) return;
+
+  function syncLabels() {
+    for (const row of table.querySelectorAll('tbody tr')) {
+      /* Katak indeksi <th> ni ham hisoblaydi: birinchi ustun
+         qator nomi, keyingilari qiymatlar */
+      [...row.children].forEach((cell, i) => {
+        if (cell.tagName !== 'TD') return;
+        const label = headCells[i];
+        if (label) cell.setAttribute('data-label', label.textContent.trim());
+      });
+    }
+  }
+
+  syncLabels();
+
+  const thead = table.querySelector('thead');
+  if (thead && 'MutationObserver' in window) {
+    new MutationObserver(syncLabels).observe(thead, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+    });
+  }
+})();

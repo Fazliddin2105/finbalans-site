@@ -4,7 +4,7 @@ img/_bak/
 node_modules/
 server.js
 start-site.bat
-_shot.html
-_ashot.html
-__cred-test.html
+# "_" bilan boshlanadigan vaqtinchalik sahifalar (o'lchov,
+# skrinshot) — saytga chiqmaydi
+_*.html
 *.log

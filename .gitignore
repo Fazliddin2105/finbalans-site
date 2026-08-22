@@ -2,10 +2,10 @@
 data/
 *.log
 
-# Vaqtinchalik fayllar
-_shot.html
-_ashot.html
-__cred-test.html
+# Vaqtinchalik fayllar — o'lchov/skrinshot uchun yasalgan
+# sahifalar. Nomi "_" bilan boshlanadi: yangisini yaratganda
+# ro'yxatni yangilash shart emas (masalan _meas.html).
+_*.html
 node_modules/
 .vercel
 .DS_Store
