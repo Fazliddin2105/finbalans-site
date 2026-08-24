@@ -4008,3 +4008,130 @@ picture { display: contents; }
 
   @page { margin: 14mm; }
 }
+
+/* =========================================================
+   YOTIQ (ALBOM) HOLAT VA JUDA KICHIK EKRANLAR
+   ---------------------------------------------------------
+   TOPILGAN XATO: telefon yon burilganda hero baribir butun
+   ekranni (100svh) egallardi, lekin balandlik atigi 375-430px
+   bo'lardi. Natijada tashrifchi faqat sarlavha va izohni
+   ko'rar, asosiy "Bepul konsultatsiya olish" tugmasi esa
+   ekrandan tashqarida qolardi:
+
+     844x390 (iPhone 14 yon)  - tugma fold ostida
+     932x430 (Pro Max yon)    - tugma fold ostida
+     667x375 (SE yon)         - tugma yopishqoq panel ostida
+
+   Yotiq holatda hero endi ekranni to'ldirmaydi: `min-height`
+   olib tashlanadi va tipografiya ixchamlashadi. Hech narsa
+   yashirilmaydi - faktlar va chiplar oddiygina pastda qoladi,
+   lekin CTA birinchi ekranga chiqadi.
+   ========================================================= */
+@media (orientation: landscape) and (max-height: 540px) {
+  /* Ekranni to'ldirish talabi olib tashlanadi - balandlik
+     mazmunga qarab belgilanadi */
+  .hero {
+    min-height: 0;
+    padding-top: calc(var(--hdr-h) + 14px);
+    padding-bottom: 14px;
+  }
+  body.has-rates .hero {
+    padding-top: calc(var(--hdr-h) + var(--rates-h) + 14px);
+  }
+  .hero-content {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 10px;
+  }
+
+  .hero-kicker { font-size: 11px; padding-top: 8px; margin-bottom: 8px; }
+  .hero h1 { font-size: clamp(21px, 3.6vw, 30px); margin-bottom: 9px; }
+  .hero .lead {
+    font-size: 14px;
+    line-height: 1.45;
+    margin-bottom: 12px;
+    max-width: 60ch;
+  }
+
+  /* Yotiq holatda kenglik yetarli - tugmalar bir qatorda */
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .hero-actions .cta-pulse-wrap,
+  .hero-actions .btn { width: auto; }
+
+  .hero-chips { margin-bottom: 2px; }
+  .hero-chips .chip { padding: 6px 12px; font-size: 12px; }
+
+  .facts { padding: 10px 0 14px; gap: 10px 14px; }
+  .fact::before { margin-bottom: 5px; }
+  .fact dt { font-size: 20px; }
+  .fact dd { font-size: 11.5px; margin-top: 2px; }
+
+  /* Past ekranda grafik matn bilan chalkashadi */
+  .hero-chart { display: none; }
+
+  /* Ochiq menyu ekrandan chiqib ketmasin */
+  .nav { max-height: calc(100dvh - (var(--hdr-h) + var(--rates-h) + 12px)); }
+
+  /* Bo'limlar ritmi ham ixchamlashadi */
+  .section { padding: 40px 0; }
+  .guarantee { padding: 40px 0; }
+}
+
+/* ---------------------------------------------------------
+   Juda tor ekran (320px - iPhone SE 1, eski Android)
+   360px uchun yozilgan o'lchamlar bu yerda 18px ga sig'masdi:
+   CTA tugmasi yopishqoq panel ostiga tushib qolardi.
+   --------------------------------------------------------- */
+@media (max-width: 340px) {
+  .brand { font-size: 19px; }
+  .hero-kicker { font-size: 11px; margin-bottom: 10px; }
+  .hero h1 { font-size: 26px; margin-bottom: 12px; }
+  .hero .lead { font-size: 14.5px; margin-bottom: 13px; }
+  .hero-actions { gap: 10px; margin-bottom: 10px; }
+  .facts { gap: 11px 10px; padding-top: 11px; }
+  .fact dt { font-size: 22px; }
+  .fact dd { font-size: 12px; }
+  .mobile-cta-btn { font-size: 13.5px; padding: 6px 8px; }
+  .tariff { padding: 22px 16px; }
+  .service-row { grid-template-columns: 38px 1fr; column-gap: 12px; }
+  .service-ic { width: 38px; height: 38px; }
+  .service-ic svg { width: 19px; height: 19px; }
+}
+
+/* ---------------------------------------------------------
+   Yotiq holatda yopishqoq panel ingichkalashadi
+   375px balandlikdagi ekranda 63px panel - bu ekranning
+   oltidan biri. Shu sabab hero CTA tugmasi uning ostiga
+   tushib qolardi. Panel o'z vazifasini bajaradi, lekin
+   ixchamroq: tugmalar pastroq, oraliqlar tor.
+   --------------------------------------------------------- */
+@media (orientation: landscape) and (max-height: 460px) {
+  :root {
+    --cta-h: calc(44px + env(safe-area-inset-bottom, 0px));
+  }
+  .mobile-cta {
+    gap: 6px;
+    padding: 4px 12px calc(4px + env(safe-area-inset-bottom, 0px));
+  }
+  .mobile-cta-btn {
+    min-height: 36px;
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+  /* Panel pastda, back-to-top esa uning ustida qoladi */
+  .back-top { width: 38px; height: 38px; bottom: calc(var(--cta-h) + 8px); }
+
+  /* Oxirgi 8px: shu bilan CTA tugmasi eng past ekranda ham
+     (667x375 - SE yon holatda) panel ustida to'liq ko'rinadi */
+  .hero-kicker { margin-bottom: 6px; padding-top: 6px; }
+  .hero h1 { margin-bottom: 7px; }
+  .hero .lead { margin-bottom: 10px; }
+  .hero-actions { margin-bottom: 8px; }
+  .facts { padding-bottom: calc(var(--cta-h) + 8px); }
+}

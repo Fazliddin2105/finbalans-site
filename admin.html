@@ -246,7 +246,14 @@
        4. Panel karkasi — yon panel
        ===================================================== */
     .app { display: none; min-height: 100vh; }
-    .app.active { display: grid; grid-template-columns: 250px 1fr; }
+    /* minmax(0, 1fr): grid treki sukut bo'yicha ichidagi min-content
+       dan tor bo'la olmaydi. Arizalar jadvali keng bo'lgani uchun
+       1024px oynada o'ng ustun 803px ga cho'zilib, butun panelni
+       29px yon tomonga surib yuborardi. minmax(0, ...) trekka
+       qisqarishga ruxsat beradi - jadval esa o'z konteyneri
+       (.table-wrap) ichida suriladi. */
+    .app.active { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+    .app.active > .main { min-width: 0; }
 
     .sidebar {
       background: var(--navy);
@@ -789,13 +796,27 @@
       flex-wrap: wrap;
       margin-bottom: 16px;
     }
+    /* Holat filtrlari ("Barchasi / Yangi / Bog'lanildi / Yakunlandi /
+       Rad etilgan") bitta qatorda ~470px joy talab qiladi. Tor oynada
+       (telefon, shuningdek 1024px noutbukda yon panel bilan birga) bu
+       qator sahifani yon tomonga cho'zib yuborardi va ariza tafsilotlari
+       oynasini ham ekrandan chiqarardi.
+       max-width + overflow-x: qator faqat kerak bo'lganda suriladi,
+       keng oynada esa xuddi avvalgidek ko'rinadi. */
     .tabs {
-      display: inline-flex;
+      display: flex;
+      max-width: 100%;
       gap: 2px;
       background: #E9EDF0;
       border-radius: var(--r-ctl);
       padding: 3px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-item, .tabs > * { flex: 0 0 auto; }
     .tab {
       display: inline-flex;
       align-items: center;
@@ -1162,6 +1183,63 @@
       table { min-width: 640px; }
       .login-card { padding: 34px 24px 28px; }
     }
+    /* =====================================================
+       Telefon (<=600px) — panel egasining asosiy qurilmasi
+       -----------------------------------------------------
+       TOPILGAN XATO: 390px ekranda panel 316px yon tomonga
+       chiqib ketardi. Ikki sabab bor edi:
+
+       1. <=900px da yon panel gorizontal qatorga aylanadi,
+          lekin qator ichidagi elementlar (logotip + 6 ta
+          ikonka + rejim yorlig'i) ~700px joy talab qilardi
+          va na o'ralar, na surilardi.
+       2. `grid-template-columns: 1fr` trekining eng kichik
+          o'lchami `auto` - ya'ni u ichidagi min-content
+          (706px) dan tor bo'la olmasdi va butun panelni
+          cho'zib yuborardi.
+
+       Egasi arizalarni telefonda ko'radi - panel telefonga
+       moslashishi shart.
+       ===================================================== */
+    @media (max-width: 600px) {
+      /* minmax(0, 1fr): trek ichidagi mazmundan tor bo'la oladi */
+      .app.active { grid-template-columns: minmax(0, 1fr); }
+      .sidebar, .main { min-width: 0; }
+
+      /* Bo'limlar qatori suriladi: ikonkalar kesilmaydi,
+         qator ekrandan chiqmaydi */
+      .sidebar { gap: 4px; padding: 8px 10px; }
+      .sidebar .brand { font-size: 16px; padding: 0 6px 0 0; flex: 0 0 auto; }
+      .side-nav {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .side-nav::-webkit-scrollbar { display: none; }
+      .side-link {
+        flex: 0 0 auto;
+        min-width: 42px;
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /* "Server rejimi" yorlig'i telefonda joy yeydi va
+         ma'lumot bermaydi - holat baribir ishlashda ko'rinadi */
+      .mode-pill { display: none; }
+
+      /* Barmoq uchun o'lchamlar */
+      .icon-btn { min-width: 40px; min-height: 40px; }
+      .chip-new { min-height: 34px; padding: 6px 12px; }
+      .btn { min-height: 42px; }
+
+      /* Jadval o'z konteyneri ichida suriladi (butun sahifa emas) */
+      .table-wrap, .panel > .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
