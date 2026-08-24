@@ -1143,7 +1143,40 @@ function startTyping(words) {
       typedTimer = setTimeout(swap, 3500);
     }, 400);
   }
-  typedTimer = setTimeout(swap, 3500);
+  /* ---------- Almashinuv qachon boshlanadi ----------
+     TOPILGAN MUAMMO: so'z almashishi LCP ni buzardi.
+
+     Brauzer LCP ni "eng katta chizilgan element" bo'yicha
+     o'lchaydi va u foydalanuvchi biror narsa bosmaguncha
+     yangilanib turadi. Almashuvchi so'z sarlavha ichida katta
+     serif matn - "TIF kompaniyalari uchun" ("MChJ uchun" dan
+     ancha uzun) chizilganda brauzer yangi, KATTAROQ LCP
+     nomzodini yozardi.
+
+     O'lchov (20 Mbps, 6 marta): odatda LCP 1 208ms, lekin
+     almashinuv o'z vaqtida tushib qolgan bir yugurishda
+     4 544ms - "yomon" darajaga chiqib ketdi.
+
+     Yechim: birinchi bosish/tugma bosilishini kutamiz -
+     aynan o'sha paytda brauzer LCP ni yakunlaydi, ya'ni
+     undan keyin animatsiya o'lchovga umuman ta'sir qila
+     olmaydi. Hech kim bosmasa ham 10 soniyadan keyin o'zi
+     boshlanadi (bu paytga kelib sahifa allaqachon o'qilgan).
+
+     Scroll ataylab hisobga olinmagan: u LCP ni yakunlamaydi. */
+  let started = false;
+  function beginRotation() {
+    if (started) return;
+    started = true;
+    clearTimeout(idleStart);
+    ['pointerdown', 'keydown', 'click'].forEach(ev =>
+      window.removeEventListener(ev, beginRotation));
+    typedTimer = setTimeout(swap, 900);
+  }
+
+  const idleStart = setTimeout(beginRotation, 10000);
+  ['pointerdown', 'keydown', 'click'].forEach(ev =>
+    window.addEventListener(ev, beginRotation, { once: false, passive: true }));
 }
 
 /* ---------------- Faktlar: sanaladigan raqamlar ---------------- */
