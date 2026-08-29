@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinBalans — qurilma tekshiruvi</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  /* Ataylab hech qanday tashqi fayl ishlatilmaydi: bu sahifa
+     saytning o'zi buzilgan holatda ham ochilishi kerak. */
+  :root { color-scheme: dark; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+         background:#0B1A2C; color:#E8EDF3; padding:16px 14px 40px; }
+  h1 { font-size:19px; margin-bottom:4px; }
+  .sub { color:#9DAFC2; font-size:13.5px; margin-bottom:18px; }
+  .card { background:#10233B; border:1px solid rgba(255,255,255,.12);
+          border-radius:8px; padding:12px 14px; margin-bottom:10px; }
+  .card h2 { font-size:13px; letter-spacing:.06em; text-transform:uppercase;
+             color:#D9BC6B; margin-bottom:8px; font-weight:600; }
+  .row { display:flex; justify-content:space-between; gap:12px; padding:4px 0;
+         border-bottom:1px solid rgba(255,255,255,.07); font-size:14px; }
+  .row:last-child { border-bottom:0; }
+  .k { color:#9DAFC2; flex:0 0 auto; }
+  .v { text-align:right; word-break:break-word; font-weight:600; }
+  .ok { color:#5FD08A; } .warn { color:#F0C05A; } .bad { color:#FF7B7B; }
+  #fps { font-size:44px; font-weight:700; line-height:1; }
+  #fpsNote { font-size:13px; color:#9DAFC2; margin-top:4px; }
+  .bar { height:8px; background:rgba(255,255,255,.1); border-radius:4px;
+         overflow:hidden; margin-top:10px; }
+  .bar i { display:block; height:100%; background:#5FD08A; width:0; transition:width .3s; }
+  button { width:100%; min-height:50px; margin-top:14px; border:0; border-radius:8px;
+           background:linear-gradient(105deg,#D9BC6B,#B8902D); color:#10233B;
+           font:600 16px system-ui,sans-serif; }
+  button.sec { background:transparent; color:#E8EDF3; border:1px solid rgba(255,255,255,.25); }
+  pre { white-space:pre-wrap; word-break:break-all; font-size:11.5px;
+        background:#08131F; padding:10px; border-radius:6px; margin-top:10px;
+        color:#9DAFC2; max-height:280px; overflow:auto; }
+  .hint { font-size:13px; color:#9DAFC2; margin-top:14px; line-height:1.5; }
+</style>
+</head>
+<body>
+<h1>Qurilma tekshiruvi</h1>
+<p class="sub">Bu sahifa telefoningizda nima bo'layotganini o'lchaydi.
+   Pastdagi tugmani bosib natijani nusxalang va menga yuboring.</p>
+
+<div class="card">
+  <h2>Kadr tezligi (hozir)</h2>
+  <div id="fps">&mdash;</div>
+  <div id="fpsNote">o'lchanmoqda&hellip;</div>
+  <div class="bar"><i id="fpsBar"></i></div>
+</div>
+
+<div class="card"><h2>Qurilma</h2><div id="dev"></div></div>
+<div class="card"><h2>Sayt rejimi</h2><div id="mode">yuklanmoqda&hellip;</div></div>
+<div class="card"><h2>Yuklangan fayllar</h2><div id="net">yuklanmoqda&hellip;</div></div>
+<div class="card"><h2>Xatolar</h2><div id="errs">&mdash;</div></div>
+
+<button id="copy">Natijani nusxalash</button>
+<button class="sec" id="reload">Keshni tozalab saytni ochish</button>
+<pre id="report"></pre>
+<p class="hint">Nusxalash ishlamasa &mdash; yuqoridagi matnli qutini uzun bosib
+   belgilang va nusxalang, yoki ekran rasmini yuboring.</p>
+
+<script>
+(function () {
+  var errors = [];
+  window.addEventListener('error', function (e) {
+    errors.push((e.message || 'xato') + ' @ ' + String(e.filename || '?').split('/').pop() + ':' + (e.lineno || '?'));
+    draw();
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    errors.push('promise: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+    draw();
+  });
+
+  function row(k, v, cls) {
+    return '<div class="row"><span class="k">' + k + '</span><span class="v ' + (cls || '') + '">' + v + '</span></div>';
+  }
+
+  var nav = navigator;
+  var conn = nav.connection || nav.mozConnection || nav.webkitConnection || {};
+  var S = {};
+
+  function collectDevice() {
+    S.ekran = window.innerWidth + 'x' + window.innerHeight;
+    S.dpr = (window.devicePixelRatio || 1);
+    S.fizikPiksel = Math.round(window.innerWidth * S.dpr) + 'x' + Math.round(window.innerHeight * S.dpr);
+    S.xotira = (typeof nav.deviceMemory === 'number') ? nav.deviceMemory + ' GB' : 'aytmaydi';
+    S.yadro = nav.hardwareConcurrency || 'aytmaydi';
+    S.ulanish = conn.effectiveType || 'aytmaydi';
+    S.tejash = (conn.saveData === true) ? 'YOQILGAN' : 'yoq';
+    S.harakat = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'kamaytirilgan' : 'normal';
+    S.ua = nav.userAgent;
+
+    var weakMem = (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 2);
+    document.getElementById('dev').innerHTML =
+      row('Ekran (CSS px)', S.ekran) +
+      row('Piksel zichligi', S.dpr) +
+      row('Haqiqiy piksel', S.fizikPiksel) +
+      row('Xotira', S.xotira, weakMem ? 'warn' : '') +
+      row('Yadrolar', S.yadro) +
+      row('Ulanish turi', S.ulanish, /2g/.test(String(S.ulanish)) ? 'warn' : '') +
+      row('Trafik tejash', S.tejash, S.tejash === 'YOQILGAN' ? 'warn' : '') +
+      row('Harakat sozlamasi', S.harakat, S.harakat !== 'normal' ? 'warn' : '');
+  }
+
+  /* Asosiy sahifaning holatini bilish uchun uni yashirin ramkada ochamiz.
+     Bir xil domen - shuning uchun ichini o'qiy olamiz. */
+  var frame = document.createElement('iframe');
+  frame.setAttribute('title', 'tekshiruv');
+  frame.style.cssText = 'position:absolute;left:-10000px;top:0;width:390px;height:760px;border:0';
+  frame.src = '/';
+  document.body.appendChild(frame);
+
+  function collectMode() {
+    var out = '';
+    try {
+      var d = frame.contentDocument;
+      if (!d || !d.documentElement) {
+        out = row('Sayt', 'ochilmadi', 'bad');
+      } else {
+        var w = frame.contentWindow;
+        var cls = d.documentElement.className || '(bosh)';
+        var low = cls.indexOf('low-power') > -1;
+        var hasJs = /(^|\s)js(\s|$)/.test(cls);
+        S.rejim = low ? 'TINCH (low-power)' : 'TOLIQ';
+        S.htmlSinflari = cls;
+        S.jsIshladi = hasJs ? 'ha' : 'YOQ';
+
+        var heroImg = d.querySelector('.hero-bg img.active') || d.querySelector('.hero-bg img');
+        if (heroImg) {
+          var cs = w.getComputedStyle(heroImg);
+          S.heroAnimatsiya = cs.animationName + ' / ' + cs.animationPlayState;
+          S.heroRasm = String(heroImg.currentSrc || heroImg.src || '').split('/').pop();
+        } else { S.heroAnimatsiya = '-'; S.heroRasm = '-'; }
+
+        var bodyFont = w.getComputedStyle(d.body).fontFamily || '';
+        S.cssYuklandi = bodyFont.indexOf('Golos') > -1 ? 'ha' : 'YOQ';
+        S.bolimlar = d.querySelectorAll('section').length;
+        S.sahifaBalandligi = d.documentElement.scrollHeight;
+        S.yonSiljish = d.documentElement.scrollWidth - d.documentElement.clientWidth;
+
+        var jonli = 0;
+        var all = d.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+          var c2 = w.getComputedStyle(all[i]);
+          if (c2.animationName && c2.animationName !== 'none' &&
+              c2.animationPlayState === 'running' &&
+              String(c2.animationIterationCount).indexOf('infinite') > -1) jonli++;
+        }
+        S.jonliAnimatsiya = jonli;
+
+        out = row('Rejim', S.rejim, low ? 'warn' : 'ok') +
+              row('html sinflari', S.htmlSinflari) +
+              row('JS ishladi', S.jsIshladi, hasJs ? 'ok' : 'bad') +
+              row('CSS yuklandi', S.cssYuklandi, S.cssYuklandi === 'ha' ? 'ok' : 'bad') +
+              row('Bo‘limlar', S.bolimlar, S.bolimlar > 5 ? 'ok' : 'bad') +
+              row('Yon siljish', S.yonSiljish + 'px', S.yonSiljish > 0 ? 'bad' : 'ok') +
+              row('Jonli animatsiya', S.jonliAnimatsiya) +
+              row('Hero animatsiya', S.heroAnimatsiya) +
+              row('Hero rasm', S.heroRasm);
+      }
+    } catch (e) {
+      out = row('Ramka', 'o‘qib bo‘lmadi: ' + e.message, 'bad');
+    }
+    document.getElementById('mode').innerHTML = out;
+  }
+
+  function collectNet() {
+    var out = '';
+    try {
+      var w = frame.contentWindow;
+      var res = w.performance.getEntriesByType('resource');
+      var total = 0, big = [];
+      for (var i = 0; i < res.length; i++) {
+        var sz = res[i].transferSize || res[i].encodedBodySize || 0;
+        total += sz;
+        if (sz > 20000) big.push({ n: String(res[i].name).split('/').pop().split('?')[0], s: sz });
+      }
+      big.sort(function (a, b) { return b.s - a.s; });
+      S.trafik = Math.round(total / 1024) + ' KB, ' + res.length + ' fayl';
+      out = row('Jami', S.trafik);
+      var top = [];
+      for (var j = 0; j < Math.min(6, big.length); j++) {
+        out += row(big[j].n.slice(0, 24), Math.round(big[j].s / 1024) + ' KB');
+        top.push(big[j].n + '=' + Math.round(big[j].s / 1024) + 'KB');
+      }
+      S.ogirFayllar = top.join(', ');
+    } catch (e) {
+      out = row('O‘lchov', 'mavjud emas');
+    }
+    document.getElementById('net').innerHTML = out;
+  }
+
+  /* --- Kadr tezligi o'lchagichi --- */
+  var samples = [], last = 0, shownAt = 0;
+  function tick(t) {
+    if (last) { var dt = t - last; if (dt < 500) samples.push(dt); }
+    last = t;
+    if (samples.length > 150) samples.shift();
+    if (t - shownAt > 500 && samples.length > 10) {
+      shownAt = t;
+      var sorted = samples.slice().sort(function (a, b) { return a - b; });
+      var med = sorted[Math.floor(sorted.length / 2)];
+      var fps = Math.round(1000 / med);
+      var slowPct = 0;
+      for (var i = 0; i < samples.length; i++) if (samples[i] > 33) slowPct++;
+      slowPct = Math.round(slowPct / samples.length * 100);
+      S.fps = fps;
+      S.sekinKadrUlushi = slowPct + '%';
+      var el = document.getElementById('fps');
+      el.textContent = fps + ' fps';
+      el.className = fps >= 50 ? 'ok' : (fps >= 30 ? 'warn' : 'bad');
+      document.getElementById('fpsNote').textContent =
+        'kadrlarning ' + slowPct + '% i 30 fps dan past' +
+        (fps >= 50 ? ' — yaxshi' : (fps >= 30 ? ' — o‘rtacha' : ' — yomon'));
+      var bar = document.getElementById('fpsBar');
+      bar.style.width = Math.min(100, fps / 60 * 100) + '%';
+      bar.style.background = fps >= 50 ? '#5FD08A' : (fps >= 30 ? '#F0C05A' : '#FF7B7B');
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function draw() {
+    var e = document.getElementById('errs');
+    if (errors.length) {
+      var h = '';
+      for (var i = 0; i < Math.min(6, errors.length); i++) h += row('!', errors[i], 'bad');
+      e.innerHTML = h;
+    } else {
+      e.innerHTML = row('Xato', 'yo‘q', 'ok');
+    }
+    S.xatolar = errors.length ? errors.slice(0, 6).join(' | ') : 'yoq';
+
+    var lines = ['FINBALANS QURILMA TEKSHIRUVI'];
+    for (var k in S) if (Object.prototype.hasOwnProperty.call(S, k)) lines.push(k + ': ' + S[k]);
+    document.getElementById('report').textContent = lines.join('\n');
+  }
+
+  collectDevice();
+  draw();
+
+  frame.addEventListener('load', function () {
+    setTimeout(function () { collectMode(); collectNet(); draw(); }, 3500);
+  });
+  setTimeout(function () { collectMode(); collectNet(); draw(); }, 8000);
+
+  document.getElementById('copy').addEventListener('click', function () {
+    var txt = document.getElementById('report').textContent;
+    var btn = this;
+    function ok() { btn.textContent = 'Nusxalandi ✓'; }
+    if (nav.clipboard && nav.clipboard.writeText) {
+      nav.clipboard.writeText(txt).then(ok, select);
+    } else { select(); }
+    function select() {
+      try {
+        var r = document.createRange();
+        r.selectNodeContents(document.getElementById('report'));
+        var s = window.getSelection();
+        s.removeAllRanges(); s.addRange(r);
+        btn.textContent = 'Belgilandi — nusxalang';
+      } catch (e) { btn.textContent = 'Ekran rasmini yuboring'; }
+    }
+  });
+
+  document.getElementById('reload').addEventListener('click', function () {
+    location.href = '/?yangi=' + Date.now();
+  });
+})();
+</script>
+</body>
+</html>

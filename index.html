@@ -57,8 +57,18 @@
 
   <!-- LCP surati: brauzer <picture> ni o'qigunicha kutmasdan,
        aynan o'zi tanlaydigan o'lchamni oldindan tortadi -->
-  <link rel="preload" as="image" type="image/webp"
-        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" imagesizes="(max-width: 900px) 800px, 100vw" fetchpriority="high">
+  <!-- Preload ham <picture> dagi cheklovga MOS bo'lishi shart.
+       Ilgari bu yerda 1600px ham ro'yxatda edi va imagesizes DPR ga
+       ko'paytirilardi - natijada telefon avval gold-1600.webp (154 KB)
+       ni tortib, keyin <picture> tanlagan gold-1080.webp ni ham
+       yuklardi. Ya'ni bitta rasm ikki marta, 253 KB.
+       `media` atributi bilan har bir preload o'z ekraniga tegishli. -->
+  <link rel="preload" as="image" type="image/webp" media="(max-width: 900px)"
+        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w"
+        imagesizes="450px" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" media="(min-width: 901px)"
+        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w"
+        imagesizes="100vw" fetchpriority="high">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
