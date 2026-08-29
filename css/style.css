@@ -4153,47 +4153,6 @@ picture { display: contents; }
 }
 
 
-/* =========================================================
-   TELEFONDA HERO FONI — GPU NI BO'G'MASLIK
-   ---------------------------------------------------------
-   Shikoyat: telefonda sahifa pirpirab, o'chib-yonib turadi.
-
-   Sabab GPU yuki. Hero fonida uchta surat ustma-ust turadi
-   va ularning har biri:
-     - ekran kengligidan ~1.15 baravar katta qutida,
-     - hero balandligidan 260px uzunroq (.hero-bg bottom: -260px),
-     - uzluksiz Ken Burns animatsiyasi bilan (transform: scale),
-     - ustiga surish paytida parallaks transformi qo'shiladi,
-     - `will-change: transform` bilan alohida qatlamga chiqarilgan.
-
-   Bunga qo'shimcha: DPR 3 bo'lgan Android telefonlar 1600px
-   kenglikdagi WebP larni tanlaydi - uchtasi 461 KB. O'rta
-   darajadagi telefon bu qatlamlarni har kadrda qayta
-   rasterlashga ulgurmaydi va ekran pirpiraydi.
-
-   Yechim: telefonda bezak harakati o'chiriladi. Slaydlar
-   almashinuvi (opacity krossfeyd) qoladi - u arzon. Desktop
-   va planshetda hammasi avvalgidek.
-   ========================================================= */
-@media (max-width: 900px) {
-  /* Ken Burns - telefonda eng qimmat qism */
-  .hero-bg img,
-  .hero.anim-live .hero-bg img.active { animation: none !important; }
-
-  /* Parallaks uchun ajratilgan qatlam ham kerak emas.
-     JS inline transform qo'yadi - uni ham bekor qilamiz. */
-  .hero-bg {
-    bottom: 0;
-    will-change: auto;
-    transform: none !important;
-  }
-
-  /* Hero grafigi - yana bitta uzluksiz animatsiyalanadigan qatlam */
-  .hero-chart { animation: none !important; }
-  .hero-chart path,
-  .hero-chart rect,
-  .hero-chart circle { animation: none !important; }
-}
 
 /* =========================================================
    TINCH REJIM (low-power) — zaif qurilmalar uchun
@@ -4268,4 +4227,30 @@ html.low-power [data-reveal],
 html.low-power .stagger > * {
   transition-duration: 0.25s !important;
   transform: none !important;
+}
+
+
+/* =========================================================
+   TELEFONDA HERO: harakat qoladi, ortiqcha yuk ketadi
+   ---------------------------------------------------------
+   Avvalgi urinishda telefonda BARCHA hero animatsiyalari
+   o'chirilgandi - natijada dizayn jonsiz va quruq bo'lib
+   qoldi. Bu noto'g'ri yechim edi: pirpirashning asosiy
+   sababi animatsiya emas, yopishqoq paneldagi keraksiz
+   backdrop-filter va ortiqcha GPU qatlamlari edi.
+
+   Endi harakat joyida qoladi, faqat eng qimmat qismi
+   yengillashtiriladi: fon rasmi hero balandligidan 260px
+   uzun bo'lishi shart emas (kichik ekranda ko'rinmaydi
+   ham), va bir vaqtning o'zida faqat ko'rinib turgan
+   slayd animatsiyalanadi (buni .anim-live allaqachon
+   ta'minlaydi).
+
+   Haqiqatan zaif qurilmalar uchun alohida `low-power`
+   rejimi bor - u o'zini o'zi aniqlaydi.
+   ========================================================= */
+@media (max-width: 720px) {
+  /* 260px ortiqcha bo'y - kichik ekranda parallaks masofasi
+     baribir kichik, lekin qatlam maydoni 30% kattaroq bo'lardi */
+  .hero-bg { bottom: -120px; }
 }

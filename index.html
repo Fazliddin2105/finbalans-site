@@ -169,13 +169,28 @@
       try {
         var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
         var c = navigator.connection || {};
+        /* CHEGARALAR ATAYLAB QAT'IY.
+           Birinchi urinishda `deviceMemory <= 4` va
+           `hardwareConcurrency <= 4` qo'yilgandi - bu deyarli
+           HAR QANDAY oddiy telefonni tinch rejimga tushirib
+           yubordi va dizayn jonsiz bo'lib qoldi. 4 GB xotirali
+           telefon 2026-yilda mutlaqo normal qurilma.
+
+           Endi bu yerda faqat shubhasiz holatlar:
+             - foydalanuvchining O'ZI harakatni kamaytirishni
+               so'ragani (bu buyruq, taxmin emas),
+             - trafik tejash rejimi yoqilgani,
+             - 2G ulanish,
+             - 2 GB yoki undan kam xotira (haqiqatan zaif).
+           Qolgan hammasi to'liq dizaynni oladi. Agar qurilma
+           baribir uddalay olmasa, main.js dagi kadr o'lchovi
+           uni keyinroq tutadi. */
         var weak =
           mq('(prefers-reduced-motion: reduce)') ||
           mq('(prefers-reduced-data: reduce)') ||
           c.saveData === true ||
-          /^(slow-2g|2g|3g)$/.test(c.effectiveType || '') ||
-          (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
-          (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4);
+          /^(slow-2g|2g)$/.test(c.effectiveType || '') ||
+          (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 2);
         if (weak) d.classList.add('low-power');
       } catch (e) { /* eski brauzer - hech narsa qilmaymiz, sayt ishlaydi */ }
     })();

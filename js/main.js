@@ -2117,10 +2117,17 @@ setLanguage(savedLang);
   if (root.classList.contains('low-power')) return;          /* allaqachon tinch */
   if (!window.requestAnimationFrame || !window.performance) return;
 
-  const SAMPLE_MS = 2000;      /* qancha vaqt kuzatiladi */
-  const SLOW_FRAME = 33;       /* 30 kadr/sek chegarasi */
-  const SLOW_SHARE = 0.34;     /* shundan ko'pi sekin bo'lsa - tinch rejim */
-  const MIN_FRAMES = 24;       /* shundan kam kadrda qaror qabul qilinmaydi */
+  /* CHEGARALAR ATAYLAB QAT'IY. Birinchi urinishda "kadrlarning
+     uchdan biri 33ms dan uzun" deb qo'yilgandi - bu oddiy
+     telefonni ham tinch rejimga tushirardi, chunki surish
+     paytida qisqa sekinlashuv normal hodisa.
+     Endi chegara "sayt haqiqatan ishlatib bo'lmaydigan holatda":
+     kadrlarning yarmidan ko'pi 50ms dan uzun, ya'ni barqaror
+     20 kadr/sekunddan past. */
+  const SAMPLE_MS = 3000;      /* uzoqroq kuzatiladi - tasodifiy sakrash aldamaydi */
+  const SLOW_FRAME = 50;       /* 20 kadr/sek chegarasi */
+  const SLOW_SHARE = 0.55;     /* yarmidan ko'pi sekin bo'lsagina */
+  const MIN_FRAMES = 40;       /* yetarli namuna bo'lmasa qaror qabul qilinmaydi */
 
   let prev = 0, slow = 0, total = 0, startedAt = 0;
 
