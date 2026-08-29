@@ -143,7 +143,43 @@
        animatsiyasi kechikib yoqilar va bo'limlar avval ko'rinib,
        keyin g'oyib bo'lardi. Inline skript birinchi bo'yashdan
        oldin bajariladi. -->
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    /* Bu skript birinchi bo'yashdan OLDIN bajariladi - shuning uchun
+       hech narsa "avval harakatlanib, keyin to'xtab" qolmaydi.
+
+       1. `js` sinfi: paydo bo'lish animatsiyalarini yoqadi. main.js
+          `defer` bilan yuklanadi, ya'ni kech ishga tushadi - sinf
+          o'sha paytda qo'yilsa bo'limlar avval ko'rinib, keyin
+          g'oyib bo'lardi.
+
+       2. `low-power` sinfi: sayt HAR QANDAY qurilmada qulay bo'lishi
+          kerak. Zaif telefonda bezak harakatlari (lentalar, Ken
+          Burns, pulsatsiya) kadrni yeydi va ekran pirpiraydi.
+          Qurilmadan so'raymiz - taxmin qilmaymiz:
+            - foydalanuvchi harakatni kamaytirishni so'raganmi
+            - trafikni tejash rejimi yoqilganmi
+            - xotira 4 GB dan kammi
+            - protsessor 4 yadrodan kammi
+            - ulanish 2G/sekin 3G mi
+          Shulardan biri to'g'ri bo'lsa - sayt tinch rejimda ochiladi.
+          Kuchli qurilmada esa hamma narsa avvalgidek qoladi. */
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      try {
+        var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+        var c = navigator.connection || {};
+        var weak =
+          mq('(prefers-reduced-motion: reduce)') ||
+          mq('(prefers-reduced-data: reduce)') ||
+          c.saveData === true ||
+          /^(slow-2g|2g|3g)$/.test(c.effectiveType || '') ||
+          (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
+          (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4);
+        if (weak) d.classList.add('low-power');
+      } catch (e) { /* eski brauzer - hech narsa qilmaymiz, sayt ishlaydi */ }
+    })();
+  </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>

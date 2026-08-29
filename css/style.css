@@ -2072,11 +2072,17 @@ html:not(.js) .loader { display: none; }
     display: flex;
     gap: 10px;
     padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-    background: rgba(11, 26, 44, 0.96);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    /* Fon 96% shaffofmas edi va ustiga blur(8px) qo'yilgandi -
+       ya'ni blur amalda KO'RINMASDI (4% shaffoflik ortida), lekin
+       telefonda har bir surish kadrida butun ekran kengligidagi
+       GPU blur o'tkazilardi. Bu zaif qurilmada pirpirashning
+       to'g'ridan-to'g'ri sababi. Fon to'liq shaffofmas qilindi,
+       blur olib tashlandi - ko'rinishi bir xil, narxi nol. */
+    background: #0B1A2C;
     border-top: 1px solid rgba(217, 188, 107, 0.35);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+    /* Soya ham yengillashtirildi: 30px radius fixed elementda har
+       kadrda qayta chiziladi */
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.32);
   }
   .mobile-cta-btn {
     flex: 1;
@@ -4187,4 +4193,79 @@ picture { display: contents; }
   .hero-chart path,
   .hero-chart rect,
   .hero-chart circle { animation: none !important; }
+}
+
+/* =========================================================
+   TINCH REJIM (low-power) — zaif qurilmalar uchun
+   ---------------------------------------------------------
+   Sayt har qanday qurilmada qulay bo'lishi kerak. Kuchli
+   telefonlarda bezak harakatlari chiroyli; 2-4 GB xotirali
+   yoki sekin ulanishdagi telefonda esa ular kadrni yeydi va
+   ekran pirpiraydi.
+
+   `low-power` sinfini <head> dagi inline skript qo'yadi -
+   birinchi bo'yashdan oldin, shuning uchun hech narsa avval
+   harakatlanib keyin to'xtab qolmaydi. Shartlar: harakatni
+   kamaytirish so'rovi, trafik tejash, 2G/3G, <=4 GB xotira,
+   <=4 yadro.
+
+   Bu yerda MAZMUN yo'qolmaydi - faqat harakat to'xtaydi va
+   qimmat effektlar olib tashlanadi. Hamma matn, rasm va
+   tugmalar joyida qoladi.
+   ========================================================= */
+html.low-power .txt-marquee-track,
+html.low-power .rates-track,
+html.low-power .hero-bg img,
+html.low-power .hero-chart,
+html.low-power .hero-chart *,
+html.low-power .cta-pulse-wrap::before,
+html.low-power .compare td.compare-us::after,
+html.low-power .compare thead th.compare-us::after,
+html.low-power .footer-mega,
+html.low-power .loader,
+html.low-power .loader * {
+  animation: none !important;
+}
+
+/* Doimiy GPU qatlamlari: harakat yo'q ekan, ular faqat xotira yeydi */
+html.low-power * { will-change: auto !important; }
+
+/* Parallaks va Ken Burns uchun ajratilgan qatlam kerak emas */
+html.low-power .hero-bg {
+  transform: none !important;
+  bottom: 0;
+}
+
+/* Orqa fonni xiralashtirish - eng qimmat effektlardan biri.
+   Fonlar allaqachon deyarli shaffofmas, farq ko'rinmaydi. */
+html.low-power .rates-strip,
+html.low-power .site-header,
+html.low-power .mobile-cta {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Katta yumshoq soyalar har kadrda qayta chiziladi */
+html.low-power .tariff,
+html.low-power .mobile-cta,
+html.low-power .btn,
+html.low-power .back-top,
+html.low-power .float-tg { box-shadow: none !important; }
+
+/* Matn lentasi tinch turadi - o'qish uchun mo'ljallangan emas,
+   lekin bezak sifatida qoladi */
+html.low-power .txt-marquee-track { transform: none !important; }
+
+/* Suratlar ustidagi silliq o'tishlar ham qisqartiriladi */
+html.low-power .hero-bg img { transition-duration: 0.2s !important; }
+
+/* Javobgarlik bo'limidagi surat parallaksi ham to'xtaydi */
+html.low-power .guarantee-media img { transform: none !important; }
+
+/* Paydo bo'lish animatsiyasi qoladi, lekin qisqaroq va faqat
+   shaffoflik bo'yicha - siljish qatlam yaratadi */
+html.low-power [data-reveal],
+html.low-power .stagger > * {
+  transition-duration: 0.25s !important;
+  transform: none !important;
 }

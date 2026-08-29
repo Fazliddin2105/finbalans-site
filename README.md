@@ -71,6 +71,26 @@ TG_TOKEN=<bot-token> TG_CHAT=<chat-id> node server.js
 - Brute-force cheklovi, sessiya muddati, xavfsizlik sarlavhalari
 - `data/` papkasi web orqali ochilmaydi va git repoga qo'shilmaydi
 
+## Tinch rejim (low-power)
+
+Sayt zaif qurilmani o'zi tanib, bezak harakatlarini o'chiradi —
+mazmun to'liq qoladi, faqat hech narsa qimirlamaydi.
+
+Ikki bosqichda aniqlanadi:
+
+1. **Darhol**, `<head>` dagi inline skript: harakatni kamaytirish
+   so'rovi, trafik tejash, 2G/3G, ≤4 GB xotira, ≤4 yadro.
+2. **Keyin**, `js/main.js`: sahifa yuklangach ~2 soniya davomida
+   haqiqiy kadr oralig'i o'lchanadi. Kadrlarning uchdan biridan
+   ko'pi 33 ms dan uzun bo'lsa — tinch rejimga o'tadi.
+
+Ikkinchi bosqich Safari uchun muhim: iOS `navigator.deviceMemory`
+bermaydi, shuning uchun birinchi bosqich u yerda ishlamaydi.
+
+Tekshirish: brauzer konsolida `document.documentElement.classList`
+ichida `low-power` bor-yo'qligiga qarang. Majburan yoqish:
+`document.documentElement.classList.add('low-power')`.
+
 ## Shriftlar
 
 `fonts/` — Lora va Golos Text, o'z serverimizda, **variable** ko'rinishda:

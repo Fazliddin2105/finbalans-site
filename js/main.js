@@ -1708,6 +1708,15 @@ function frameUpdate() {
 
   if (REDUCED_MOTION) return;
 
+  /* Tinch rejimda parallaks yozilmaydi. CSS uni allaqachon bekor
+     qiladi (transform: none !important), lekin har kadrda inline
+     style yozish baribir uslub qayta hisoblashiga sabab bo'ladi -
+     zaif qurilmada bu bekorga sarflangan ish.
+     classList.contains arzon: hech narsa o'lchanmaydi, faqat
+     ro'yxatga qaraladi. Sinf ish vaqtida ham qo'shilishi mumkin
+     (avtomatik aniqlash), shuning uchun har kadrda tekshiriladi. */
+  if (document.documentElement.classList.contains('low-power')) return;
+
   /* --- Parallakslar: faqat transform yoziladi, hech narsa o'qilmaydi --- */
   if (heroBg && y < m.heroPar) {
     heroBg.style.transform = 'translate3d(0,' + (y * 0.22) + 'px,0)';
@@ -2081,4 +2090,61 @@ setLanguage(savedLang);
       characterData: true,
     });
   }
+})();
+
+
+/* =========================================================
+   TINCH REJIMGA AVTOMATIK O'TISH
+   ---------------------------------------------------------
+   <head> dagi skript qurilmadan so'raydi: xotira, yadrolar,
+   ulanish turi, foydalanuvchi sozlamalari. Lekin bu signallar
+   hammasini qamramaydi:
+     - navigator.deviceMemory Safari da umuman yo'q,
+     - telefon kuchli bo'lsa ham fon dasturlari band qilib
+       qo'ygan bo'lishi mumkin,
+     - eski Android da qiymatlar yolg'on bo'ladi.
+
+   Shuning uchun sahifa ochilgandan keyin ~2 soniya davomida
+   haqiqiy kadr oralig'i o'lchanadi. Agar kadrlarning uchdan
+   biridan ko'pi 33ms dan uzun bo'lsa (ya'ni 30 kadr/sek dan
+   past), sayt o'zi tinch rejimga o'tadi.
+
+   O'lchov faqat bir marta, sahifa ko'rinib turganda va
+   requestAnimationFrame ustida - qo'shimcha yuk bermaydi.
+   ========================================================= */
+(function () {
+  const root = document.documentElement;
+  if (root.classList.contains('low-power')) return;          /* allaqachon tinch */
+  if (!window.requestAnimationFrame || !window.performance) return;
+
+  const SAMPLE_MS = 2000;      /* qancha vaqt kuzatiladi */
+  const SLOW_FRAME = 33;       /* 30 kadr/sek chegarasi */
+  const SLOW_SHARE = 0.34;     /* shundan ko'pi sekin bo'lsa - tinch rejim */
+  const MIN_FRAMES = 24;       /* shundan kam kadrda qaror qabul qilinmaydi */
+
+  let prev = 0, slow = 0, total = 0, startedAt = 0;
+
+  function tick(t) {
+    if (document.hidden) { prev = 0; requestAnimationFrame(tick); return; }
+    if (!startedAt) startedAt = t;
+    if (prev) {
+      const dt = t - prev;
+      /* 250ms dan uzun tanaffus - bu kadr emas, sahifa fonda edi
+         yoki brauzer boshqa ish bilan band bo'ldi. Hisobga olinmaydi. */
+      if (dt < 250) { total++; if (dt > SLOW_FRAME) slow++; }
+    }
+    prev = t;
+
+    if (t - startedAt < SAMPLE_MS) { requestAnimationFrame(tick); return; }
+
+    if (total >= MIN_FRAMES && slow / total > SLOW_SHARE) {
+      root.classList.add('low-power');
+      /* Ken Burns va lentalar to'xtaydi - qatlamlar bo'shaydi */
+    }
+  }
+
+  /* Yuklanish tugagach boshlanadi: yuklash paytidagi tabiiy
+     sekinlik qurilmaning aybi emas */
+  if (document.readyState === 'complete') requestAnimationFrame(tick);
+  else window.addEventListener('load', () => setTimeout(() => requestAnimationFrame(tick), 600));
 })();
