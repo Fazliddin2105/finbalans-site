@@ -35,6 +35,9 @@ const translations = {
     'a11y.skip': "Mazmunga o'tish",
     'a11y.tg': "Telegram orqali yozish",
     'a11y.menu': "Menyu",
+    'a11y.mainNav': "Asosiy menyu",
+    'a11y.tariffs': "Tariflar — yon tomonga suriladi",
+    'a11y.langNow': "tanlangan til",
 
     'nav.services': "Xizmatlar",
     'nav.pricing': "Narxlar",
@@ -313,6 +316,9 @@ const translations = {
     'a11y.skip': "Перейти к содержанию",
     'a11y.tg': "Написать в Telegram",
     'a11y.menu': "Меню",
+    'a11y.mainNav': "Главное меню",
+    'a11y.tariffs': "Тарифы — прокручивается вбок",
+    'a11y.langNow': "выбранный язык",
 
     'nav.services': "Услуги",
     'nav.pricing': "Цены",
@@ -591,6 +597,9 @@ const translations = {
     'a11y.skip': "Skip to content",
     'a11y.tg': "Message us on Telegram",
     'a11y.menu': "Menu",
+    'a11y.mainNav': "Main menu",
+    'a11y.tariffs': "Pricing plans — scrolls sideways",
+    'a11y.langNow': "selected language",
 
     'nav.services': "Services",
     'nav.pricing': "Pricing",
@@ -891,7 +900,13 @@ function setLanguage(lang) {
     });
   });
 
-  langButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+  langButtons.forEach(btn => {
+    const on = btn.dataset.lang === lang;
+    btn.classList.toggle('active', on);
+    /* aria-pressed: skrinrider "bosilgan" deb o'qiydi. Ilgari faol til
+       faqat `.active` sinfi bilan, ya'ni ko'z bilan ajralib turardi. */
+    btn.setAttribute('aria-pressed', String(on));
+  });
   document.documentElement.lang = lang;
   document.title = dict['meta.title'];
   try { localStorage.setItem('finbalans-lang', lang); } catch (e) { /* xotira bloklangan */ }

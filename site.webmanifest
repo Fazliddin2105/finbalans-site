@@ -1,0 +1,16 @@
+{
+  "name": "FinBalans — buxgalteriya xizmatlari",
+  "short_name": "FinBalans",
+  "description": "MChJ va YaTT uchun buxgalteriya autsorsingi. Toshkent, 2018-yildan beri.",
+  "lang": "uz",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#10233B",
+  "theme_color": "#10233B",
+  "icons": [
+    { "src": "/img/icon/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/img/icon/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/img/icon/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

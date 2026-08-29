@@ -58,6 +58,10 @@ TG_TOKEN=<bot-token> TG_CHAT=<chat-id> node server.js
 | `server.js` | Server: sayt + API + Telegram + kurslar |
 | `css/style.css`, `js/main.js` | Dizayn va skriptlar |
 | `img/` | Suratlar: asl `.jpg` + WebP variantlari (`-400`, `-640`, `-800`, `-1080`, `-1600`) |
+| `img/icon/` | Favicon, iOS ikonkasi, Android manifest ikonkalari |
+| `fonts/` | Lora va Golos Text (variable, o'z serverimizda) |
+| `robots.txt`, `sitemap.xml`, `site.webmanifest` | Qidiruv tizimlari va "bosh ekranga qo'shish" |
+| `404.html` | Topilmagan sahifa |
 | `data/` | Arizalar, kontent, admin ma'lumotlari (repoga tushmaydi) |
 
 ## Xavfsizlik
