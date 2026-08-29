@@ -176,6 +176,23 @@
     (function () {
       var d = document.documentElement;
       d.classList.add('js');
+
+      /* ZAXIRA TAYMER — sayt bo'sh qolib ketmasin.
+         `js` sinfi paydo bo'lish animatsiyasini yoqadi: 23 ta blok
+         `opacity: 0` bilan boshlanadi va main.js ularga `.visible`
+         qo'ygandagina ko'rinadi. Agar main.js yetib kelmasa (2G
+         uzilish, proksi, reklama bloker, edge xatosi) yoki ichida
+         xato bersa, o'sha bloklar MANGU ko'rinmas qolardi - sayt
+         sarlavha va hero'dan keyin bo'm-bo'sh bo'lardi, ustiga
+         preloader ham qotib qolardi.
+
+         main.js muvaffaqiyatli ishga tushsa `js-ready` qo'yadi.
+         6 soniyada u paydo bo'lmasa - `js` ni olib tashlaymiz:
+         animatsiya yo'qoladi, lekin BUTUN KONTENT ko'rinadi.
+         Yomon animatsiya - bo'sh sahifadan yaxshiroq. */
+      setTimeout(function () {
+        if (!d.classList.contains('js-ready')) d.classList.remove('js');
+      }, 6000);
       try {
         var mq = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
         var c = navigator.connection || {};

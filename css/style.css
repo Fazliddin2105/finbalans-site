@@ -646,6 +646,11 @@ h3 {
 /* =========================================================
    Paydo bo'lish animatsiyasi (yumshoq, bir martalik)
    ========================================================= */
+/* DIQQAT: `html.js` bilan boshlanadigan qoidalar FAQAT animatsiya
+   darvozasi bo'lib qolishi kerak. Bu sinf main.js yiqilganda zaxira
+   taymer tomonidan olib tashlanadi - agar shu yerga JS talab
+   qiladigan boshqa yashirish qoidasi qo'shilsa, u holatda kutilmagan
+   narsa ko'rinib qolishi mumkin. */
 html.js [data-reveal] {
   opacity: 0;
   transform: translateY(40px);
@@ -1742,8 +1747,12 @@ html.js .image-zoom.visible img { transform: scale(1); }
   transition: opacity 0.55s ease, visibility 0.55s ease;
 }
 .loader.done { opacity: 0; visibility: hidden; }
-/* JS yuklanmasa (yoki o'chirilgan bo'lsa) sayt loader ortida qolib ketmasin:
-   main.js birinchi qatorida html ga .js sinfini qo'shadi */
+/* Sayt loader ortida qolib ketmasin.
+   `js` sinfini index.html dagi inline skript qo'yadi. JS butunlay
+   o'chirilgan bo'lsa u ham ishlamaydi -> sinf yo'q -> loader
+   yashiriladi. main.js yetib kelmagan holat uchun esa o'sha
+   inline skriptdagi 6 soniyalik zaxira taymer `js` ni olib
+   tashlaydi va bu qoida yana kuchga kiradi. */
 html:not(.js) .loader { display: none; }
 .loader-brand {
   font-family: var(--serif);

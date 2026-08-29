@@ -12,8 +12,11 @@
 const FORM_ENDPOINT =
   (location.protocol === 'http:' || location.protocol === 'https:') ? '/api/leads' : '';
 
-/* Paydo bo'lish animatsiyalari faqat JS ishlaganda yoqiladi */
-document.documentElement.classList.add('js');
+/* `js` sinfi index.html dagi inline skriptda qo'yiladi (birinchi
+   bo'yashdan oldin). BU YERDA QAYTA QO'YILMAYDI: aks holda
+   index.html dagi 6 soniyalik zaxira sinfni olib tashlagandan
+   keyin kech yuklangan main.js uni qaytarib, kontent
+   "ko'rinib -> yashirinib" ketardi. Sinfning egasi bitta joyda. */
 
 /* ---------------- Preloader ----------------
    Eng boshda turadi: quyidagi kodda xato bo'lsa ham loader baribir
@@ -1587,16 +1590,35 @@ document.querySelectorAll('.faq-item').forEach(item => {
 });
 
 /* ---------------- Paydo bo'lish animatsiyasi ---------------- */
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
+/* IntersectionObserver himoyada. U yo'q dvigatelda (iOS 12.0-12.1
+   Safari, eski Android WebView) himoyasiz `new IntersectionObserver`
+   ReferenceError beradi va main.js SHU YERDA o'ladi - undan keyingi
+   hamma narsa (menyu, forma, til, karusellar) ishlamay qoladi.
+   Bundan ham yomoni: `html.js [data-reveal] { opacity: 0 }` kuchda
+   qolib, 23 ta blok mangu ko'rinmas bo'lardi. */
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  
+  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+} else {
+  /* Observer yo'q: animatsiyasiz, hamma narsa darhol ko'rinadi.
+     scroll listener ataylab qo'yilmaydi - u bu dvigatellarda
+     sekin va baribir keraksiz. */
+  document.querySelectorAll('[data-reveal], .stagger, .image-zoom, .steps')
+    .forEach(el => el.classList.add('visible'));
+}
 
-document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+/* Bootstrap shu yergacha yetdi - zaxira taymerga "kerak emas" deymiz.
+   Bayroq AYNAN shu yerda, fayl boshida emas: undan oldingi har
+   qanday xato zaxirani ishga tushirishi kerak. */
+document.documentElement.classList.add('js-ready');
 
 /* Zaxira yo'li: observer biror sababga ko'ra ishlamasa ham ko'rinish
    doirasidagi bloklar yashirin qolib ketmasligi uchun.
@@ -1797,17 +1819,22 @@ if (heroSlides.length > 1 && !REDUCED_MOTION) {
 /* ---------------- Doimiy animatsiyalar: faqat ekranda ko'ringanda ----------------
    Shimmer/glow kabi cheksiz animatsiyalar element ko'rinmasa pauza qilinadi
    (CSS'dagi .anim-live qoidalari bilan juft ishlaydi) */
-const animObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    entry.target.classList.toggle('anim-live', entry.isIntersecting);
-  });
-}, { rootMargin: '80px' });
-/* Cheksiz animatsiyali barcha bloklar: ikkita marquee-lenta, hero
-   (Ken Burns + grafik nuqtasi + CTA pulsi), footer suvbelgisi,
-   navy tarif kartasi va taqqoslash jadvali nuri. */
-document.querySelectorAll(
-  '.footer-mega, .tariff-main, .compare-wrap, .hero, .txt-marquee, .rates-bar'
-).forEach(el => animObserver.observe(el));
+/* Bu observer faqat animatsiyalarni pauzadan chiqaradi. Yo'q bo'lsa
+   ular pauzada qoladi - kontent yo'qolmaydi, zaif qurilmada hatto
+   foydali. Shuning uchun `else` shoxi kerak emas. */
+if ('IntersectionObserver' in window) {
+  const animObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('anim-live', entry.isIntersecting);
+    });
+  }, { rootMargin: '80px' });
+  /* Cheksiz animatsiyali barcha bloklar: ikkita marquee-lenta, hero
+     (Ken Burns + grafik nuqtasi + CTA pulsi), footer suvbelgisi,
+     navy tarif kartasi va taqqoslash jadvali nuri. */
+  document.querySelectorAll(
+    '.footer-mega, .tariff-main, .compare-wrap, .hero, .txt-marquee, .rates-bar'
+  ).forEach(el => animObserver.observe(el));
+}
 
 /* ---------------- Mijozlar fikri: avtomatik karusel ---------------- */
 const revTrack = document.getElementById('reviewsTrack');
