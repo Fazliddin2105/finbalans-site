@@ -58,7 +58,7 @@
   <!-- LCP surati: brauzer <picture> ni o'qigunicha kutmasdan,
        aynan o'zi tanlaydigan o'lchamni oldindan tortadi -->
   <link rel="preload" as="image" type="image/webp"
-        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
+        imagesrcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" imagesizes="(max-width: 900px) 800px, 100vw" fetchpriority="high">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -212,15 +212,36 @@
         <!-- WebP + o'lchamlar: telefon 1 800px suratni tortmaydi.
              <img src> - eski brauzerlar uchun zaxira (asl JPEG). -->
         <picture>
-          <source type="image/webp" srcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" sizes="100vw">
+          <!-- Ikkita <source>: telefon uchun srcset 1080px bilan cheklangan.
+         Faqat `sizes` yetarli emas edi - brauzer uni DPR ga ko'paytiradi,
+         shuning uchun DPR 3 telefon baribir 1600px ni tanlardi (262 KB).
+         Fon surati to'q qoplama ostida turadi - farq ko'rinmaydi. -->
+          <source type="image/webp" media="(max-width: 900px)"
+                  srcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w" sizes="450px">
+          <source type="image/webp"
+                  srcset="img/gold-640.webp 640w, img/gold-800.webp 800w, img/gold-1080.webp 1080w, img/gold-1600.webp 1600w" sizes="100vw">
           <img class="hero-slide active" src="img/gold.jpg" alt="" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
         </picture>
         <picture>
-          <source type="image/webp" data-srcset="img/dollars-640.webp 640w, img/dollars-800.webp 800w, img/dollars-1080.webp 1080w, img/dollars-1600.webp 1600w" sizes="100vw">
+          <!-- Ikkita <source>: telefon uchun srcset 1080px bilan cheklangan.
+         Faqat `sizes` yetarli emas edi - brauzer uni DPR ga ko'paytiradi,
+         shuning uchun DPR 3 telefon baribir 1600px ni tanlardi (262 KB).
+         Fon surati to'q qoplama ostida turadi - farq ko'rinmaydi. -->
+          <source type="image/webp" media="(max-width: 900px)"
+                  data-srcset="img/dollars-640.webp 640w, img/dollars-800.webp 800w, img/dollars-1080.webp 1080w" sizes="450px">
+          <source type="image/webp"
+                  data-srcset="img/dollars-640.webp 640w, img/dollars-800.webp 800w, img/dollars-1080.webp 1080w, img/dollars-1600.webp 1600w" sizes="100vw">
           <img class="hero-slide" data-src="img/dollars.jpg" alt="" width="1800" height="1200" decoding="async">
         </picture>
         <picture>
-          <source type="image/webp" data-srcset="img/office-640.webp 640w, img/office-800.webp 800w, img/office-1080.webp 1080w, img/office-1600.webp 1600w" sizes="100vw">
+          <!-- Ikkita <source>: telefon uchun srcset 1080px bilan cheklangan.
+         Faqat `sizes` yetarli emas edi - brauzer uni DPR ga ko'paytiradi,
+         shuning uchun DPR 3 telefon baribir 1600px ni tanlardi (262 KB).
+         Fon surati to'q qoplama ostida turadi - farq ko'rinmaydi. -->
+          <source type="image/webp" media="(max-width: 900px)"
+                  data-srcset="img/office-640.webp 640w, img/office-800.webp 800w, img/office-1080.webp 1080w" sizes="450px">
+          <source type="image/webp"
+                  data-srcset="img/office-640.webp 640w, img/office-800.webp 800w, img/office-1080.webp 1080w, img/office-1600.webp 1600w" sizes="100vw">
           <img class="hero-slide" data-src="img/office.jpg" alt="" width="1800" height="1202" decoding="async">
         </picture>
       </div>
@@ -580,7 +601,7 @@
 
     <!-- ===================== Oltin-band (CTA) ===================== -->
     <section class="image-band image-zoom" data-reveal>
-      <picture><source type="image/webp" srcset="img/gold-2-640.webp 640w, img/gold-2-800.webp 800w, img/gold-2-1080.webp 1080w, img/gold-2-1600.webp 1600w" sizes="100vw"><img src="img/gold-2.jpg" alt="Oltin tangalar o'sish dinamikasida" data-i18n-attr="alt:about.imgAlt" width="1800" height="1200" loading="lazy" decoding="async"></picture>
+      <picture><source type="image/webp" media="(max-width: 900px)" srcset="img/gold-2-640.webp 640w, img/gold-2-800.webp 800w, img/gold-2-1080.webp 1080w" sizes="100vw"><source type="image/webp" srcset="img/gold-2-640.webp 640w, img/gold-2-800.webp 800w, img/gold-2-1080.webp 1080w, img/gold-2-1600.webp 1600w" sizes="100vw"><img src="img/gold-2.jpg" alt="Oltin tangalar o'sish dinamikasida" data-i18n-attr="alt:about.imgAlt" width="1800" height="1200" loading="lazy" decoding="async"></picture>
       <div class="money-overlay">
         <h2 data-i18n="cta.title">Buxgalteriyani ishonchli qo'llarga topshiring</h2>
         <a href="#contact" class="btn btn-light" data-i18n="hero.cta1">Bepul konsultatsiya olish</a>

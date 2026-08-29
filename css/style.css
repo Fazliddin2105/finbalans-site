@@ -3536,12 +3536,13 @@ body.has-rates .hero { padding-top: 150px; }
      to'xtatadi: blok doim 390px, chiplar esa ichida suriladi. */
   .hero > .container { width: 100%; min-width: 0; }
 
-  /* Kesilgan chip "buzuq" emas, "davomi bor" degan ma'noni beradi */
-  .hero-chips[data-scroll="start"],
-  .hero-chips[data-scroll="mid"] {
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-  }
+  /* ILGARI bu yerda mask-image bilan o'ng chetga soya berilardi
+     ("davomi bor" degan ishora). OLIB TASHLANDI: suriladigan
+     elementga qo'yilgan mask har bir surish kadrida qatlamni
+     qaytadan rasterlashga majbur qiladi va haqiqiy telefonda
+     (ayniqsa iOS Safari) ko'zga tashlanadigan pirpirash beradi.
+     Chetda turgan keyingi chipning o'zi surish mumkinligini
+     yetarlicha ko'rsatadi - GPU ni qiynamasdan. */
 }
 
 /* ---------- 9. Footer: bitta ustun → ikki ustun ----------
@@ -3779,12 +3780,9 @@ body.has-rates .hero { padding-top: 150px; }
     scroll-snap-align: start;
     padding: 26px 20px;
   }
-  /* Karusel oxirida o'ng chetdagi soya yo'qoladi (JS data-scroll qo'yadi) */
-  .tariffs[data-scroll="start"],
-  .tariffs[data-scroll="mid"] {
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent);
-  }
+  /* mask-image shu yerda ham bor edi - yuqoridagi sababga ko'ra
+     olib tashlandi. Yon tomonda "qarab" turgan karta va nuqtalar
+     surish mumkinligini ko'rsatadi. */
 
   /* Karusel nuqtalari: qaysi tarifda turganini ko'rsatadi.
      Ko'rinishi 8px, bosiladigan maydoni 44px (::before). */
@@ -3850,6 +3848,18 @@ body.has-rates .hero { padding-top: 150px; }
    o'ram yo'qdagidek qoladi.
    ========================================================= */
 picture { display: contents; }
+
+/* Hero fon slaydlari bundan mustasno: u yerda uchta surat ustma-ust
+   turadi, doimiy Ken Burns animatsiyasi bilan. `display: contents`
+   o'ramning qutisini butunlay yo'q qiladi va ba'zi mobil brauzerlarda
+   animatsiyalanayotgan bola element qaysi qatlamga tegishli ekani
+   noaniq qolib, pirpirashga sabab bo'ladi. Bu yerda o'ram aniq
+   joylashtiriladi - hech qanday taxmin qolmaydi. */
+.hero-bg picture {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
 
 /* =========================================================
    CHOP ETISH
@@ -4134,4 +4144,47 @@ picture { display: contents; }
   .hero .lead { margin-bottom: 10px; }
   .hero-actions { margin-bottom: 8px; }
   .facts { padding-bottom: calc(var(--cta-h) + 8px); }
+}
+
+
+/* =========================================================
+   TELEFONDA HERO FONI — GPU NI BO'G'MASLIK
+   ---------------------------------------------------------
+   Shikoyat: telefonda sahifa pirpirab, o'chib-yonib turadi.
+
+   Sabab GPU yuki. Hero fonida uchta surat ustma-ust turadi
+   va ularning har biri:
+     - ekran kengligidan ~1.15 baravar katta qutida,
+     - hero balandligidan 260px uzunroq (.hero-bg bottom: -260px),
+     - uzluksiz Ken Burns animatsiyasi bilan (transform: scale),
+     - ustiga surish paytida parallaks transformi qo'shiladi,
+     - `will-change: transform` bilan alohida qatlamga chiqarilgan.
+
+   Bunga qo'shimcha: DPR 3 bo'lgan Android telefonlar 1600px
+   kenglikdagi WebP larni tanlaydi - uchtasi 461 KB. O'rta
+   darajadagi telefon bu qatlamlarni har kadrda qayta
+   rasterlashga ulgurmaydi va ekran pirpiraydi.
+
+   Yechim: telefonda bezak harakati o'chiriladi. Slaydlar
+   almashinuvi (opacity krossfeyd) qoladi - u arzon. Desktop
+   va planshetda hammasi avvalgidek.
+   ========================================================= */
+@media (max-width: 900px) {
+  /* Ken Burns - telefonda eng qimmat qism */
+  .hero-bg img,
+  .hero.anim-live .hero-bg img.active { animation: none !important; }
+
+  /* Parallaks uchun ajratilgan qatlam ham kerak emas.
+     JS inline transform qo'yadi - uni ham bekor qilamiz. */
+  .hero-bg {
+    bottom: 0;
+    will-change: auto;
+    transform: none !important;
+  }
+
+  /* Hero grafigi - yana bitta uzluksiz animatsiyalanadigan qatlam */
+  .hero-chart { animation: none !important; }
+  .hero-chart path,
+  .hero-chart rect,
+  .hero-chart circle { animation: none !important; }
 }
