@@ -235,6 +235,7 @@ const translations = {
     'form.submit': "Ariza yuborish",
     'form.invalid': "Iltimos, belgilangan maydonlarni to'ldiring va rozilik bandini belgilang.",
     'form.success': "Rahmat, arizangiz qabul qilindi. Ish vaqtida 30 daqiqa ichida bog'lanamiz.",
+    'form.sending': "Yuborilmoqda…",
     'form.error': "Xatolik yuz berdi — ariza yuborilmadi. Iltimos, to'g'ridan-to'g'ri bog'laning:",
 
     'footer.tagline': "MChJ va YaTT uchun buxgalteriya autsorsingi. Toshkent, 2018-yildan beri.",
@@ -516,6 +517,7 @@ const translations = {
     'form.submit': "Отправить заявку",
     'form.invalid': "Пожалуйста, заполните отмеченные поля и отметьте согласие.",
     'form.success': "Спасибо, заявка принята. Перезвоним в течение 30 минут в рабочее время.",
+    'form.sending': "Отправляется…",
     'form.error': "Произошла ошибка — заявка не отправлена. Пожалуйста, свяжитесь с нами напрямую:",
 
     'footer.tagline': "Аутсорсинг бухгалтерии для ООО и ИП. Ташкент, работаем с 2018 года.",
@@ -797,6 +799,7 @@ const translations = {
     'form.submit': "Send request",
     'form.invalid': "Please fill in the highlighted fields and tick the consent box.",
     'form.success': "Thank you, your request has been received. We'll call back within 30 minutes during business hours.",
+    'form.sending': "Sending…",
     'form.error': "Something went wrong — the request was not sent. Please contact us directly:",
 
     'footer.tagline': "Accounting outsourcing for LLCs and sole proprietors. Tashkent, since 2018.",
@@ -1407,7 +1410,26 @@ phoneInput.addEventListener('blur', () => {
 });
 
 phoneInput.addEventListener('input', () => {
-  let digits = phoneInput.value.replace(/\D/g, '');
+  /* KURSOR JOYIDA QOLISHI KERAK.
+     Ilgari bu yerda `value` shunchaki qayta yozilardi - brauzer esa
+     value o'zgargach kursorni oxiriga tashlaydi. Natijada o'rtadagi
+     xato raqamni tuzatib bo'lmasdi: har bosishda kursor oxiriga
+     sakrardi va raqam teskari terilardi. Telefonda bu ayniqsa
+     asabiylashtiradi - odam raqamini kiritolmaydi.
+
+     Yechim: kursordan OLDIN nechta RAQAM borligini sanaymiz
+     (bo'shliqlarni emas - ular formatlashda siljiydi), qayta
+     formatlaymiz, keyin kursorni o'sha raqamdan keyingi joyga
+     qaytaramiz. */
+  const el = phoneInput;
+  const before = el.value;
+  const selStart = el.selectionStart;
+  /* kursordan oldingi raqamlar soni */
+  const digitsBeforeCaret = selStart === null
+    ? null
+    : before.slice(0, selStart).replace(/\D/g, '').length;
+
+  let digits = before.replace(/\D/g, '');
   if (digits.startsWith('998')) digits = digits.slice(3);
   /* To'liq xalqaro raqam qo'yilganda (prefiks ustiga paste) 998 takroran
      olib tashlanadi - aks holda noto'g'ri, lekin "haqiqiyga o'xshash" raqam chiqadi */
@@ -1415,15 +1437,36 @@ phoneInput.addEventListener('input', () => {
   digits = digits.slice(0, 9);
 
   /* Maydonni butunlay tozalashga ruxsat beramiz */
-  if (!digits) { phoneInput.value = ''; return; }
+  if (!digits) { el.value = ''; return; }
 
   let out = '+998';
   out += ' ' + digits.slice(0, 2);
   if (digits.length > 2) out += ' ' + digits.slice(2, 5);
   if (digits.length > 5) out += ' ' + digits.slice(5, 7);
   if (digits.length > 7) out += ' ' + digits.slice(7, 9);
-  phoneInput.value = out;
+
+  if (out === before) return;      /* o'zgarish yo'q - kursorga tegmaymiz */
+  el.value = out;
+
+  if (digitsBeforeCaret === null) return;
+  /* "+998" prefiksining uchta raqami har doim boshida turadi.
+     Foydalanuvchi kiritgan raqamlar shundan keyin boshlanadi. */
+  const wanted = Math.max(0, digitsBeforeCaret - (before.replace(/\D/g, '').startsWith('998') ? 3 : 0));
+  let seen = 0, pos = out.length;
+  for (let i = 0; i < out.length; i++) {
+    if (i >= 4 && /\d/.test(out[i])) {      /* 4 = "+998" dan keyin */
+      seen++;
+      if (seen > wanted) { pos = i; break; }
+    }
+  }
+  if (seen <= wanted) pos = out.length;
+  try { el.setSelectionRange(pos, pos); } catch (e) { /* ba'zi turlar qo'llab-quvvatlamaydi */ }
 });
+
+/* Joriy tildagi lug'at - forma holat matnlari uchun */
+function dictNow() {
+  return translations[currentLang] || translations.uz;
+}
 
 /* ---------------- Ariza formasi ---------------- */
 const form = document.getElementById('contactForm');
@@ -1529,19 +1572,56 @@ form.addEventListener('submit', e => {
     return;
   }
 
+  /* VAQT CHEKLOVI VA KO'RINADIGAN HOLAT.
+     Ilgari `fetch` cheksiz kutardi: sekin yoki uzilgan tarmoqda
+     tugma o'chgan holda qotib qolar, hech qanday xabar chiqmasdi.
+     Odam nima bo'layotganini bilmay, sahifani tashlab ketardi.
+
+     Endi: tugmada "Yuborilmoqda..." yozuvi, 15 soniyadan keyin
+     so'rov bekor qilinadi va odatiy xato xabari chiqadi -
+     telefon va Telegram havolalari bilan. */
+  const origLabel = submitBtn.textContent;
   submitBtn.disabled = true;
+  submitBtn.setAttribute('aria-busy', 'true');
+  submitBtn.textContent = (dictNow() && dictNow()['form.sending']) || 'Yuborilmoqda…';
+
+  function restoreBtn() {
+    submitBtn.disabled = false;
+    submitBtn.removeAttribute('aria-busy');
+    submitBtn.textContent = origLabel;
+  }
+
+  /* AbortController eski brauzerlarda yo'q - u holda taymer
+     faqat interfeysni tiklaydi, so'rov fonda tugaydi */
+  let ctrl = null;
+  try { ctrl = new AbortController(); } catch (e) { /* eski dvigatel */ }
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    if (ctrl) { try { ctrl.abort(); } catch (e) {} }
+    restoreBtn();
+    formError.hidden = false;
+    revealFormMsg(formError);
+  }, 15000);
+
   fetch(FORM_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+    signal: ctrl ? ctrl.signal : undefined
   })
     .then(res => {
+      if (timedOut) return;
+      clearTimeout(timer);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       saveLead(data);
+      restoreBtn();
       showSuccess();
     })
     .catch(() => {
-      submitBtn.disabled = false;
+      if (timedOut) return;          /* xabar allaqachon ko'rsatilgan */
+      clearTimeout(timer);
+      restoreBtn();
       formError.hidden = false;
       revealFormMsg(formError);
     });
@@ -1855,10 +1935,23 @@ function goToReview(i) {
   }
 }
 
+/* Foydalanuvchi karuselga tegsa - avtomatik almashinuv butunlay
+   to'xtaydi. Sichqoncha bilan `:hover` pauza beradi, sensorli
+   ekranda esa hover yo'q: odam sharhni o'qiyotganda karusel uni
+   o'g'irlab ketardi va to'xtatishning iloji yo'q edi. Endi
+   birinchi teginish/bosishdan keyin boshqaruv odamda qoladi. */
+let revUserTook = false;
+
 function restartRevTimer() {
   clearInterval(revTimer);
-  if (REDUCED_MOTION) return;
+  if (REDUCED_MOTION || revUserTook) return;
   revTimer = setInterval(() => goToReview(revIndex + 1), 6000);
+}
+
+function revStopAuto() {
+  revUserTook = true;
+  clearInterval(revTimer);
+  revTimer = null;
 }
 
 if (revTrack && revCarouselEl) {
@@ -1871,14 +1964,18 @@ if (revTrack && revCarouselEl) {
     dot.type = 'button';
     dot.className = 'rev-dot' + (i === 0 ? ' active' : '');
     dot.setAttribute('aria-label', (dict0['reviews.goto'] || 'Fikr') + ' ' + (i + 1));
-    dot.addEventListener('click', () => { goToReview(i); restartRevTimer(); });
+    dot.addEventListener('click', () => { revStopAuto(); goToReview(i); });
     dotsWrap.appendChild(dot);
   }
 
+  /* Sensorli ekranda karuselga teginishning o'zi avtomatikani
+     to'xtatadi - odam o'qishga ulgurmay slayd almashib ketmasin */
+  revCarouselEl.addEventListener('pointerdown', revStopAuto, { passive: true });
+
   const prevBtn = document.getElementById('revPrev');
   const nextBtn = document.getElementById('revNext');
-  if (prevBtn) prevBtn.addEventListener('click', () => { goToReview(revIndex - 1); restartRevTimer(); });
-  if (nextBtn) nextBtn.addEventListener('click', () => { goToReview(revIndex + 1); restartRevTimer(); });
+  if (prevBtn) prevBtn.addEventListener('click', () => { revStopAuto(); goToReview(revIndex - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { revStopAuto(); goToReview(revIndex + 1); });
 
   /* Sichqoncha ustida turganda pauza */
   revCarouselEl.addEventListener('mouseenter', () => clearInterval(revTimer));

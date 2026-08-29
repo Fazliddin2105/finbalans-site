@@ -532,6 +532,12 @@ h3 {
    Hero — to'liq ekranli, fotoli
    ========================================================= */
 .hero {
+  /* ZAXIRA FON RANGI. Hero matni oq - agar fon rasmi biror sababga
+     ko'ra joylashmasa (eski brauzer `inset` ni tanimasa, rasm
+     yuklanmasa, trafik tejash rejimi rasmlarni bloklasa), oq fonda
+     oq matn qolardi va birinchi ekran o'qib bo'lmas edi.
+     Navy fon har qanday holatda matnni o'qiladigan qiladi. */
+  background-color: var(--navy);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -541,7 +547,8 @@ h3 {
   color: var(--on-navy);
 }
 
-.hero-bg { position: absolute; inset: 0; overflow: hidden; }
+.hero-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  inset: 0; overflow: hidden; }
 .hero-bg img {
   position: absolute;
   inset: 0;
@@ -555,6 +562,7 @@ h3 {
 .hero-bg::after {
   content: '';
   position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
   inset: 0;
   background: linear-gradient(180deg,
     rgba(10, 21, 36, 0.90) 0%,
@@ -899,11 +907,13 @@ html.js [data-reveal].visible {
 .image-band::after {
   content: '';
   position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
   inset: 0;
   background: linear-gradient(180deg, rgba(11, 22, 38, 0.72), rgba(16, 35, 59, 0.6));
 }
 .money-overlay {
   position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
   inset: 0;
   z-index: 1;
   display: flex;
@@ -1057,6 +1067,18 @@ html.js [data-reveal].visible {
   background: var(--bg);
   resize: vertical;
   transition: border-color 0.15s ease;
+}
+
+/* iOS maydonga fokusda, agar shrift 16px dan kichik bo'lsa, butun
+   sahifani MAJBURAN kattalashtiradi - keyin foydalanuvchi uni qo'l
+   bilan qaytarishga majbur. Ilgari 16px faqat <=720px da qo'yilgandi,
+   ya'ni yotiq holatdagi telefon (844px) va planshet bundan tashqarida
+   qolardi. `pointer: coarse` barcha sensorli qurilmani qamraydi va
+   desktop tipografiyasiga tegmaydi. */
+@media (pointer: coarse) {
+  .form-group input,
+  .form-group textarea,
+  .form-group select { font-size: 16px; }
 }
 .form-group input:focus,
 .form-group textarea:focus {
@@ -4262,4 +4284,26 @@ html.low-power .stagger > * {
   /* 260px ortiqcha bo'y - kichik ekranda parallaks masofasi
      baribir kichik, lekin qatlam maydoni 30% kattaroq bo'lardi */
   .hero-bg { bottom: -120px; }
+}
+
+
+/* =========================================================
+   SENSORLI QURILMALARDA: to'xtatib bo'lmaydigan harakatlar
+   ---------------------------------------------------------
+   Ba'zi animatsiyalar faqat `:hover` bilan pauza qilinardi -
+   telefon va planshetda esa hover yo'q, ya'ni ular hech qachon
+   to'xtamasdi. Bu ham quvvat, ham diqqatni yeydi.
+   ========================================================= */
+@media (hover: none) {
+  /* Kurs lentasi: <=720px da allaqachon to'xtatilgan, lekin
+     planshet (721-1000px) sensorli bo'lsa ham suriladi va
+     `:hover` pauzasi u yerda ishlamaydi */
+  .rates-track { animation: none; width: auto; }
+  .rates-view { overflow-x: auto; scrollbar-width: none; }
+  .rates-view::-webkit-scrollbar { display: none; }
+
+  /* Navy tarif kartasidagi oltin yarqirash: surma karusel
+     ichida turadi va surish paytida qatlamni qayta chizishga
+     majbur qiladi */
+  .tariff-main { animation: none; background-image: none; }
 }
